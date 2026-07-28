@@ -1,0 +1,63 @@
+---
+import '../styles/global.css';
+import { ClientRouter } from 'astro:transitions';
+const { title = 'Jorge Troncoso | Desarrollo web e IA local', description = 'Portafolio profesional de Jorge Troncoso: desarrollo web, infraestructura local de IA, RAG y procesamiento documental.', hideFooter = false, panelNavigation = false } = Astro.props;
+---
+<!doctype html>
+<html lang="es">
+  <head>
+    <ClientRouter />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#050814" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="es_CL" />
+    <meta property="og:site_name" content="Jorge Troncoso" />
+    <meta name="twitter:card" content="summary" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <title>{title}</title>
+  </head>
+  <body class="viewport-locked">
+    <a class="skip-link" href="#contenido">Saltar al contenido</a>
+    <header transition:persist="site-header" class="fixed inset-x-0 top-0 z-50 border-b border-white/5 bg-[#050814]/75 backdrop-blur-xl">
+      <nav class="container-shell flex h-16 items-center justify-between" aria-label="Navegación principal">
+        <a href="/#inicio" data-view-link="inicio" class="font-black tracking-tight"><span class="text-cyan-300">&lt;</span>JORGE<span class="text-violet-400">/&gt;</span></a>
+        <div class="hidden items-center gap-6 text-sm text-slate-300 md:flex">
+          <a data-view-link="perfil" class="nav-view-link hover:text-white" href="/#perfil">Perfil</a>
+          <a data-view-link="proyectos" class="nav-view-link hover:text-white" href="/#proyectos">Proyectos</a>
+          <a data-view-link="inicio" class="nav-home-link" href="/#inicio" aria-label="Ir al inicio" title="Inicio"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1V10Z" /></svg></a>
+          <a data-view-link="tecnologias" class="nav-view-link hover:text-white" href="/#tecnologias">Tecnologías</a>
+          <a data-view-link="ia-local" class="nav-view-link hover:text-white" href="/#ia-local">IA local</a>
+        </div>
+        <div class="flex items-center gap-3">
+          <a href="mailto:jorge.troncoso4@gmail.com" class="hidden rounded-full border border-cyan-300/30 bg-cyan-300/10 px-4 py-2 text-sm font-bold text-cyan-100 sm:inline-flex">Contacto</a>
+          <details class="relative md:hidden">
+            <summary class="cursor-pointer rounded-full border border-white/15 bg-white/[.04] px-4 py-2 text-sm font-bold text-white">Menú</summary>
+            <div class="absolute right-0 top-12 w-52 rounded-2xl border border-white/10 bg-[#0b1020] p-2 shadow-2xl">
+              <a data-view-link="perfil" class="nav-view-link block rounded-xl px-4 py-3 text-sm hover:bg-white/[.06]" href="/#perfil">Perfil</a>
+              <a data-view-link="proyectos" class="nav-view-link block rounded-xl px-4 py-3 text-sm hover:bg-white/[.06]" href="/#proyectos">Proyectos</a>
+              <a data-view-link="inicio" class="nav-view-link block rounded-xl px-4 py-3 text-sm hover:bg-white/[.06]" href="/#inicio">Inicio</a>
+              <a data-view-link="tecnologias" class="nav-view-link block rounded-xl px-4 py-3 text-sm hover:bg-white/[.06]" href="/#tecnologias">Tecnologías</a>
+              <a data-view-link="ia-local" class="nav-view-link block rounded-xl px-4 py-3 text-sm hover:bg-white/[.06]" href="/#ia-local">IA local</a>
+              <a class="block rounded-xl px-4 py-3 text-sm text-cyan-200 hover:bg-white/[.06]" href="mailto:jorge.troncoso4@gmail.com">Contacto</a>
+            </div>
+          </details>
+        </div>
+      </nav>
+    </header>
+    <div class:list={{ 'site-viewport': true, 'site-viewport-panels': panelNavigation }}>
+      <div class="site-window">
+        <slot />
+        {!hideFooter && <footer transition:persist="site-footer" class="border-t border-white/5 py-8">
+          <div class="container-shell flex flex-col gap-5 text-sm text-slate-300 md:flex-row md:items-center md:justify-between">
+            <div><p class="font-bold text-white">Jorge Troncoso</p><a class="mt-1 inline-block hover:text-cyan-200" href="tel:+56950254516">+56 9 5025 4516</a><span class="mx-2 text-slate-600">·</span><a class="hover:text-cyan-200" href="mailto:jorge.troncoso4@gmail.com">jorge.troncoso4@gmail.com</a></div>
+            <div class="md:text-right"><p>Página web desarrollada en Astro</p><p class="mt-1 text-slate-400">Todos los derechos reservados.</p></div>
+          </div>
+        </footer>}
+      </div>
+    </div>
+  </body>
+</html>
