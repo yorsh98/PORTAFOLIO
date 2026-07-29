@@ -6,15 +6,97 @@ import iconSet from '@iconify-json/simple-icons/icons.json';
 
 const selectedTech = technologies.map((tech) => ({ ...tech, iconBody: iconSet.icons[tech.slug as keyof typeof iconSet.icons]?.body }));
 const categoryColors: Record<string, string> = { frontend: '#67e8f9', backend: '#60a5fa', ai: '#a78bfa', data: '#2dd4bf', infrastructure: '#34d399', documents: '#fbbf24', audio: '#fb7185', quality: '#c4b5fd' };
-const technologyGroups = Object.entries(categoryLabels).map(([category, label]) => ({ label, color: categoryColors[category], technologies: selectedTech.filter((tech) => tech.category === category) }));
+const featuredStack = [['Laravel + React/Vue', 'laravel'], ['FastAPI + Celery + Redis', 'fastapi'], ['Ollama + LangGraph', 'ollama'], ['Docker + NVIDIA GPU', 'docker']].map(([name, slug]) => ({ name, slug, iconBody: iconSet.icons[slug as keyof typeof iconSet.icons]?.body }));
+const technologyGroups = [{ label: 'Stack destacado', color: '#67e8f9', technologies: featuredStack }, ...Object.entries(categoryLabels).map(([category, label]) => ({ label, color: categoryColors[category], technologies: selectedTech.filter((tech) => tech.category === category) }))];
 const webProjects = projects.filter((project) => project.kind === 'web');
 const modelProject = projects.find((project) => project.kind === 'model');
+const profileTechnologies = [
+  ['PHP', 'php'], ['Laravel', 'laravel'], ['Python', 'python'], ['HTML5', 'html5'], ['CSS3', 'css3'], ['JavaScript', 'javascript'], ['Ollama', 'ollama'], ['Hugging Face', 'huggingface'], ['ChatGPT / Codex App', 'openai'], ['OpenCode CLI', 'opencode'], ['Antigravity CLI', 'antigravity'], ['MCPs', 'modelcontextprotocol'], ['SKILL.md', 'agentskills'], ['SOLID', 'solid-principles'], ['MVC', 'mvc-pattern'], ['RAG documental', 'rag'], ['PostgreSQL', 'postgresql'], ['MySQL', 'mysql'], ['MariaDB', 'mariadb'], ['SQL', 'sql'], ['Git', 'git'], ['GitHub', 'github'], ['Windows', 'windows'], ['Linux', 'linux'], ['macOS', 'apple'], ['Redes', 'network']
+] as const;
+const profileCustomIcons: Record<string, string> = {
+  antigravity: '<defs><linearGradient id="antigravity-gradient" x1="3" y1="20" x2="21" y2="4" gradientUnits="userSpaceOnUse"><stop stop-color="#4785ff"/><stop offset=".35" stop-color="#54d8e7"/><stop offset=".63" stop-color="#95d83e"/><stop offset=".82" stop-color="#ffd63d"/><stop offset="1" stop-color="#ed5b6d"/></linearGradient></defs><path fill="url(#antigravity-gradient)" d="M2.7 20.5 9.2 5.7a3.06 3.06 0 0 1 5.6 0l6.5 14.8h-4.54L12 9.72 7.24 20.5H2.7Z"/><path fill="#07101f" d="m8.88 20.5 3.12-7.08 3.12 7.08h-2.2L12 17.86l-.8 2.64H8.88Z"/>',
+  'solid-principles': '<path fill="none" stroke="currentColor" stroke-width="1.8" d="m12 2.7 7.55 4.35v8.9L12 20.3l-7.55-4.35v-8.9L12 2.7Z"/><path fill="none" stroke="currentColor" stroke-width="1.8" d="M8.4 8.2h7.2M8.4 12h7.2M8.4 15.8h4.1" stroke-linecap="round"/>',
+  'mvc-pattern': '<rect x="3" y="4" width="6.2" height="5.4" rx="1" fill="none" stroke="currentColor" stroke-width="1.7"/><rect x="14.8" y="4" width="6.2" height="5.4" rx="1" fill="none" stroke="currentColor" stroke-width="1.7"/><rect x="8.9" y="14.6" width="6.2" height="5.4" rx="1" fill="none" stroke="currentColor" stroke-width="1.7"/><path fill="none" stroke="currentColor" stroke-width="1.7" d="m9.2 9.2 2.8 5.1m2.8-5.1-2.8 5.1" stroke-linecap="round"/>',
+  rag: '<path fill="none" stroke="currentColor" stroke-width="1.8" d="M6 3.5h8.2l3.8 3.8v13.2H6V3.5Z"/><path fill="none" stroke="currentColor" stroke-width="1.8" d="M14.2 3.5v3.8H18M9 12h5.7M9 15.5h3.4" stroke-linecap="round"/><circle cx="16.6" cy="17.1" r="2.1" fill="none" stroke="currentColor" stroke-width="1.6"/><path fill="none" stroke="currentColor" stroke-width="1.6" d="m18.2 18.7 2 2" stroke-linecap="round"/>',
+  sql: '<ellipse cx="12" cy="5.6" rx="6.8" ry="2.6" fill="none" stroke="currentColor" stroke-width="1.8"/><path fill="none" stroke="currentColor" stroke-width="1.8" d="M5.2 5.6v6.4c0 1.44 3.05 2.6 6.8 2.6s6.8-1.16 6.8-2.6V5.6m-13.6 6.4v6.4c0 1.44 3.05 2.6 6.8 2.6s6.8-1.16 6.8-2.6V12"/>',
+  network: '<circle cx="5" cy="12" r="2.2" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="18.5" cy="5.5" r="2.2" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="18.5" cy="18.5" r="2.2" fill="none" stroke="currentColor" stroke-width="1.8"/><path fill="none" stroke="currentColor" stroke-width="1.8" d="m7.1 10.95 9.25-4.4M7.1 13.05l9.25 4.4" stroke-linecap="round"/>'
+};
+const selectedProfileTechnologies = profileTechnologies.map(([name, slug]) => ({ name, slug, iconBody: profileCustomIcons[slug] ?? iconSet.icons[slug as keyof typeof iconSet.icons]?.body }));
+const credentialFans = [
+  {
+    title: 'Diplomado y formación INACAP',
+    credentials: [
+      { title: 'Diplomado Inteligencia Artificial aplicada a negocios', image: '/images/profile/Captura desde 2026-07-28 21-51-24.webp', alt: 'Certificado redactado del Diplomado Inteligencia Artificial aplicada a negocios de INACAP.' },
+      { title: 'Fundamentos de Inteligencia Artificial aplicada a negocios', image: '/images/profile/Captura desde 2026-07-28 21-52-26.webp', alt: 'Certificado redactado del curso Fundamentos de Inteligencia Artificial aplicada a negocios.' },
+      { title: 'Incorporación de Inteligencia Artificial', image: '/images/profile/Captura desde 2026-07-28 21-52-40.webp', alt: 'Certificado redactado del curso Incorporación de Inteligencia Artificial.' },
+      { title: 'Desarrollo y gestión de bases de datos', image: '/images/profile/Captura desde 2026-07-28 21-52-16.webp', alt: 'Certificado redactado del curso Desarrollo y gestión de bases de datos.' }
+    ]
+  },
+  {
+    title: 'Especialización complementaria',
+    credentials: [
+      { title: 'Adopción de Machine Learning para la toma de decisiones', image: '/images/profile/Captura desde 2026-07-28 21-51-47.webp', alt: 'Certificado redactado del curso Adopción de Machine Learning para la toma de decisiones.' },
+      { title: 'Curso de Bases y Conceptos de Inteligencia Artificial', image: '/images/profile/Captura desde 2026-07-28 21-50-37.webp', alt: 'Certificado redactado del Curso de Bases y Conceptos de Inteligencia Artificial de Código Facilito.' },
+      { title: 'Curso a fondo de GitHub', image: '/images/profile/Captura desde 2026-07-28 21-50-29.webp', alt: 'Certificado redactado del Curso a fondo de GitHub de Código Facilito.' },
+      { title: 'Curso de Laravel Profesional', image: '/images/profile/Captura desde 2026-07-28 21-50-47.webp', alt: 'Certificado redactado del Curso de Laravel Profesional de Código Facilito.' }
+    ]
+  }
+] as const;
 ---
 <BaseLayout hideFooter={true} panelNavigation={true}>
   <main id="contenido" class="cube-stage">
     <section id="perfil" data-view="perfil" class="cube-panel" aria-labelledby="perfil-title" aria-hidden="true">
-      <div class="cube-panel-content container-shell py-28"><div class="grid min-h-full content-center gap-10 lg:grid-cols-[.8fr_1.2fr]"><div><p class="eyebrow">Perfil</p><h1 id="perfil-title" class="section-title" tabindex="-1">Software con contexto técnico</h1></div><div><p class="section-copy text-lg">Trabajo en aplicaciones web y backend, conectando interfaces, APIs, procesamiento asíncrono y datos con herramientas de inteligencia artificial ejecutadas de forma local cuando el contexto lo requiere.</p><div class="mt-7 grid gap-3 sm:grid-cols-2"><div class="glass rounded-2xl p-5"><strong>Arquitectura práctica</strong><p class="mt-2 text-sm leading-6 text-slate-300">APIs, workers, bases de datos y pipelines pensados para integrarse con procesos reales.</p></div><div class="glass rounded-2xl p-5"><strong>IA con control de datos</strong><p class="mt-2 text-sm leading-6 text-slate-300">Modelos locales, embeddings y recuperación de información para tratar contenido sensible con mayor control.</p></div></div></div></div></div>
+      <div class="cube-panel-content container-shell py-10 sm:py-14">
+        <div class="profile-layout">
+          <header class="profile-intro">
+            <p class="eyebrow">Perfil profesional</p>
+            <h1 id="perfil-title" class="section-title" tabindex="-1">Tecnología que resuelve, automatiza y sostiene la operación.</h1>
+            <p class="section-copy text-lg">Profesional TI con experiencia desde 2019 en soporte tecnológico, continuidad operativa y desarrollo de soluciones internas para instituciones del Poder Judicial. Combino resolución de incidencias, infraestructura local y desarrollo web para convertir necesidades operativas en herramientas útiles.</p>
+            <div class="mt-6 flex flex-wrap gap-2"><span class="tag">Soporte TI</span><span class="tag">Soluciones a medida</span><span class="tag">Automatización</span><span class="tag">Infraestructura local</span></div>
+          </header>
+
+          <section class="profile-section" aria-labelledby="capacidades-title">
+            <div class="profile-section-heading"><p class="eyebrow">Enfoque de trabajo</p><h2 id="capacidades-title">Del incidente a la solución</h2></div>
+            <div class="grid gap-3 md:grid-cols-3">
+              <article class="profile-capability"><span class="profile-number">01</span><h3>Continuidad operativa</h3><p>Soporte a usuarios y equipamiento, configuración de puestos, redes, impresoras, audio y salas de audiencias híbridas.</p></article>
+              <article class="profile-capability"><span class="profile-number">02</span><h3>Soluciones internas</h3><p>Desarrollo y mantención de sistemas web, automatizaciones y herramientas orientadas a procesos institucionales reales.</p></article>
+              <article class="profile-capability"><span class="profile-number">03</span><h3>Entornos técnicos</h3><p>Servidores locales, bases de datos, Linux, redes y herramientas de IA aplicada para apoyar flujos de trabajo.</p></article>
+            </div>
+          </section>
+
+          <section class="profile-section" aria-labelledby="experiencia-title">
+            <div class="profile-section-heading"><p class="eyebrow">Experiencia aplicada</p><h2 id="experiencia-title">Resolver primero. Mejorar después.</h2></div>
+            <div class="grid gap-3">
+              <article class="profile-experience profile-experience-featured"><div><p class="profile-period">2024 - 2026</p><h3>4to Tribunal de Juicio Oral en lo Penal de Santiago</h3><p class="profile-role">Administrativo tercero Informatico</p></div><div class="profile-experience-details"><p>Impulso mejoras tecnológicas, actualizaciones de flujos de trabajo locales y procedimientos internos, con desarrollos que integran inteligencia artificial local para la gestión documental judicial.</p><ul class="profile-project-list"><li><strong>Plataforma IA Unificada:</strong> ecosistema institucional que centraliza herramientas de IA con portal de usuarios, roles, permisos, auditoría y acceso a módulos; analizador documental; anonimizador de datos personales; transcriptor con seguimiento de tareas; y chatbots respaldados por citas.</li><li><strong>4toTOP:</strong> sistema web para gestión judicial y administrativa, con control de usuarios y permisos, carga y procesamiento de archivos Excel, consulta de correos IMAP, tablas dinámicas y reportes.</li><li><strong>Chatbot UNIJUD:</strong> asistente jurídico conversacional basado en RAG para consultar documentación institucional, recuperar información relevante y generar respuestas con fuentes y citas verificables.</li></ul></div></article>
+              <article class="profile-experience"><p class="profile-period">2019 - 2024</p><h3>Soporte tecnologico CAPJ y TOP San bernardo</h3><p class="profile-role">Administrativo Informatico</p><p>Labores administrando equipos, respaldo de audios, redes local, sistemas remotos, salas de audiencia hibridas, sistema de archivos compartidos y atencion de emergencias informaticas, ademas de entregar soporte a distintas competencias jurisdiccionales.</p></article>
+            </div>
+          </section>
+
+          <section class="profile-section" aria-labelledby="stack-perfil-title">
+            <div class="profile-section-heading"><p class="eyebrow">Tecnologías utilizadas</p><h2 id="stack-perfil-title">Una base práctica, de la red al software</h2></div>
+            <div class="profile-tech-strip" data-profile-tech-strip tabindex="0" role="region" aria-label="Tecnologías utilizadas. Arrastra o usa las flechas izquierda y derecha para recorrer la lista.">
+              {[...selectedProfileTechnologies, ...selectedProfileTechnologies].map((tech, index) => <div class="profile-tech-item" data-profile-tech-loop={index === selectedProfileTechnologies.length ? 'true' : undefined} aria-hidden={index >= selectedProfileTechnologies.length ? 'true' : undefined}><div class="profile-tech-icon">{tech.iconBody ? <svg viewBox="0 0 24 24" aria-hidden="true" set:html={tech.iconBody} /> : <span aria-hidden="true">{tech.slug}</span>}</div><span>{tech.name}</span></div>)}
+            </div>
+          </section>
+
+          <section class="profile-section" aria-labelledby="credenciales-title">
+            <div class="profile-section-heading"><p class="eyebrow">Formación continua</p><h2 id="credenciales-title">Credenciales que respaldan el aprendizaje</h2></div>
+            <p class="section-copy">Una selección ordenada de formación en inteligencia artificial, datos y desarrollo. Selecciona una credencial para verla en detalle.</p>
+            <div class="credential-fans">
+              {credentialFans.map((fan) => <section class="credential-fan" data-credential-fan aria-label={fan.title}><h3>{fan.title}</h3><div class="credential-fan-stack">{fan.credentials.map((credential, index) => <button type="button" class="credential-thumbnail" style={`--fan-index: ${index}; --fan-angle: ${index * 12}deg; --fan-x: ${index * 9}rem;`} data-credential-open data-credential-title={credential.title} data-credential-image={credential.image} data-credential-alt={credential.alt}><span class="credential-thumbnail-media"><img src={credential.image} alt="" loading="lazy" decoding="async" /></span><span class="credential-thumbnail-title">{credential.title}</span></button>)}</div></section>)}
+            </div>
+            <footer class="profile-footer">
+              <div class="flex flex-col gap-5 text-sm text-slate-300 md:flex-row md:items-center md:justify-between">
+                <div><p class="font-bold text-white">Jorge Troncoso</p><a class="mt-1 inline-block hover:text-cyan-200" href="https://wa.me/56950254516" target="_blank" rel="noopener noreferrer">+56 9 5025 4516</a><span class="mx-2 text-slate-600">·</span><a class="hover:text-cyan-200" href="mailto:jorge.troncoso4@gmail.com">jorge.troncoso4@gmail.com</a></div>
+                <div class="md:text-right"><p>Página web desarrollada en Astro</p><p class="mt-1 text-slate-400">Todos los derechos reservados.</p></div>
+              </div>
+            </footer>
+          </section>
+        </div>
+      </div>
     </section>
+
+    <dialog id="credential-dialog" class="credential-dialog" aria-labelledby="credential-dialog-title"><div class="credential-dialog-content"><button type="button" class="credential-dialog-close" aria-label="Cerrar certificado">Cerrar</button><button type="button" class="credential-dialog-image" aria-label="Cerrar vista ampliada del certificado"><img src="" alt="" /></button><p id="credential-dialog-title"></p></div></dialog>
 
     <section id="proyectos" data-view="proyectos" class="cube-panel" aria-labelledby="proyectos-title" aria-hidden="true">
       <div class="cube-panel-content container-shell py-28"><p class="eyebrow">Casos de trabajo</p><h1 id="proyectos-title" class="section-title" tabindex="-1">Proyectos destacados</h1><p class="section-copy">Una selección de aplicaciones web y trabajo aplicado con modelos de inteligencia artificial.</p><div class="mt-10 grid gap-5 md:grid-cols-3">{webProjects.map((project, index) => <article class="glass group flex min-h-[320px] flex-col rounded-3xl p-6 transition duration-300 hover:-translate-y-1 hover:border-cyan-300/25"><div class="mb-8 flex items-center justify-between"><span class="text-xs font-bold uppercase tracking-[.16em] text-cyan-300">{project.category}</span><span class="text-4xl font-black text-white/10">0{index + 1}</span></div><h2 class="text-2xl font-black tracking-tight">{project.title}</h2><p class="mt-3 flex-1 text-sm leading-6 text-slate-300">{project.description}</p><div class="mt-5 flex flex-wrap gap-2">{project.technologies.slice(0, 5).map((tech) => <span class="tag">{tech}</span>)}</div><a href={`/proyectos/${project.slug}`} class="mt-6 inline-flex items-center gap-2 text-sm font-bold text-white">Ver caso de estudio <span class="transition group-hover:translate-x-1" aria-hidden="true">→</span></a></article>)}</div>{modelProject && <article class="glass mt-5 grid gap-6 rounded-3xl p-7 md:grid-cols-[1.2fr_.8fr] md:p-9"><div><p class="eyebrow">{modelProject.category}</p><h2 class="mt-3 text-3xl font-black tracking-tight">{modelProject.title}</h2><p class="mt-4 max-w-2xl leading-7 text-slate-300">{modelProject.description}</p><a href={`/proyectos/${modelProject.slug}`} class="mt-7 inline-flex rounded-xl bg-white px-5 py-3 font-bold text-slate-950">Explorar el proyecto</a></div><div class="rounded-2xl border border-violet-300/20 bg-violet-300/[.04] p-6"><p class="text-xs font-bold uppercase tracking-[.16em] text-violet-200">Dominio legal chileno</p><p class="mt-4 text-lg font-bold">Gemma + LoRA/QLoRA</p><p class="mt-3 text-sm leading-6 text-slate-300">Datos legales, legislación y un agente de extracción de información jurídica desde fuentes web públicas.</p></div></article>}<div class="mt-8 text-center"><a href="/proyectos" class="inline-flex rounded-xl border border-white/15 bg-white/[.04] px-5 py-3 font-bold">Ver los cuatro proyectos</a></div></div>
@@ -32,14 +114,190 @@ const modelProject = projects.find((project) => project.kind === 'model');
       <div class="cube-panel-content container-shell py-28"><div class="grid min-h-full content-center gap-8 lg:grid-cols-[.92fr_1.08fr]"><div><p class="eyebrow">Entorno de cómputo</p><h1 id="ia-local-title" class="section-title" tabindex="-1">Infraestructura local de IA</h1><p class="section-copy">Un entorno local para ejecutar portales, APIs, workers, bases de datos, OCR, transcripción, recuperación de información y fine-tuning con aceleración GPU.</p><div class="mt-7 flex flex-wrap gap-2"><span class="tag">Ubuntu</span><span class="tag">NVIDIA GPU</span><span class="tag">CUDA</span><span class="tag">Docker Compose</span><span class="tag">NVIDIA Toolkit</span></div></div><div class="glass rounded-3xl p-6"><div class="grid gap-3 sm:grid-cols-2"><div class="rounded-2xl border border-white/10 bg-black/20 p-5"><p class="text-xs font-bold uppercase tracking-widest text-cyan-300">Modelos</p><p class="mt-3 text-lg font-bold">Gemma · Qwen · embeddings</p><p class="mt-2 text-sm leading-6 text-slate-300">Modelos locales y adaptadores LoRA/QLoRA para experimentar con tareas especializadas.</p></div><div class="rounded-2xl border border-white/10 bg-black/20 p-5"><p class="text-xs font-bold uppercase tracking-widest text-violet-300">Datos</p><p class="mt-3 text-lg font-bold">PostgreSQL · pgvector</p><p class="mt-2 text-sm leading-6 text-slate-300">Persistencia relacional y recuperación vectorial para aplicaciones con contexto documental.</p></div><div class="rounded-2xl border border-white/10 bg-black/20 p-5"><p class="text-xs font-bold uppercase tracking-widest text-blue-300">Procesamiento</p><p class="mt-3 text-lg font-bold">OCR · audio · NLP</p><p class="mt-2 text-sm leading-6 text-slate-300">Herramientas para extraer, transformar y consultar contenido de distintas fuentes.</p></div><div class="rounded-2xl border border-white/10 bg-black/20 p-5"><p class="text-xs font-bold uppercase tracking-widest text-emerald-300">Orquestación</p><p class="mt-3 text-lg font-bold">APIs · workers · health checks</p><p class="mt-2 text-sm leading-6 text-slate-300">Servicios desacoplados para tareas de aplicación y procesamiento asíncrono.</p></div></div></div></div></div>
     </section>
   </main>
+  <template id="project-panel-footer-template"><footer class="project-panel-footer"><div class="flex flex-col gap-5 text-sm text-slate-300 md:flex-row md:items-center md:justify-between"><div><p class="font-bold text-white">Jorge Troncoso</p><a class="mt-1 inline-block hover:text-cyan-200" href="https://wa.me/56950254516" target="_blank" rel="noopener noreferrer">+56 9 5025 4516</a><span class="mx-2 text-slate-600">·</span><a class="hover:text-cyan-200" href="mailto:jorge.troncoso4@gmail.com">jorge.troncoso4@gmail.com</a></div><div class="md:text-right"><p>Página web desarrollada en Astro</p><p class="mt-1 text-slate-400">Todos los derechos reservados.</p></div></div></footer></template>
 
   <style>
     .node-0{top:12%;left:8%}.node-1{top:18%;right:7%}.node-2{bottom:18%;left:5%}.node-3{bottom:9%;right:10%}.node-4{top:47%;left:2%}.node-5{top:47%;right:2%}
     @media(max-width:640px){.node-4,.node-5{display:none}}
   </style>
   <script>
-    const views = ['perfil', 'proyectos', 'inicio', 'tecnologias', 'ia-local'];
-    const isView = (view: string): view is typeof views[number] => views.includes(view);
+    const initializeCredentialGallery = () => {
+      const dialog = document.querySelector<HTMLDialogElement>('#credential-dialog');
+      if (!dialog || dialog.dataset.bound === 'true') return;
+      const image = dialog.querySelector<HTMLImageElement>('img');
+      const title = dialog.querySelector<HTMLElement>('#credential-dialog-title');
+      const close = dialog.querySelector<HTMLButtonElement>('.credential-dialog-close');
+      const imageButton = dialog.querySelector<HTMLButtonElement>('.credential-dialog-image');
+      if (!image || !title || !close || !imageButton) return;
+      dialog.dataset.bound = 'true';
+      let opener: HTMLButtonElement | null = null;
+      document.querySelectorAll<HTMLButtonElement>('[data-credential-open]').forEach((button) => button.addEventListener('click', () => {
+        opener = button;
+        image.src = button.dataset.credentialImage ?? '';
+        image.alt = button.dataset.credentialAlt ?? '';
+        title.textContent = button.dataset.credentialTitle ?? '';
+        dialog.showModal();
+      }));
+      const closeDialog = () => dialog.close();
+      close.addEventListener('click', closeDialog);
+      imageButton.addEventListener('click', closeDialog);
+      dialog.addEventListener('click', (event) => { if (event.target === dialog) closeDialog(); });
+      dialog.addEventListener('close', () => { opener?.focus(); opener = null; });
+    };
+
+    initializeCredentialGallery();
+    document.addEventListener('astro:page-load', initializeCredentialGallery);
+
+    const initializeCredentialFans = () => {
+      const fans = document.querySelectorAll<HTMLElement>('[data-credential-fan]');
+      if (!fans.length || !('IntersectionObserver' in window)) {
+        fans.forEach((fan) => fan.classList.add('is-active'));
+        return;
+      }
+      const observer = new IntersectionObserver((entries, activeObserver) => entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        (entry.target as HTMLElement).classList.add('is-active');
+        activeObserver.unobserve(entry.target);
+      }), { threshold: .3 });
+      fans.forEach((fan) => {
+        if (fan.dataset.fanObserved === 'true') return;
+        fan.dataset.fanObserved = 'true';
+        observer.observe(fan);
+      });
+    };
+
+    initializeCredentialFans();
+    document.addEventListener('astro:page-load', initializeCredentialFans);
+
+    const initializeProfileTechStrips = () => {
+      document.querySelectorAll<HTMLElement>('[data-profile-tech-strip]').forEach((strip) => {
+        if (strip.dataset.bound === 'true') return;
+        strip.dataset.bound = 'true';
+        let startX = 0;
+        let startScrollLeft = 0;
+        let dragging = false;
+        let paused = false;
+        let animationFrame = 0;
+        let lastFrame = 0;
+        let currentScrollLeft = strip.scrollLeft;
+        let loopAt = 0;
+        const animate = (timestamp: number) => {
+          if (!lastFrame) lastFrame = timestamp;
+          const elapsed = timestamp - lastFrame;
+          lastFrame = timestamp;
+          if (!loopAt) loopAt = strip.scrollWidth / 2;
+          if (!paused && loopAt && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            currentScrollLeft += elapsed * .06;
+            if (currentScrollLeft >= loopAt) currentScrollLeft -= loopAt;
+            strip.scrollLeft = currentScrollLeft;
+          }
+          animationFrame = window.requestAnimationFrame(animate);
+        };
+        animationFrame = window.requestAnimationFrame(animate);
+        strip.addEventListener('pointerdown', (event) => {
+          dragging = true;
+          paused = true;
+          startX = event.clientX;
+          startScrollLeft = strip.scrollLeft;
+          currentScrollLeft = startScrollLeft;
+          strip.setPointerCapture(event.pointerId);
+          strip.classList.add('is-dragging');
+        });
+        strip.addEventListener('pointermove', (event) => {
+          if (!dragging) return;
+          strip.scrollLeft = startScrollLeft - (event.clientX - startX);
+          currentScrollLeft = strip.scrollLeft;
+        });
+        const stopDragging = (event: PointerEvent) => {
+          if (!dragging) return;
+          dragging = false;
+          strip.releasePointerCapture(event.pointerId);
+          strip.classList.remove('is-dragging');
+          paused = false;
+        };
+        strip.addEventListener('pointerup', stopDragging);
+        strip.addEventListener('pointercancel', stopDragging);
+        strip.addEventListener('mouseenter', () => { paused = true; });
+        strip.addEventListener('mouseleave', () => { if (!dragging) paused = false; });
+        strip.addEventListener('focusin', () => { paused = true; });
+        strip.addEventListener('focusout', () => { paused = false; });
+        strip.addEventListener('keydown', (event) => {
+          if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+          event.preventDefault();
+          currentScrollLeft = Math.max(0, currentScrollLeft + (event.key === 'ArrowRight' ? 180 : -180));
+          strip.scrollLeft = currentScrollLeft;
+        });
+        document.addEventListener('astro:before-swap', () => window.cancelAnimationFrame(animationFrame), { once: true });
+      });
+    };
+
+    initializeProfileTechStrips();
+    document.addEventListener('astro:page-load', initializeProfileTechStrips);
+
+    const arrangeProjectCards = () => {
+      const projectsPanel = document.querySelector<HTMLElement>('#proyectos');
+      const grid = projectsPanel?.querySelector<HTMLElement>('.mt-10.grid');
+      const modelCard = projectsPanel?.querySelector<HTMLAnchorElement>('a[href="/proyectos/legal-chile-gemma"]')?.closest<HTMLElement>('article');
+      if (!projectsPanel || !grid || !modelCard) return;
+      let anchor = projectsPanel.querySelector<HTMLElement>('[data-project-model-anchor]');
+      if (!anchor) {
+        anchor = document.createElement('span');
+        anchor.hidden = true;
+        anchor.dataset.projectModelAnchor = 'true';
+        modelCard.before(anchor);
+      }
+      const compactLayout = window.matchMedia('(min-width: 768px) and (max-width: 1279px)').matches;
+      if (compactLayout) {
+        modelCard.classList.add('project-model-card');
+        grid.append(modelCard);
+      } else {
+        modelCard.classList.remove('project-model-card');
+        anchor.after(modelCard);
+      }
+    };
+
+    arrangeProjectCards();
+    window.addEventListener('resize', arrangeProjectCards);
+    document.addEventListener('astro:page-load', arrangeProjectCards);
+
+    const initializeProjectPanelFooter = () => {
+      const panelContent = document.querySelector<HTMLElement>('#proyectos .cube-panel-content');
+      const template = document.querySelector<HTMLTemplateElement>('#project-panel-footer-template');
+      if (!panelContent || !template || panelContent.querySelector('.project-panel-footer')) return;
+      panelContent.append(template.content.cloneNode(true));
+    };
+
+    initializeProjectPanelFooter();
+    document.addEventListener('astro:page-load', initializeProjectPanelFooter);
+
+    const initializeHomePanelFooter = () => {
+      const panelContent = document.querySelector<HTMLElement>('#inicio .cube-panel-content');
+      const template = document.querySelector<HTMLTemplateElement>('#project-panel-footer-template');
+      if (!panelContent || !template || panelContent.querySelector('.home-panel-footer')) return;
+      const footer = template.content.firstElementChild?.cloneNode(true) as HTMLElement | undefined;
+      if (!footer) return;
+      footer.classList.replace('project-panel-footer', 'home-panel-footer');
+      const contactLabel = footer.querySelector<HTMLElement>('p.font-bold');
+      if (contactLabel) contactLabel.textContent = 'Contacto:';
+      const phoneLink = footer.querySelector<HTMLAnchorElement>('a[href^="https://wa.me"]');
+      if (phoneLink) {
+        phoneLink.href = 'https://wa.me/56950254516';
+        phoneLink.textContent = 'WhatsApp: +56 9 5025 4516';
+        phoneLink.target = '_blank';
+        phoneLink.rel = 'noopener noreferrer';
+      }
+      const emailLink = footer.querySelector<HTMLAnchorElement>('a[href^="mailto:"]');
+      if (emailLink) emailLink.textContent = 'Correo: jorge.troncoso4@gmail.com';
+      panelContent.append(footer);
+    };
+
+    initializeHomePanelFooter();
+    document.addEventListener('astro:page-load', initializeHomePanelFooter);
+
+    const views = ['perfil', 'proyectos', 'inicio', 'tecnologias', 'ia-local'] as const;
+    const faceByView = { perfil: 'left', proyectos: 'front', inicio: 'bottom', tecnologias: 'right', 'ia-local': 'top' } as const;
+    type View = typeof views[number];
+    const isView = (view: string): view is View => (views as readonly string[]).includes(view);
 
     let showView: ((next: string, focus?: boolean) => void) | undefined;
     const initializeViews = () => {
@@ -51,7 +309,7 @@ const modelProject = projects.find((project) => project.kind === 'model');
       const panels = new Map(views.map((view) => [view, document.querySelector<HTMLElement>(`[data-view="${view}"]`)]));
       if (views.some((view) => !panels.get(view))) return;
 
-      let active = 'inicio';
+      let active: View = 'inicio';
       let isTransitioning = false;
       const updateLinks = (view: string) => document.querySelectorAll<HTMLAnchorElement>('[data-view-link]').forEach((link) => {
         if (link.dataset.viewLink === view) link.setAttribute('aria-current', 'page');
@@ -63,10 +321,11 @@ const modelProject = projects.find((project) => project.kind === 'model');
         const incoming = panels.get(next);
         if (!outgoing || !incoming) return;
         isTransitioning = true;
-        const direction = views.indexOf(next) > views.indexOf(active) ? 'forward' : 'backward';
+        const direction = faceByView[next];
         outgoing.classList.add(`cube-leave-${direction}`);
         incoming.classList.add(`cube-enter-${direction}`);
         incoming.setAttribute('aria-hidden', 'false');
+        const duration = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 620;
         window.setTimeout(() => {
           outgoing.classList.remove('is-active', `cube-leave-${direction}`);
           outgoing.setAttribute('aria-hidden', 'true');
@@ -76,7 +335,7 @@ const modelProject = projects.find((project) => project.kind === 'model');
           updateLinks(active);
           isTransitioning = false;
           if (focus) incoming.querySelector<HTMLElement>('h1')?.focus({ preventScroll: true });
-        }, 620);
+        }, duration);
       };
 
       const initial = location.hash.slice(1);

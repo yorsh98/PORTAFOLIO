@@ -7,19 +7,104 @@ export function getStaticPaths() {
 }
 
 const { project } = Astro.props;
+const galleryImages = project.gallery ?? [];
+const galleryLastIndex = Math.max(galleryImages.length - 1, 1);
+const galleryAngle = galleryImages.length > 15 ? 2.4 : 3.5;
 ---
 <BaseLayout title={`${project.title} | Jorge Troncoso`} description={project.description}>
-  <main id="contenido" class="container-shell py-28">
-    <a href="/proyectos" class="text-sm text-cyan-300">← Volver a proyectos</a>
-    <section class="mt-12 grid gap-8 lg:grid-cols-[1.15fr_.85fr]">
-      <div><p class="eyebrow">{project.category}</p><h1 class="section-title">{project.title}</h1><p class="section-copy text-lg">{project.description}</p></div>
-      <aside class="glass rounded-3xl p-6"><p class="text-sm font-bold text-slate-200">Tecnologías principales</p><div class="mt-4 flex flex-wrap gap-2">{project.technologies.map((tech) => <span class="tag">{tech}</span>)}</div></aside>
+  <main id="contenido" class="project-case container-shell py-10 sm:py-14">
+    <a href="/#proyectos" class="text-sm text-cyan-300">← Volver a proyectos</a>
+    <section class:list={{ 'project-hero mt-5': true, 'has-project-image': Boolean(project.image) }}>
+      {project.image && <figure class="project-hero-image"><button type="button" data-project-image-open data-project-image={project.image.src} data-project-alt={project.image.alt} aria-label={`Ampliar imagen de ${project.title}`}><img src={project.image.src} alt={project.image.alt} width="1200" height="750" decoding="async" /></button></figure>}
+      <div class="project-hero-content"><p class="eyebrow">{project.category}</p><h1 class="section-title">{project.title}</h1><p class="section-copy text-lg">{project.description}</p></div>
     </section>
+    <section class="glass mt-6 rounded-3xl p-6"><p class="text-sm font-bold text-slate-200">Tecnologías utilizadas</p><div class="profile-tech-strip project-tech-strip mt-4" data-profile-tech-strip tabindex="0" role="region" aria-label={`Tecnologías utilizadas en ${project.title}. Arrastra o usa las flechas izquierda y derecha para recorrer la lista.`}>{[...project.technologies, ...project.technologies].map((tech, index) => <span class="tag" aria-hidden={index >= project.technologies.length ? 'true' : undefined}>{tech}</span>)}</div></section>
     <section class="mt-14 grid gap-5 md:grid-cols-2">
       <article class="glass rounded-3xl p-6"><h2 class="text-xl font-black">Objetivo</h2><p class="mt-3 leading-7 text-slate-300">{project.objective}</p></article>
       <article class="glass rounded-3xl p-6"><h2 class="text-xl font-black">Solución</h2><p class="mt-3 leading-7 text-slate-300">{project.solution}</p></article>
       <article class="glass rounded-3xl p-6"><h2 class="text-xl font-black">Arquitectura</h2><p class="mt-3 leading-7 text-slate-300">{project.architecture}</p></article>
-      <article class="glass rounded-3xl p-6"><h2 class="text-xl font-black">Publicación</h2><p class="mt-3 leading-7 text-slate-300">{project.publicationNote}</p></article>
+      <article class="glass rounded-3xl p-6"><h2 class="text-xl font-black">Infraestructura</h2><p class="mt-3 leading-7 text-slate-300">{project.infrastructure}</p></article>
     </section>
+    {galleryImages.length > 0 && <section class="mt-14" aria-labelledby="galeria-title"><p class="eyebrow">Interfaz del sistema</p><h2 id="galeria-title" class="mt-2 text-3xl font-black tracking-tight">Galería de pantallas</h2><p class="mt-3 text-sm text-slate-400">Explora las capturas y selecciona una para ampliarla.</p><div class="project-gallery-fan mt-7">{galleryImages.map((image, index) => <figure class="project-gallery-card" style={`--fan-left: ${(index / galleryLastIndex) * 76}%; --fan-angle: ${(index - galleryLastIndex / 2) * galleryAngle}deg; --fan-index: ${index};`}><button type="button" data-project-image-open data-project-image={image} data-project-alt={`Captura ${index + 1} de ${project.title}.`} aria-label={`Ampliar captura ${index + 1} de ${project.title}`}><img src={image} alt={`Captura ${index + 1} de ${project.title}.`} width="1200" height="750" loading="lazy" decoding="async" /></button></figure>)}</div></section>}
   </main>
+  <dialog class="project-lightbox" aria-label="Vista ampliada de captura"><div class="project-lightbox-content"><button type="button" class="project-lightbox-close" aria-label="Cerrar vista ampliada">Cerrar</button><button type="button" class="project-lightbox-image" aria-label="Cerrar vista ampliada"><img src="" alt="" /></button><div class="project-lightbox-controls"><button type="button" data-project-image-previous>← Anterior</button><p aria-live="polite" data-project-image-position></p><button type="button" data-project-image-next>Siguiente →</button></div></div></dialog>
+  <script>
+    const initializeProjectGallery = () => {
+      const dialog = document.querySelector<HTMLDialogElement>('.project-lightbox');
+      const dialogButton = dialog?.querySelector<HTMLButtonElement>('.project-lightbox-image');
+      const dialogImage = dialogButton?.querySelector<HTMLImageElement>('img');
+      const previousButton = dialog?.querySelector<HTMLButtonElement>('[data-project-image-previous]');
+      const nextButton = dialog?.querySelector<HTMLButtonElement>('[data-project-image-next]');
+      const position = dialog?.querySelector<HTMLElement>('[data-project-image-position]');
+      const closeButton = dialog?.querySelector<HTMLButtonElement>('.project-lightbox-close');
+      if (!dialog || !dialogButton || !dialogImage || !previousButton || !nextButton || !position || !closeButton || dialog.dataset.bound === 'true') return;
+      dialog.dataset.bound = 'true';
+      const images = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-project-image-open]'));
+      let activeIndex = 0;
+      let opener: HTMLButtonElement | null = null;
+      const showImage = (index: number) => {
+        const opener = images[index];
+        if (!opener) return;
+        activeIndex = index;
+        dialogImage.src = opener.dataset.projectImage ?? '';
+        dialogImage.alt = opener.dataset.projectAlt ?? '';
+        previousButton.disabled = activeIndex === 0;
+        nextButton.disabled = activeIndex === images.length - 1;
+        position.textContent = `${activeIndex + 1} de ${images.length}`;
+        if (!dialog.open) dialog.showModal();
+      };
+      images.forEach((button, index) => button.addEventListener('click', () => {
+        opener = button;
+        showImage(index);
+      }));
+      const closeDialog = () => dialog.close();
+      dialogButton.addEventListener('click', closeDialog);
+      closeButton.addEventListener('click', closeDialog);
+      previousButton.addEventListener('click', () => showImage(activeIndex - 1));
+      nextButton.addEventListener('click', () => showImage(activeIndex + 1));
+      dialog.addEventListener('click', (event) => { if (event.target === dialog) closeDialog(); });
+      dialog.addEventListener('close', () => { opener?.focus(); opener = null; });
+    };
+
+    initializeProjectGallery();
+    document.addEventListener('astro:page-load', initializeProjectGallery);
+
+    const initializeProjectTechStrip = () => {
+      document.querySelectorAll<HTMLElement>('.project-tech-strip[data-profile-tech-strip]').forEach((strip) => {
+        if (strip.dataset.bound === 'true') return;
+        strip.dataset.bound = 'true';
+        let animationFrame = 0;
+        let lastFrame = 0;
+        let currentScrollLeft = strip.scrollLeft;
+        let paused = false;
+        const animate = (timestamp: number) => {
+          if (!lastFrame) lastFrame = timestamp;
+          const elapsed = timestamp - lastFrame;
+          lastFrame = timestamp;
+          const loopAt = strip.scrollWidth / 2;
+          if (!paused && loopAt && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            currentScrollLeft += elapsed * .06;
+            if (currentScrollLeft >= loopAt) currentScrollLeft -= loopAt;
+            strip.scrollLeft = currentScrollLeft;
+          }
+          animationFrame = window.requestAnimationFrame(animate);
+        };
+        animationFrame = window.requestAnimationFrame(animate);
+        strip.addEventListener('mouseenter', () => { paused = true; });
+        strip.addEventListener('mouseleave', () => { paused = false; });
+        strip.addEventListener('focusin', () => { paused = true; });
+        strip.addEventListener('focusout', () => { paused = false; });
+        strip.addEventListener('keydown', (event) => {
+          if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+          event.preventDefault();
+          currentScrollLeft = Math.max(0, currentScrollLeft + (event.key === 'ArrowRight' ? 180 : -180));
+          strip.scrollLeft = currentScrollLeft;
+        });
+        document.addEventListener('astro:before-swap', () => window.cancelAnimationFrame(animationFrame), { once: true });
+      });
+    };
+
+    initializeProjectTechStrip();
+    document.addEventListener('astro:page-load', initializeProjectTechStrip);
+  </script>
 </BaseLayout>

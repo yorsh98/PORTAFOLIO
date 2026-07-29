@@ -33,8 +33,8 @@ const { title = 'Jorge Troncoso | Desarrollo web e IA local', description = 'Por
           <a data-view-link="ia-local" class="nav-view-link hover:text-white" href="/#ia-local">IA local</a>
         </div>
         <div class="flex items-center gap-3">
-          <a href="mailto:jorge.troncoso4@gmail.com" class="hidden rounded-full border border-cyan-300/30 bg-cyan-300/10 px-4 py-2 text-sm font-bold text-cyan-100 sm:inline-flex">Contacto</a>
-          <details class="relative md:hidden">
+          <a href="mailto:jorge.troncoso4@gmail.com" data-contact-trigger class="inline-flex rounded-full border border-cyan-300/30 bg-cyan-300/10 px-4 py-2 text-sm font-bold text-cyan-100">Contacto</a>
+          <details class="relative md:hidden" data-mobile-menu>
             <summary class="cursor-pointer rounded-full border border-white/15 bg-white/[.04] px-4 py-2 text-sm font-bold text-white">Menú</summary>
             <div class="absolute right-0 top-12 w-52 rounded-2xl border border-white/10 bg-[#0b1020] p-2 shadow-2xl">
               <a data-view-link="perfil" class="nav-view-link block rounded-xl px-4 py-3 text-sm hover:bg-white/[.06]" href="/#perfil">Perfil</a>
@@ -42,7 +42,6 @@ const { title = 'Jorge Troncoso | Desarrollo web e IA local', description = 'Por
               <a data-view-link="inicio" class="nav-view-link block rounded-xl px-4 py-3 text-sm hover:bg-white/[.06]" href="/#inicio">Inicio</a>
               <a data-view-link="tecnologias" class="nav-view-link block rounded-xl px-4 py-3 text-sm hover:bg-white/[.06]" href="/#tecnologias">Tecnologías</a>
               <a data-view-link="ia-local" class="nav-view-link block rounded-xl px-4 py-3 text-sm hover:bg-white/[.06]" href="/#ia-local">IA local</a>
-              <a class="block rounded-xl px-4 py-3 text-sm text-cyan-200 hover:bg-white/[.06]" href="mailto:jorge.troncoso4@gmail.com">Contacto</a>
             </div>
           </details>
         </div>
@@ -53,11 +52,70 @@ const { title = 'Jorge Troncoso | Desarrollo web e IA local', description = 'Por
         <slot />
         {!hideFooter && <footer transition:persist="site-footer" class="border-t border-white/5 py-8">
           <div class="container-shell flex flex-col gap-5 text-sm text-slate-300 md:flex-row md:items-center md:justify-between">
-            <div><p class="font-bold text-white">Jorge Troncoso</p><a class="mt-1 inline-block hover:text-cyan-200" href="tel:+56950254516">+56 9 5025 4516</a><span class="mx-2 text-slate-600">·</span><a class="hover:text-cyan-200" href="mailto:jorge.troncoso4@gmail.com">jorge.troncoso4@gmail.com</a></div>
+            <div><p class="font-bold text-white">Jorge Troncoso</p><a class="mt-1 inline-block hover:text-cyan-200" href="https://wa.me/56950254516" target="_blank" rel="noopener noreferrer">+56 9 5025 4516</a><span class="mx-2 text-slate-600">·</span><a class="hover:text-cyan-200" href="mailto:jorge.troncoso4@gmail.com">jorge.troncoso4@gmail.com</a></div>
             <div class="md:text-right"><p>Página web desarrollada en Astro</p><p class="mt-1 text-slate-400">Todos los derechos reservados.</p></div>
           </div>
         </footer>}
       </div>
     </div>
+    <dialog id="contact-dialog" class="contact-dialog" aria-labelledby="contact-dialog-title" aria-describedby="contact-dialog-description">
+      <div class="contact-dialog-content">
+        <button type="button" class="contact-dialog-close" data-contact-close aria-label="Cerrar opciones de contacto">Cerrar</button>
+        <p class="eyebrow">Contacto</p>
+        <h2 id="contact-dialog-title">¿Cómo prefieres contactar?</h2>
+        <p id="contact-dialog-description">Selecciona un canal para iniciar la conversación.</p>
+        <div class="contact-dialog-actions">
+          <a href="mailto:jorge.troncoso4@gmail.com" data-contact-action class="contact-email-action">✉️ Correo: jorge.troncoso4@gmail.com</a>
+          <a href="https://wa.me/56950254516" data-contact-action class="contact-whatsapp-action" target="_blank" rel="noreferrer">💬 WhatsApp: +56950254516</a>
+        </div>
+      </div>
+    </dialog>
+    <script>
+      const projectPath = /^\/proyectos\/([^/?#]+)\/?$/;
+      let lastContactTrigger: HTMLElement | null = null;
+
+      const prepareProjectTransitions = (root: ParentNode = document) => {
+        root.querySelectorAll<HTMLAnchorElement>('a[href^="/proyectos/"]').forEach((link) => {
+          const slug = new URL(link.href).pathname.match(projectPath)?.[1];
+          const card = link.closest<HTMLElement>('article');
+          if (slug && card) card.style.viewTransitionName = `project-${slug}`;
+        });
+      };
+
+      prepareProjectTransitions();
+      document.addEventListener('astro:page-load', () => prepareProjectTransitions());
+      document.addEventListener('click', (event) => {
+        if (!(event.target instanceof Element)) return;
+
+        const contactTrigger = event.target.closest<HTMLElement>('[data-contact-trigger], a[href="mailto:jorge.troncoso4@gmail.com"]');
+        const isContactButton = contactTrigger?.hasAttribute('data-contact-trigger') || contactTrigger?.textContent?.trim() === 'Contactar';
+        const contactDialog = document.querySelector<HTMLDialogElement>('#contact-dialog');
+        if (isContactButton && contactTrigger && contactDialog) {
+          event.preventDefault();
+          lastContactTrigger = contactTrigger;
+          contactDialog.showModal();
+          return;
+        }
+
+        if (event.target.closest('[data-contact-close]')) {
+          contactDialog?.close();
+          return;
+        }
+
+        if (event.target.closest('[data-contact-action]')) contactDialog?.close();
+
+        const link = event.target.closest<HTMLAnchorElement>('[data-mobile-menu] a');
+        if (link) link.closest<HTMLDetailsElement>('[data-mobile-menu]')?.removeAttribute('open');
+      });
+      document.querySelector<HTMLDialogElement>('#contact-dialog')?.addEventListener('close', () => {
+        lastContactTrigger?.focus();
+        lastContactTrigger = null;
+      });
+      document.addEventListener('astro:before-swap', (event) => {
+        const slug = new URL(event.newDocument.location.href).pathname.match(projectPath)?.[1];
+        const hero = event.newDocument.querySelector<HTMLElement>('main > section');
+        if (slug && hero) hero.style.viewTransitionName = `project-${slug}`;
+      });
+    </script>
   </body>
 </html>
