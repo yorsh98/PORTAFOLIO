@@ -4,10 +4,46 @@ import { projects } from '../data/projects';
 import { technologies, categoryLabels } from '../data/technologies';
 import iconSet from '@iconify-json/simple-icons/icons.json';
 
-const selectedTech = technologies.map((tech) => ({ ...tech, iconBody: iconSet.icons[tech.slug as keyof typeof iconSet.icons]?.body }));
-const categoryColors: Record<string, string> = { frontend: '#67e8f9', backend: '#60a5fa', ai: '#a78bfa', data: '#2dd4bf', infrastructure: '#34d399', documents: '#fbbf24', audio: '#fb7185', quality: '#c4b5fd' };
-const featuredStack = [['Laravel + React/Vue', 'laravel'], ['FastAPI + Celery + Redis', 'fastapi'], ['Ollama + LangGraph', 'ollama'], ['Docker + NVIDIA GPU', 'docker']].map(([name, slug]) => ({ name, slug, iconBody: iconSet.icons[slug as keyof typeof iconSet.icons]?.body }));
-const technologyGroups = [{ label: 'Stack destacado', color: '#67e8f9', technologies: featuredStack }, ...Object.entries(categoryLabels).map(([category, label]) => ({ label, color: categoryColors[category], technologies: selectedTech.filter((tech) => tech.category === category) }))];
+const technologyCustomIcons: Record<string, string> = {
+  cuda: '<rect x="4" y="4" width="16" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 9h8v6H8zM2 8h2m16 0h2M2 12h2m16 0h2M2 16h2m16 0h2M8 2v2m4-2v2m4-2v2M8 20v2m4-2v2m4-2v2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>'
+};
+const selectedTech = technologies.map((tech) => ({ ...tech, iconBody: technologyCustomIcons[tech.slug] ?? iconSet.icons[tech.slug as keyof typeof iconSet.icons]?.body }));
+const featuredStack = [['Laravel + React/Vue', 'laravel'], ['FastAPI + Celery + Redis', 'fastapi'], ['Ollama + LangGraph + LLMs', 'ollama'], ['Docker Compose + NVIDIA CUDA', 'docker']].map(([name, slug]) => ({ name, slug, iconBody: iconSet.icons[slug as keyof typeof iconSet.icons]?.body }));
+const technologyBySlug = new Map(selectedTech.map((tech) => [tech.slug, tech]));
+const technologyMapPositions = [
+  ['html5', 13.5, 69],
+  ['css3', 22, 64],
+  ['javascript', 30.5, 59],
+  ['typescript', 29.5, 75],
+  ['react', 14.5, 48],
+  ['vuedotjs', 20.4, 44],
+  ['livewire', 38, 69],
+  ['tailwindcss', 20.4, 53.5],
+  ['vite', 22, 80],
+  ['astro', 8.5, 52],
+  ['bootstrap', 14.5, 57],
+  ['laravel', 69.8, 19.2],
+  ['php', 69.8, 26.2],
+  ['fastapi', 80.7, 20.6],
+  ['python', 81, 26.9],
+  ['ollama', 84.5, 35],
+  ['langchain', 75.4, 42.5],
+  ['langgraph', 94, 42.5],
+  ['huggingface', 75.4, 53.5],
+  ['modelcontextprotocol', 93.4, 53.5],
+  ['pgvector', 84.2, 59],
+  ['postgresql', 42.6, 82.8],
+  ['mariadb', 47.8, 85.2],
+  ['redis', 53.1, 87.8],
+  ['docker', 64, 65],
+  ['ubuntu', 61.2, 79.1],
+  ['nvidia', 71.8, 72.6],
+  ['cuda', 54.3, 72]
+] as const;
+const technologyMapItems = technologyMapPositions.map(([slug, x, y]) => {
+  const technology = technologyBySlug.get(slug);
+  return { slug, x, y, name: technology?.name ?? slug, category: technology?.category ?? 'quality', iconBody: technology?.iconBody };
+});
 const webProjects = projects.filter((project) => project.kind === 'web');
 const modelProject = projects.find((project) => project.kind === 'model');
 const profileTechnologies = [
@@ -107,11 +143,136 @@ const credentialFans = [
     </section>
 
     <section id="tecnologias" data-view="tecnologias" class="cube-panel" aria-labelledby="tecnologias-title" aria-hidden="true">
-      <div class="cube-panel-content container-shell py-28"><p class="eyebrow">Stack técnico</p><h1 id="tecnologias-title" class="section-title" tabindex="-1">Tecnologías organizadas por especialidad</h1><p class="section-copy">Herramientas utilizadas en aplicaciones web, backend, procesamiento y flujos de inteligencia artificial.</p><div class="mt-10 grid gap-8">{technologyGroups.map((group) => <section><h2 class="mb-4 text-sm font-black uppercase tracking-[.16em]" style={`color: ${group.color}`}>{group.label}</h2><div class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">{group.technologies.map((tech) => <article class="tech-card" style={`--tech-color: ${group.color}`}><div class="tech-icon">{tech.iconBody ? <svg viewBox="0 0 24 24" aria-hidden="true" set:html={tech.iconBody} /> : <span aria-hidden="true">{tech.name.slice(0, 2)}</span>}</div><h3>{tech.name}</h3></article>)}</div></section>)}</div></div>
+      <div class="cube-panel-content technology-view">
+        <div class="technology-shell">
+          <div class="technology-map-scroll" role="region" aria-label="Mapa completo de tecnologías organizado por especialidad.">
+            <section class="technology-map" aria-labelledby="tecnologias-title">
+              <img src="/images/technologies/technology-map.webp" alt="Mapa isométrico de una arquitectura tecnológica con zonas para frontend, backend, inteligencia artificial, infraestructura, datos, documentos y calidad." width="2392" height="1792" />
+              <header class="technology-map-heading">
+                <p>Stack técnico / arquitectura aplicada</p>
+                <h1 id="tecnologias-title" tabindex="-1">Tecnologías</h1>
+                <span>Herramientas conectadas para construir productos web, servicios, datos e inteligencia artificial local.</span>
+              </header>
+              <div class="technology-featured-heading"><span>Flujos integrados</span><h2>Stack destacado</h2></div>
+              <div class="technology-featured-list">
+                {featuredStack.map((stack, index) =>
+                  <article class={`technology-featured technology-featured-${index + 1}`} tabindex="0">
+                    <div>{stack.iconBody && <svg viewBox="0 0 24 24" aria-hidden="true" set:html={stack.iconBody} />}</div>
+                    {index === 0 && <small>Interfaz Usuario</small>}
+                    {index === 1 && <small>Intercomunicación asíncrona</small>}
+                    {index === 2 && <small>Orquestación de Inteligencia Artificial</small>}
+                    {index === 3 && <small>Infraestructura de Cómputo</small>}
+                    <span>{stack.name}</span>
+                  </article>
+                )}
+              </div>
+              <div class="technology-map-items" role="list" aria-label="Tecnologías por especialidad">
+                {technologyMapItems.map((tech) =>
+                  <div class={`technology-map-item technology-map-item-${tech.category} technology-map-item-${tech.slug}`} style={`--map-x: ${tech.x}%; --map-y: ${tech.y}%`} role="listitem" tabindex="0" aria-label={`${tech.name}, ${categoryLabels[tech.category]}`}>
+                    <span class="technology-map-icon">{tech.iconBody ? <svg viewBox="0 0 24 24" aria-hidden="true" set:html={tech.iconBody} /> : <b aria-hidden="true">{tech.name.slice(0, 2)}</b>}</span>
+                    <span class="technology-map-name">{tech.name}</span>
+                  </div>
+                )}
+              </div>
+            </section>
+          </div>
+        </div>
+      </div>
     </section>
 
     <section id="ia-local" data-view="ia-local" class="cube-panel" aria-labelledby="ia-local-title" aria-hidden="true">
-      <div class="cube-panel-content container-shell py-28"><div class="grid min-h-full content-center gap-8 lg:grid-cols-[.92fr_1.08fr]"><div><p class="eyebrow">Entorno de cómputo</p><h1 id="ia-local-title" class="section-title" tabindex="-1">Infraestructura local de IA</h1><p class="section-copy">Un entorno local para ejecutar portales, APIs, workers, bases de datos, OCR, transcripción, recuperación de información y fine-tuning con aceleración GPU.</p><div class="mt-7 flex flex-wrap gap-2"><span class="tag">Ubuntu</span><span class="tag">NVIDIA GPU</span><span class="tag">CUDA</span><span class="tag">Docker Compose</span><span class="tag">NVIDIA Toolkit</span></div></div><div class="glass rounded-3xl p-6"><div class="grid gap-3 sm:grid-cols-2"><div class="rounded-2xl border border-white/10 bg-black/20 p-5"><p class="text-xs font-bold uppercase tracking-widest text-cyan-300">Modelos</p><p class="mt-3 text-lg font-bold">Gemma · Qwen · embeddings</p><p class="mt-2 text-sm leading-6 text-slate-300">Modelos locales y adaptadores LoRA/QLoRA para experimentar con tareas especializadas.</p></div><div class="rounded-2xl border border-white/10 bg-black/20 p-5"><p class="text-xs font-bold uppercase tracking-widest text-violet-300">Datos</p><p class="mt-3 text-lg font-bold">PostgreSQL · pgvector</p><p class="mt-2 text-sm leading-6 text-slate-300">Persistencia relacional y recuperación vectorial para aplicaciones con contexto documental.</p></div><div class="rounded-2xl border border-white/10 bg-black/20 p-5"><p class="text-xs font-bold uppercase tracking-widest text-blue-300">Procesamiento</p><p class="mt-3 text-lg font-bold">OCR · audio · NLP</p><p class="mt-2 text-sm leading-6 text-slate-300">Herramientas para extraer, transformar y consultar contenido de distintas fuentes.</p></div><div class="rounded-2xl border border-white/10 bg-black/20 p-5"><p class="text-xs font-bold uppercase tracking-widest text-emerald-300">Orquestación</p><p class="mt-3 text-lg font-bold">APIs · workers · health checks</p><p class="mt-2 text-sm leading-6 text-slate-300">Servicios desacoplados para tareas de aplicación y procesamiento asíncrono.</p></div></div></div></div></div>
+      <div class="cube-panel-content container-shell">
+        <div class="local-ai-layout">
+          <header class="local-ai-intro">
+            <p class="eyebrow">Entorno de cómputo</p>
+            <h1 id="ia-local-title" class="section-title" tabindex="-1">Infraestructura local de IA</h1>
+            <p class="section-copy">Una plataforma propia para ejecutar modelos, agentes, recuperación documental y servicios de procesamiento con aceleración GPU, manteniendo el control técnico sobre los datos y cada componente.</p>
+
+            <div class="local-ai-principles" aria-label="Criterios de diseño de la infraestructura">
+              <article>
+                <span>01</span>
+                <div><h2>Procesamiento local</h2><p>Los flujos sensibles pueden mantenerse dentro del entorno administrado.</p></div>
+              </article>
+              <article>
+                <span>02</span>
+                <div><h2>Servicios desacoplados</h2><p>Portales, APIs, workers y modelos evolucionan de forma independiente.</p></div>
+              </article>
+              <article>
+                <span>03</span>
+                <div><h2>Resultados trazables</h2><p>RAG con recuperación de contexto, fuentes y citas verificables.</p></div>
+              </article>
+            </div>
+
+          </header>
+
+          <section class="local-ai-architecture glass" aria-labelledby="local-ai-architecture-title">
+            <div class="local-ai-architecture-heading">
+              <div><p class="eyebrow">Arquitectura por capas</p><h2 id="local-ai-architecture-title">Del sistema base a la aplicación</h2></div>
+              <span class="local-ai-status"><i aria-hidden="true"></i> Entorno local</span>
+            </div>
+
+            <div class="local-ai-layers">
+              <svg class="local-ai-circuits" viewBox="0 0 1000 620" preserveAspectRatio="none" aria-hidden="true">
+                <path d="M500 310 C430 310 445 98 390 98 H360" />
+                <path d="M500 310 C570 310 555 98 610 98 H640" />
+                <path d="M500 310 H360" />
+                <path d="M500 310 H640" />
+                <path d="M500 310 C430 310 445 522 390 522 H360" />
+                <path d="M500 310 C570 310 555 522 610 522 H640" />
+                <circle cx="500" cy="310" r="5" />
+                <circle cx="360" cy="98" r="4" /><circle cx="640" cy="98" r="4" />
+                <circle cx="360" cy="310" r="4" /><circle cx="640" cy="310" r="4" />
+                <circle cx="360" cy="522" r="4" /><circle cx="640" cy="522" r="4" />
+              </svg>
+
+              <div class="local-ai-core" aria-label="Núcleo de infraestructura local de inteligencia artificial">
+                <span class="local-ai-core-orbit" aria-hidden="true"></span>
+                <span class="local-ai-core-content">
+                  <span class="local-ai-core-mark" aria-hidden="true">AI</span>
+                  <strong>Local AI<br />Core</strong>
+                  <small>PRIVATE · GPU</small>
+                </span>
+              </div>
+
+              <article class="local-ai-layer local-ai-layer-base">
+                <span class="local-ai-layer-number">01</span>
+                <div><p class="local-ai-layer-label">Plataforma base</p><h3>Ubuntu 26.04 LTS</h3><p>Sistema operativo anfitrión para servicios, almacenamiento, red local y administración del entorno.</p></div>
+                <div class="local-ai-tags"><span>Linux</span><span>Docker Compose</span></div>
+              </article>
+
+              <article class="local-ai-layer local-ai-layer-gpu">
+                <span class="local-ai-layer-number">02</span>
+                <div><p class="local-ai-layer-label">Procesamiento</p><h3>NVIDIA GPU</h3><p>Drivers, CUDA y NVIDIA Container Toolkit habilitan inferencia y entrenamiento dentro de contenedores.</p></div>
+                <div class="local-ai-tags"><span>CUDA</span><span>Container Toolkit</span></div>
+              </article>
+
+              <article class="local-ai-layer local-ai-layer-models">
+                <span class="local-ai-layer-number">03</span>
+                <div><p class="local-ai-layer-label">Modelos locales</p><h3>Ollama · Gemma · Qwen</h3><p>Inferencia, embeddings y adaptación especializada mediante LoRA y QLoRA.</p></div>
+                <div class="local-ai-tags"><span>LLMs</span><span>Fine-tuning</span></div>
+              </article>
+
+              <article class="local-ai-layer local-ai-layer-agents">
+                <span class="local-ai-layer-number">04</span>
+                <div><p class="local-ai-layer-label">Entornos de agentes</p><h3>OpenClaw · Hermes Agent</h3><p>Agentes con herramientas para ejecutar tareas, coordinar flujos y apoyar automatizaciones.</p></div>
+                <div class="local-ai-tags"><span>Tools</span><span>Workflows</span></div>
+              </article>
+
+              <article class="local-ai-layer local-ai-layer-data">
+                <span class="local-ai-layer-number">05</span>
+                <div><p class="local-ai-layer-label">Datos y conocimiento</p><h3>PostgreSQL · pgvector · Redis</h3><p>Persistencia, búsqueda semántica, estados, colas e índices para aplicaciones con contexto.</p></div>
+                <div class="local-ai-tags"><span>RAG</span><span>Embeddings</span></div>
+              </article>
+
+              <article class="local-ai-layer local-ai-layer-services">
+                <span class="local-ai-layer-number">06</span>
+                <div><p class="local-ai-layer-label">Servicios aplicados</p><h3>APIs · Workers · Procesamiento</h3><p>OCR, audio, NLP, transcripción y tareas asíncronas operadas como servicios desacoplados.</p></div>
+                <div class="local-ai-tags"><span>Health checks</span><span>Logs</span></div>
+              </article>
+            </div>
+          </section>
+        </div>
+      </div>
     </section>
   </main>
   <template id="project-panel-footer-template"><footer class="project-panel-footer"><div class="flex flex-col gap-5 text-sm text-slate-300 md:flex-row md:items-center md:justify-between"><div><p class="font-bold text-white">Jorge Troncoso</p><a class="mt-1 inline-block hover:text-cyan-200" href="https://wa.me/56950254516" target="_blank" rel="noopener noreferrer">+56 9 5025 4516</a><span class="mx-2 text-slate-600">·</span><a class="hover:text-cyan-200" href="mailto:jorge.troncoso4@gmail.com">jorge.troncoso4@gmail.com</a></div><div class="md:text-right"><p>Página web desarrollada en Astro</p><p class="mt-1 text-slate-400">Todos los derechos reservados.</p></div></div></footer></template>
@@ -294,6 +455,37 @@ const credentialFans = [
     initializeHomePanelFooter();
     document.addEventListener('astro:page-load', initializeHomePanelFooter);
 
+    const layoutTechnologyMap = (resetPosition = false) => {
+      const viewport = document.querySelector<HTMLElement>('.technology-map-scroll');
+      const map = viewport?.querySelector<HTMLElement>('.technology-map');
+      if (!viewport || !map) return;
+      if (!window.matchMedia('(max-width: 767px)').matches) {
+        map.style.removeProperty('width');
+        map.style.removeProperty('height');
+        return;
+      }
+      const height = viewport.clientHeight;
+      if (!height) return;
+      map.style.width = `${height * (2392 / 1792)}px`;
+      map.style.height = `${height}px`;
+      if (resetPosition) {
+        viewport.scrollLeft = 0;
+        viewport.scrollTop = 0;
+      }
+    };
+
+    const initializeTechnologyMapLayout = () => {
+      const viewport = document.querySelector<HTMLElement>('.technology-map-scroll');
+      if (!viewport) return;
+      layoutTechnologyMap(true);
+      if (viewport.dataset.layoutObserved === 'true') return;
+      viewport.dataset.layoutObserved = 'true';
+      new ResizeObserver(() => layoutTechnologyMap()).observe(viewport);
+    };
+
+    initializeTechnologyMapLayout();
+    document.addEventListener('astro:page-load', initializeTechnologyMapLayout);
+
     const views = ['perfil', 'proyectos', 'inicio', 'tecnologias', 'ia-local'] as const;
     const faceByView = { perfil: 'left', proyectos: 'front', inicio: 'bottom', tecnologias: 'right', 'ia-local': 'top' } as const;
     type View = typeof views[number];
@@ -321,6 +513,7 @@ const credentialFans = [
         const incoming = panels.get(next);
         if (!outgoing || !incoming) return;
         isTransitioning = true;
+        if (next === 'tecnologias') layoutTechnologyMap(true);
         const direction = faceByView[next];
         outgoing.classList.add(`cube-leave-${direction}`);
         incoming.classList.add(`cube-enter-${direction}`);
@@ -332,6 +525,7 @@ const credentialFans = [
           incoming.classList.remove(`cube-enter-${direction}`);
           incoming.classList.add('is-active');
           active = next;
+          if (active === 'tecnologias') layoutTechnologyMap(true);
           updateLinks(active);
           isTransitioning = false;
           if (focus) incoming.querySelector<HTMLElement>('h1')?.focus({ preventScroll: true });
@@ -347,6 +541,7 @@ const credentialFans = [
         active = initial;
       }
       updateLinks(active);
+      if (active === 'tecnologias') layoutTechnologyMap(true);
     };
 
     initializeViews();
