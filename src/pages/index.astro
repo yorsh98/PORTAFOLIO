@@ -42,7 +42,7 @@ const technologyMapPositions = [
 ] as const;
 const technologyMapItems = technologyMapPositions.map(([slug, x, y]) => {
   const technology = technologyBySlug.get(slug);
-  return { slug, x, y, name: technology?.name ?? slug, category: technology?.category ?? 'quality', iconBody: technology?.iconBody };
+  return { slug, x, y, name: technology?.name ?? slug, category: technology?.category ?? 'frontend', iconBody: technology?.iconBody };
 });
 const webProjects = projects.filter((project) => project.kind === 'web');
 const modelProject = projects.find((project) => project.kind === 'model');
@@ -111,7 +111,7 @@ const credentialFans = [
           <section class="profile-section" aria-labelledby="stack-perfil-title">
             <div class="profile-section-heading"><p class="eyebrow">Tecnologías utilizadas</p><h2 id="stack-perfil-title">Una base práctica, de la red al software</h2></div>
             <div class="profile-tech-strip" data-profile-tech-strip tabindex="0" role="region" aria-label="Tecnologías utilizadas. Arrastra o usa las flechas izquierda y derecha para recorrer la lista.">
-              {[...selectedProfileTechnologies, ...selectedProfileTechnologies].map((tech, index) => <div class="profile-tech-item" data-profile-tech-loop={index === selectedProfileTechnologies.length ? 'true' : undefined} aria-hidden={index >= selectedProfileTechnologies.length ? 'true' : undefined}><div class="profile-tech-icon">{tech.iconBody ? <svg viewBox="0 0 24 24" aria-hidden="true" set:html={tech.iconBody} /> : <span aria-hidden="true">{tech.slug}</span>}</div><span>{tech.name}</span></div>)}
+              {[...selectedProfileTechnologies, ...selectedProfileTechnologies].map((tech, index) => <div class="profile-tech-item" aria-hidden={index >= selectedProfileTechnologies.length ? 'true' : undefined}><div class="profile-tech-icon">{tech.iconBody ? <svg viewBox="0 0 24 24" aria-hidden="true" set:html={tech.iconBody} /> : <span aria-hidden="true">{tech.slug}</span>}</div><span>{tech.name}</span></div>)}
             </div>
           </section>
 
@@ -394,6 +394,35 @@ const credentialFans = [
 
     initializeProfileTechStrips();
     document.addEventListener('astro:page-load', initializeProfileTechStrips);
+
+    const makeProjectCardsClickable = () => {
+      const projectsPanel = document.querySelector<HTMLElement>('#proyectos');
+      if (!projectsPanel) return;
+      const links = Array.from(projectsPanel.querySelectorAll<HTMLAnchorElement>('a[href^="/proyectos/"]'));
+      links.forEach((link) => {
+        const card = link.closest<HTMLElement>('article');
+        if (!card || card.dataset.cardLinkBound === 'true') return;
+        card.dataset.cardLinkBound = 'true';
+        card.tabIndex = 0;
+        card.style.cursor = 'pointer';
+        card.setAttribute('role', 'link');
+        card.setAttribute('aria-label', `Ver proyecto: ${card.querySelector('h2')?.textContent?.trim() ?? ''}`);
+        link.tabIndex = -1;
+        const navigate = () => window.location.assign(link.href);
+        card.addEventListener('click', (event) => {
+          if (event.target instanceof Element && event.target.closest('a, button')) return;
+          navigate();
+        });
+        card.addEventListener('keydown', (event) => {
+          if (event.key !== 'Enter' && event.key !== ' ') return;
+          event.preventDefault();
+          navigate();
+        });
+      });
+    };
+
+    makeProjectCardsClickable();
+    document.addEventListener('astro:page-load', makeProjectCardsClickable);
 
     const arrangeProjectCards = () => {
       const projectsPanel = document.querySelector<HTMLElement>('#proyectos');
