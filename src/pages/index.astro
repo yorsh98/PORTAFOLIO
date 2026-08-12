@@ -123,7 +123,7 @@ const credentialFans = [
             </div>
             <footer class="profile-footer">
               <div class="flex flex-col gap-5 text-sm text-slate-300 md:flex-row md:items-center md:justify-between">
-                <div><p class="font-bold text-white">Jorge Troncoso</p><a class="mt-1 inline-block hover:text-cyan-200" href="https://wa.me/56950254516" target="_blank" rel="noopener noreferrer">+56 9 5025 4516</a><span class="mx-2 text-slate-600">·</span><a class="hover:text-cyan-200" href="mailto:jorge.troncoso4@gmail.com">jorge.troncoso4@gmail.com</a></div>
+                <div><p class="font-bold text-white">Jorge Troncoso</p><p class="mt-1 text-slate-400">Contáctame por:</p><div class="footer-contact-links"><a href="https://wa.me/56950254516" target="_blank" rel="noopener noreferrer" aria-label="Contactar por WhatsApp" title="WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 2.8 9.2 5a1.9 1.9 0 0 1 .5 2.3l-1 2a14.5 14.5 0 0 0 6.1 6.1l2-1a1.9 1.9 0 0 1 2.3.5l2.2 2.6a1.9 1.9 0 0 1-.1 2.6l-1.5 1.5c-1.1 1.1-2.8 1.5-4.3 1C9.2 20.8 3.2 14.8 1.7 8.6c-.5-1.5-.1-3.2 1-4.3l1.5-1.5a1.9 1.9 0 0 1 2.4 0Z" /></svg></a><a href="mailto:jorge.troncoso4@gmail.com" aria-label="Enviar correo electrónico" title="Correo electrónico"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2" /><path d="m4 7 8 6 8-6" /></svg></a></div></div>
                 <div class="md:text-right"><p>Página web desarrollada en Astro</p><p class="mt-1 text-slate-400">Todos los derechos reservados.</p></div>
               </div>
             </footer>
@@ -275,12 +275,8 @@ const credentialFans = [
       </div>
     </section>
   </main>
-  <template id="project-panel-footer-template"><footer class="project-panel-footer"><div class="flex flex-col gap-5 text-sm text-slate-300 md:flex-row md:items-center md:justify-between"><div><p class="font-bold text-white">Jorge Troncoso</p><a class="mt-1 inline-block hover:text-cyan-200" href="https://wa.me/56950254516" target="_blank" rel="noopener noreferrer">+56 9 5025 4516</a><span class="mx-2 text-slate-600">·</span><a class="hover:text-cyan-200" href="mailto:jorge.troncoso4@gmail.com">jorge.troncoso4@gmail.com</a></div><div class="md:text-right"><p>Página web desarrollada en Astro</p><p class="mt-1 text-slate-400">Todos los derechos reservados.</p></div></div></footer></template>
+  <template id="project-panel-footer-template"><footer class="project-panel-footer"><div class="flex flex-col gap-5 text-sm text-slate-300 md:flex-row md:items-center md:justify-between"><div><p class="font-bold text-white">Jorge Troncoso</p><p class="mt-1 text-slate-400">Contáctame por:</p><div class="footer-contact-links"><a href="https://wa.me/56950254516" target="_blank" rel="noopener noreferrer" aria-label="Contactar por WhatsApp" title="WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 2.8 9.2 5a1.9 1.9 0 0 1 .5 2.3l-1 2a14.5 14.5 0 0 0 6.1 6.1l2-1a1.9 1.9 0 0 1 2.3.5l2.2 2.6a1.9 1.9 0 0 1-.1 2.6l-1.5 1.5c-1.1 1.1-2.8 1.5-4.3 1C9.2 20.8 3.2 14.8 1.7 8.6c-.5-1.5-.1-3.2 1-4.3l1.5-1.5a1.9 1.9 0 0 1 2.4 0Z" /></svg></a><a href="mailto:jorge.troncoso4@gmail.com" aria-label="Enviar correo electrónico" title="Correo electrónico"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2" /><path d="m4 7 8 6 8-6" /></svg></a></div></div><div class="md:text-right"><p>Página web desarrollada en Astro</p><p class="mt-1 text-slate-400">Todos los derechos reservados.</p></div></div></footer></template>
 
-  <style>
-    .node-0{top:12%;left:8%}.node-1{top:18%;right:7%}.node-2{bottom:18%;left:5%}.node-3{bottom:9%;right:10%}.node-4{top:47%;left:2%}.node-5{top:47%;right:2%}
-    @media(max-width:640px){.node-4,.node-5{display:none}}
-  </style>
   <script>
     const initializeCredentialGallery = () => {
       const dialog = document.querySelector<HTMLDialogElement>('#credential-dialog');
@@ -468,16 +464,7 @@ const credentialFans = [
       if (!footer) return;
       footer.classList.replace('project-panel-footer', 'home-panel-footer');
       const contactLabel = footer.querySelector<HTMLElement>('p.font-bold');
-      if (contactLabel) contactLabel.textContent = 'Contacto:';
-      const phoneLink = footer.querySelector<HTMLAnchorElement>('a[href^="https://wa.me"]');
-      if (phoneLink) {
-        phoneLink.href = 'https://wa.me/56950254516';
-        phoneLink.textContent = 'WhatsApp: +56 9 5025 4516';
-        phoneLink.target = '_blank';
-        phoneLink.rel = 'noopener noreferrer';
-      }
-      const emailLink = footer.querySelector<HTMLAnchorElement>('a[href^="mailto:"]');
-      if (emailLink) emailLink.textContent = 'Correo: jorge.troncoso4@gmail.com';
+      if (contactLabel) contactLabel.textContent = 'Jorge Troncoso';
       panelContent.append(footer);
     };
 
@@ -516,11 +503,10 @@ const credentialFans = [
     document.addEventListener('astro:page-load', initializeTechnologyMapLayout);
 
     const views = ['perfil', 'proyectos', 'inicio', 'tecnologias', 'ia-local'] as const;
-    const faceByView = { perfil: 'left', proyectos: 'front', inicio: 'bottom', tecnologias: 'right', 'ia-local': 'top' } as const;
     type View = typeof views[number];
     const isView = (view: string): view is View => (views as readonly string[]).includes(view);
 
-    let showView: ((next: string, focus?: boolean) => void) | undefined;
+    let showView: ((next: string) => void) | undefined;
     const initializeViews = () => {
       if (location.pathname !== '/') {
         showView = undefined;
@@ -530,52 +516,42 @@ const credentialFans = [
       const panels = new Map(views.map((view) => [view, document.querySelector<HTMLElement>(`[data-view="${view}"]`)]));
       if (views.some((view) => !panels.get(view))) return;
 
-      let active: View = 'inicio';
-      let isTransitioning = false;
+      const resetPanelScroll = (panel: HTMLElement) => {
+        const content = panel.querySelector<HTMLElement>('.cube-panel-content');
+        if (content) content.scrollTop = 0;
+      };
       const updateLinks = (view: string) => document.querySelectorAll<HTMLAnchorElement>('[data-view-link]').forEach((link) => {
         if (link.dataset.viewLink === view) link.setAttribute('aria-current', 'page');
         else link.removeAttribute('aria-current');
       });
-      showView = (next, focus = true) => {
-        if (!isView(next) || next === active || isTransitioning) return;
-        const outgoing = panels.get(active);
-        const incoming = panels.get(next);
-        if (!outgoing || !incoming) return;
-        isTransitioning = true;
+      const activateView = (next: View) => {
+        panels.forEach((panel, view) => {
+          if (!panel) return;
+          panel.classList.remove('is-active', 'cube-enter-left', 'cube-enter-right', 'cube-enter-top', 'cube-enter-bottom', 'cube-enter-front', 'cube-leave-left', 'cube-leave-right', 'cube-leave-top', 'cube-leave-bottom', 'cube-leave-front');
+          const isActive = view === next;
+          panel.setAttribute('aria-hidden', String(!isActive));
+          if (isActive) {
+            resetPanelScroll(panel);
+            panel.classList.add('is-active');
+          }
+        });
+        updateLinks(next);
         if (next === 'tecnologias') layoutTechnologyMap(true);
-        const direction = faceByView[next];
-        outgoing.classList.add(`cube-leave-${direction}`);
-        incoming.classList.add(`cube-enter-${direction}`);
-        incoming.setAttribute('aria-hidden', 'false');
-        const duration = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 620;
-        window.setTimeout(() => {
-          outgoing.classList.remove('is-active', `cube-leave-${direction}`);
-          outgoing.setAttribute('aria-hidden', 'true');
-          incoming.classList.remove(`cube-enter-${direction}`);
-          incoming.classList.add('is-active');
-          active = next;
-          if (active === 'tecnologias') layoutTechnologyMap(true);
-          updateLinks(active);
-          isTransitioning = false;
-          if (focus) incoming.querySelector<HTMLElement>('h1')?.focus({ preventScroll: true });
-        }, duration);
+      };
+      showView = (next) => {
+        if (!isView(next)) return;
+        activateView(next);
       };
 
       const initial = location.hash.slice(1);
-      if (isView(initial) && initial !== active) {
-        panels.get(active)?.classList.remove('is-active');
-        panels.get(active)?.setAttribute('aria-hidden', 'true');
-        panels.get(initial)?.classList.add('is-active');
-        panels.get(initial)?.setAttribute('aria-hidden', 'false');
-        active = initial;
-      }
-      updateLinks(active);
-      if (active === 'tecnologias') layoutTechnologyMap(true);
+      activateView(isView(initial) ? initial : 'inicio');
     };
 
     initializeViews();
-    document.addEventListener('astro:page-load', initializeViews);
-    document.addEventListener('click', (event) => {
+    if (document.documentElement.dataset.viewNavigationBound !== 'true') {
+      document.documentElement.dataset.viewNavigationBound = 'true';
+      document.addEventListener('astro:page-load', initializeViews);
+      document.addEventListener('click', (event) => {
       if (!(event.target instanceof Element)) return;
       const link = event.target.closest<HTMLAnchorElement>('[data-view-link]');
       const next = link?.dataset.viewLink;
@@ -585,8 +561,9 @@ const credentialFans = [
         history.pushState(null, '', `#${next}`);
       }
       showView?.(next);
-    });
-    window.addEventListener('popstate', () => showView?.(location.hash.slice(1)));
-    window.addEventListener('hashchange', () => showView?.(location.hash.slice(1)));
+      });
+      window.addEventListener('popstate', () => showView?.(location.hash.slice(1)));
+      window.addEventListener('hashchange', () => showView?.(location.hash.slice(1)));
+    }
   </script>
 </BaseLayout>

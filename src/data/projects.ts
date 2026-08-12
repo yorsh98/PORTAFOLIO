@@ -111,6 +111,34 @@ export const projects: Project[] = [
     ]
   },
   {
+    slug: 'crm-whatsapp',
+    title: 'CRM comercial para WhatsApp',
+    category: 'Desarrollo web + IA',
+    kind: 'web',
+    description: 'CRM comercial para atender las consultas de clientes de tu empresa por WhatsApp, respondiendo con información del negocio hasta que se requiere la intervención de una persona.',
+    objective: 'Dar una atención comercial más ágil y consistente, conectando cada consulta con la información disponible del negocio.',
+    solution: 'El cliente escribe por WhatsApp, el sistema organiza la conversación y el agente consulta la información comercial para entregar una respuesta clara. La atención continúa de forma asistida hasta que la consulta requiere la intervención de un operador humano.',
+    architecture: 'Una capa de mensajería recibe las consultas y las conecta con el CRM, donde se concentra la información comercial. La solución incorpora IA en la nube para apoyar la comprensión de consultas y la preparación de respuestas con el contexto disponible.',
+    infrastructure: 'Aplicación web con una consola operativa para administrar conversaciones, clientes, productos, inventario y cotizaciones, preparada para acompañar el flujo de atención por WhatsApp.',
+    publicationNote: 'El caso se publica sin datos de clientes, teléfonos, conversaciones, cotizaciones, adjuntos, credenciales ni información interna. Las capturas se incorporarán tras su revisión y anonimización.',
+    technologies: ['Laravel', 'React', 'FastAPI', 'WhatsApp Cloud API', 'IA en la nube', 'PostgreSQL', 'Redis', 'Docker'],
+    image: {
+      src: '/images/projects/CRM-WHATSAPP/1.webp',
+      alt: 'Vista principal del CRM comercial para WhatsApp.'
+    },
+    gallery: [
+      '/images/projects/CRM-WHATSAPP/1.webp',
+      '/images/projects/CRM-WHATSAPP/2.webp',
+      '/images/projects/CRM-WHATSAPP/Captura%20desde%202026-08-11%2022-03-03.webp',
+      '/images/projects/CRM-WHATSAPP/Captura%20desde%202026-08-11%2022-03-19.webp',
+      '/images/projects/CRM-WHATSAPP/Captura%20desde%202026-08-11%2022-03-31.webp',
+      '/images/projects/CRM-WHATSAPP/Captura%20desde%202026-08-11%2022-03-39.webp',
+      '/images/projects/CRM-WHATSAPP/Captura%20desde%202026-08-11%2022-04-10.webp',
+      '/images/projects/CRM-WHATSAPP/Captura%20desde%202026-08-11%2022-04-29.webp',
+      '/images/projects/CRM-WHATSAPP/Captura%20desde%202026-08-11%2022-04-36.webp'
+    ]
+  },
+  {
     slug: 'legal-chile-gemma',
     title: 'Legal Chile Gemma Fine-tune',
     category: 'Modelo fine-tuneado',
