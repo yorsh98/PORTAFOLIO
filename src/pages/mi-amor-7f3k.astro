@@ -1,0 +1,112 @@
+---
+const hearts = Array.from({ length: 24 }, (_, index) => ({
+  left: `${(index * 37 + 9) % 96}%`,
+  top: `${(index * 53 + 4) % 92}%`,
+  size: `${16 + (index % 4) * 7}px`,
+  delay: `${-(index % 7) * .8}s`,
+  duration: `${5 + (index % 5)}s`
+}));
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#bfe6c7" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Para ti</title>
+  </head>
+  <body>
+    <main aria-labelledby="amor-title">
+      <div class="hearts" aria-hidden="true">
+        {hearts.map((heart) => <span style={`--left: ${heart.left}; --top: ${heart.top}; --size: ${heart.size}; --delay: ${heart.delay}; --duration: ${heart.duration}`}>♥</span>)}
+      </div>
+
+      <p class="stamp">HECHO CON MUCHO AMOR</p>
+      <p class="intro">Para celebrar lo nuestro</p>
+      <h1 id="amor-title">Te amo<br /><em>muchísimo.</em></h1>
+
+      <section class="cake-scene" aria-label="Una torta de chocolate con velas encendidas">
+        <svg class="cake" viewBox="0 0 340 310" role="img" aria-hidden="true">
+          <ellipse cx="170" cy="285" rx="143" ry="16" fill="#7b4a35" opacity=".18" />
+          <path d="M58 232h224l-15 45H73z" fill="#fff6df" stroke="#573326" stroke-width="5" stroke-linejoin="round" />
+          <path d="M80 236h180l-9 28H89z" fill="#eab9aa" />
+          <path d="M79 169h182v68H79z" fill="#6b3829" stroke="#573326" stroke-width="5" stroke-linejoin="round" />
+          <path d="M81 177c22 10 37-4 57 3s35 8 52-1 38 8 69-4v30c-22 11-37-5-58 2s-36 8-53-1-34 8-67-3z" fill="#8e4b31" />
+          <path d="M72 143c6-24 35-35 64-27 16-23 47-21 62 0 29-8 57 3 66 27z" fill="#fff5e2" stroke="#573326" stroke-width="5" stroke-linejoin="round" />
+          <path d="M79 144c13-16 35-18 51-8 18-16 43-15 58 2 17-13 47-11 67 6z" fill="#fffdf3" />
+          <path d="M93 147c7 18 19 3 26 18s20 1 28 15 21-1 30 12 23-8 32 4 22-6 32-1 17-1 20-15v-36H79z" fill="#5b3024" />
+          <circle cx="112" cy="153" r="6" fill="#f4cf74" /><circle cx="157" cy="164" r="5" fill="#f4cf74" /><circle cx="203" cy="151" r="6" fill="#f4cf74" /><circle cx="237" cy="170" r="5" fill="#f4cf74" />
+          <path d="M128 117V73M170 114V59M212 117V73" stroke="#e45358" stroke-width="9" stroke-linecap="round" />
+          <path d="M128 68c-10-13 1-24 0-35 12 11 11 22 0 35M170 54c-10-13 1-24 0-35 12 11 11 22 0 35M212 68c-10-13 1-24 0-35 12 11 11 22 0 35" fill="#f9be44" stroke="#d97838" stroke-width="3" />
+          <path d="M50 226h240" stroke="#573326" stroke-width="5" stroke-linecap="round" />
+        </svg>
+        <span class="flavor flavor-one">sabor chocolate</span>
+        <span class="flavor flavor-two">+ besitos</span>
+      </section>
+
+      <p class="message">Gracias por llenar mis días de cariño, risas y momentos bonitos. Esta tortita es para recordarte que contigo todo sabe mejor.</p>
+
+      <section class="friends" aria-label="Dos caricaturas enamoradas">
+        <svg viewBox="0 0 330 190" role="img" aria-label="Un perrito blanco y un pajarito amarillo compartiendo un corazón">
+          <path d="M151 59c-13-18-42-1-17 23l31 30 31-30c25-24-4-41-17-23-7 10-20 10-27 0Z" fill="#e8474c" />
+          <g class="bird">
+            <ellipse cx="260" cy="111" rx="33" ry="40" fill="#f8c944" stroke="#583c2f" stroke-width="4" />
+            <circle cx="250" cy="78" r="25" fill="#f8c944" stroke="#583c2f" stroke-width="4" />
+            <path d="m224 82-22 8 21 7" fill="#e7773e" stroke="#583c2f" stroke-width="4" stroke-linejoin="round" />
+            <circle cx="244" cy="75" r="3.5" fill="#35251f" /><circle cx="257" cy="75" r="3.5" fill="#35251f" />
+            <path d="M239 92q11 8 22 0" fill="none" stroke="#583c2f" stroke-width="3" stroke-linecap="round" />
+            <path d="M248 146v22m18-22v22" stroke="#583c2f" stroke-width="4" stroke-linecap="round" />
+            <path d="M239 169h16m4 0h16" stroke="#583c2f" stroke-width="4" stroke-linecap="round" />
+          </g>
+          <g class="pup">
+            <ellipse cx="78" cy="121" rx="51" ry="42" fill="#fffdf2" stroke="#583c2f" stroke-width="4" />
+            <path d="M48 92C16 72 13 35 42 35c20 0 27 25 20 51" fill="#4b4038" stroke="#583c2f" stroke-width="4" stroke-linejoin="round" />
+            <ellipse cx="92" cy="76" rx="48" ry="42" fill="#fffdf2" stroke="#583c2f" stroke-width="4" />
+            <ellipse cx="104" cy="84" rx="8" ry="6" fill="#35251f" /><circle cx="76" cy="67" r="3.5" fill="#35251f" />
+            <path d="M83 94q11 10 22 0" fill="none" stroke="#583c2f" stroke-width="3" stroke-linecap="round" />
+            <path d="M44 126 18 105" fill="none" stroke="#583c2f" stroke-width="7" stroke-linecap="round" />
+            <path d="M95 159v17m-35-15v15" stroke="#583c2f" stroke-width="5" stroke-linecap="round" />
+            <path d="M51 177h20m16 0h20" stroke="#583c2f" stroke-width="5" stroke-linecap="round" />
+          </g>
+          <path d="M116 127c34 22 83 6 112-22" fill="none" stroke="#583c2f" stroke-width="4" stroke-linecap="round" />
+        </svg>
+      </section>
+      <p class="closing">Feliz aniversario, mi amor. ♥</p>
+    </main>
+  </body>
+</html>
+
+<style>
+  :global(*) { box-sizing: border-box; }
+  :global(html) { min-width: 320px; background: #bfe6c7; }
+  :global(body) { min-width: 320px; min-height: 100dvh; margin: 0; overflow-x: hidden; background: #bfe6c7; color: #4b2c26; font-family: Georgia, "Times New Roman", serif; }
+  main { position: relative; isolation: isolate; display: flex; min-height: 100dvh; flex-direction: column; align-items: center; overflow: hidden; padding: 3.25rem 1.25rem 2.5rem; text-align: center; background: radial-gradient(circle at 50% 44%, #e9f6c9 0 12%, transparent 42%), linear-gradient(160deg, #c8eacb, #a8dbb9); }
+  main::before, main::after { position: absolute; z-index: -1; width: 18rem; height: 18rem; border: 2px dashed rgba(210, 70, 71, .2); border-radius: 50%; content: ""; }
+  main::before { top: 15%; left: -11rem; }
+  main::after { right: -11rem; bottom: 12%; }
+  .hearts { position: absolute; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+  .hearts span { position: absolute; top: var(--top); left: var(--left); color: #df4049; font-family: Arial, sans-serif; font-size: var(--size); line-height: 1; opacity: .75; animation: float var(--duration) ease-in-out var(--delay) infinite alternate; }
+  .stamp { margin: 0; border: 2px solid #db5556; border-radius: 999px; color: #c9464a; padding: .38rem .8rem; font-family: ui-monospace, monospace; font-size: .62rem; font-weight: 800; letter-spacing: .12em; transform: rotate(-3deg); }
+  .intro { margin: 1.7rem 0 .3rem; color: #7a5543; font-size: 1rem; font-style: italic; }
+  h1 { margin: 0; color: #733b2d; font-size: clamp(3.25rem, 15vw, 5rem); line-height: .85; letter-spacing: -.075em; text-shadow: 2px 3px 0 #fff4db; }
+  h1 em { color: #d8464c; font-weight: 700; }
+  .cake-scene { position: relative; width: min(100%, 23rem); margin: 1.5rem auto .25rem; }
+  .cake { display: block; width: 100%; filter: drop-shadow(0 14px 8px rgba(82, 49, 38, .2)); animation: cake-pop .7s cubic-bezier(.2, .9, .3, 1.3) both; }
+  .flavor { position: absolute; border: 2px solid #b45443; border-radius: 50%; background: #fff3d7; color: #8a4636; padding: .45rem .65rem; font-family: ui-monospace, monospace; font-size: .63rem; font-weight: 800; line-height: 1.1; text-transform: uppercase; }
+  .flavor-one { top: 32%; left: -1%; transform: rotate(-13deg); }
+  .flavor-two { right: -2%; bottom: 20%; transform: rotate(10deg); }
+  .message { max-width: 29rem; margin: .7rem 0 1.4rem; color: #694437; font-size: 1.08rem; line-height: 1.55; }
+  .friends { width: min(100%, 21rem); margin-top: auto; padding-top: .5rem; }
+  .friends svg { display: block; width: 100%; overflow: visible; filter: drop-shadow(0 8px 4px rgba(82, 49, 38, .13)); }
+  .bird { transform-origin: 260px 155px; animation: bird-bob 2.2s ease-in-out infinite alternate; }
+  .pup { transform-origin: 70px 160px; animation: pup-bob 2.2s ease-in-out .25s infinite alternate; }
+  .closing { margin: .1rem 0 0; color: #b13f46; font-size: 1.2rem; font-weight: 700; }
+  @keyframes float { to { transform: translateY(-17px) rotate(10deg); } }
+  @keyframes cake-pop { from { opacity: 0; transform: scale(.75) translateY(30px); } to { opacity: 1; transform: none; } }
+  @keyframes bird-bob { to { transform: translateY(-6px) rotate(2deg); } }
+  @keyframes pup-bob { to { transform: translateY(-5px) rotate(-2deg); } }
+  @media (min-width: 560px) { main { padding-top: 4.5rem; } .cake-scene { width: 25rem; } }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; } }
+</style>
