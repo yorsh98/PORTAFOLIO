@@ -1,3 +1,5 @@
+type Shot = { src: string; caption: string };
+
 type Project = {
   slug: string;
   title: string;
@@ -14,7 +16,7 @@ type Project = {
     src: string;
     alt: string;
   };
-  gallery?: string[];
+  gallery?: (string | Shot)[];
 };
 
 export const projects: Project[] = [
@@ -60,33 +62,30 @@ export const projects: Project[] = [
     solution: 'La aplicación utiliza Laravel para el dominio y la persistencia, con componentes Livewire y Volt para una experiencia de administración dinámica.',
     architecture: 'Arquitectura monolítica MVC basada en Laravel. Controladores, modelos y vistas gestionan la lógica del sistema, con Livewire para interfaces dinámicas. Incluye módulos de roles, datos, archivos, correo y reportes dentro de una única aplicación.',
     infrastructure: 'Aplicación Laravel desplegable sobre servidor PHP con base de datos MariaDB. Incluye procesamiento de colas, tareas programadas, Vite para activos frontend y conectividad IMAP para integración de correo.',
-    publicationNote: 'La documentación pública se limita a las capacidades generales del producto. La captura publicada excluye datos personales, credenciales y vistas operativas internas.',
+    publicationNote: 'Las capturas se tomaron sobre un entorno sin registros reales. Se excluyeron las vistas con nombres de funcionarios, planos del edificio, números de causa, correos institucionales y registros de actividad.',
     technologies: ['Laravel', 'Livewire', 'Volt', 'Tailwind CSS', 'Bootstrap', 'DataTables', 'Pest'],
     image: {
       src: '/images/projects/4toTOP/1.webp',
       alt: 'Vista principal de la plataforma 4toTOP.'
     },
     gallery: [
-      '/images/projects/4toTOP/Captura%20desde%202026-07-28%2020-36-48.webp',
-      '/images/projects/4toTOP/Captura%20desde%202026-07-28%2020-38-47.webp',
-      '/images/projects/4toTOP/Captura%20desde%202026-07-28%2020-38-54.webp',
-      '/images/projects/4toTOP/Captura%20desde%202026-07-28%2020-39-13.webp',
-      '/images/projects/4toTOP/Captura%20desde%202026-07-28%2020-39-18.webp',
-      '/images/projects/4toTOP/Captura%20desde%202026-07-28%2020-39-22.webp',
-      '/images/projects/4toTOP/Captura%20desde%202026-07-28%2020-39-32.webp',
-      '/images/projects/4toTOP/Captura%20desde%202026-07-28%2020-39-36.webp',
-      '/images/projects/4toTOP/Captura%20desde%202026-07-28%2020-39-40.webp',
-      '/images/projects/4toTOP/Captura%20desde%202026-07-28%2020-39-48.webp',
-      '/images/projects/4toTOP/Captura%20desde%202026-07-28%2020-39-54.webp',
-      '/images/projects/4toTOP/Captura%20desde%202026-07-28%2020-39-58.webp',
-      '/images/projects/4toTOP/Captura%20desde%202026-07-28%2020-40-10.webp',
-      '/images/projects/4toTOP/Captura%20desde%202026-07-28%2020-40-55.webp',
-      '/images/projects/4toTOP/Captura%20desde%202026-07-28%2020-41-12.webp',
-      '/images/projects/4toTOP/Captura%20desde%202026-07-28%2020-41-19.webp',
-      '/images/projects/4toTOP/Captura%20desde%202026-07-28%2020-41-25.webp',
-      '/images/projects/4toTOP/Captura%20desde%202026-07-28%2020-41-32.webp',
-      '/images/projects/4toTOP/Captura%20desde%202026-07-28%2020-41-38.webp',
-      '/images/projects/4toTOP/Captura%20desde%202026-07-28%2020-41-43.webp'
+      { src: '/images/projects/4toTOP/01-inicio.webp', caption: 'Portada pública con accesos a los módulos' },
+      { src: '/images/projects/4toTOP/04-programacion-diaria.webp', caption: 'Programación diaria de audiencias por turno' },
+      { src: '/images/projects/4toTOP/05-procedimientos.webp', caption: 'Biblioteca de procedimientos internos' },
+      { src: '/images/projects/4toTOP/08-buscador-sentencias.webp', caption: 'Índice y buscador de sentencias' },
+      { src: '/images/projects/4toTOP/09-ausencias.webp', caption: 'Calendario de ausentismo por tipo de permiso' },
+      { src: '/images/projects/4toTOP/12-bitacora-pruebas.webp', caption: 'Bitácora pública de pruebas por juicio' },
+      { src: '/images/projects/4toTOP/13-convertir-archivos.webp', caption: 'Conversión de PDF a Word y M4A a MP3' },
+      { src: '/images/projects/4toTOP/15-iniciar-sesion.webp', caption: 'Inicio de sesión' },
+      { src: '/images/projects/4toTOP/18-backoffice-inicio.webp', caption: 'Backoffice: panel de módulos según permisos' },
+      { src: '/images/projects/4toTOP/19-backoffice-funcionarios.webp', caption: 'Catálogo global de funcionarios' },
+      { src: '/images/projects/4toTOP/21-backoffice-turnos.webp', caption: 'Configuración y envío de la tabla semanal de turnos' },
+      { src: '/images/projects/4toTOP/24-backoffice-testigos-peritos.webp', caption: 'Unidad de testigos y peritos con importación desde Excel' },
+      { src: '/images/projects/4toTOP/27-backoffice-documentos.webp', caption: 'Biblioteca documental por colecciones' },
+      { src: '/images/projects/4toTOP/34-backoffice-insumos-solicitudes.webp', caption: 'Solicitudes de insumos' },
+      { src: '/images/projects/4toTOP/39-backoffice-insumos-reportes.webp', caption: 'Reportes de asignación de insumos' },
+      { src: '/images/projects/4toTOP/40-backoffice-seguridad-roles.webp', caption: 'Roles de acceso' },
+      { src: '/images/projects/4toTOP/44-backoffice-seguridad-permisos.webp', caption: 'Permisos por módulo: ver o gestionar' }
     ]
   },
   {
@@ -150,5 +149,70 @@ export const projects: Project[] = [
     infrastructure: 'Entorno local sobre Ubuntu 24.04 con Python 3.11+, PyTorch y CUDA 12.8. Utiliza una GPU NVIDIA RTX 3080 Ti con 16 GB de VRAM para entrenamiento e inferencia. Almacena datos, índices RAG y resultados en archivos JSONL y bases SQLite con FTS5. El modelo base y los adaptadores LoRA/QLoRA se mantienen localmente, sin requerir servicios cloud.',
     publicationNote: 'El proyecto no sustituye asesoría legal ni publica documentos privados. Las fuentes, licencias y condiciones de uso se revisan antes de integrarlas al conjunto de datos.',
     technologies: ['Python', 'Gemma', 'LoRA', 'QLoRA', 'Transformers', 'PEFT', 'TRL', 'BitsAndBytes']
+  },
+  {
+    slug: 'proviemplea',
+    title: 'ProviEmplea 2026',
+    category: 'Proyecto académico · Full stack',
+    kind: 'web',
+    description: 'Plataforma de intermediación laboral municipal con búsqueda inversa: empresas validadas buscan talentos mediante CV protegidos y solicitan el contacto a través del Departamento de Empleo.',
+    objective: 'Ordenar y digitalizar la intermediación laboral municipal (inscripción, perfilamiento, derivación y seguimiento) sin exponer datos personales de quienes buscan empleo.',
+    solution: 'Tres portales sobre una misma API: personas completan su perfil y cargan su CV con consentimiento; empresas validadas revisan una vitrina de CV ciegos y piden contacto; el equipo municipal valida perfiles, gestiona solicitudes, deja notas internas y exporta reportes.',
+    architecture: 'Monorepo con backend y frontend separados. Una API REST Laravel versionada bajo /api/v1, autenticada con Bearer Token (Sanctum) y documentada con Swagger/OpenAPI, concentra reglas de privacidad, policies, auditoría y rate limiting. El frontend Laravel + React con Inertia y TypeScript consume la API mediante servicios tipados. El análisis de CV funciona con expresiones regulares por defecto, con Ollama local u OpenAI como opción configurable.',
+    infrastructure: 'Backend en Docker Compose con PHP-FPM, Nginx, MySQL, cola en base de datos, scheduler, Mailpit y LibreOffice para procesar documentos. El frontend se ejecuta con Vite. Incluye un widget de accesibilidad propio con opciones de texto, contraste y navegación.',
+    publicationNote: 'Proyecto académico desarrollado para una evaluación de IPSS; no es un sistema oficial de la Municipalidad de Providencia. Todas las capturas usan cuentas y datos de demostración.',
+    technologies: ['Laravel', 'Sanctum', 'React', 'TypeScript', 'Inertia', 'Tailwind CSS', 'MySQL', 'Swagger/OpenAPI', 'Docker', 'Ollama'],
+    image: {
+      src: '/images/projects/proviemplea/01-01-inicio-portada.webp',
+      alt: 'Portada pública de ProviEmplea 2026.'
+    },
+    gallery: [
+      { src: '/images/projects/proviemplea/01-01-inicio-portada.webp', caption: 'Portada pública' },
+      { src: '/images/projects/proviemplea/01-02-accesos-persona-empresa-admin.webp', caption: 'Accesos para personas, empresas y gestión municipal' },
+      { src: '/images/projects/proviemplea/01-04-flujo-de-uso.webp', caption: 'Flujo: del perfil laboral a la solicitud intermediada' },
+      { src: '/images/projects/proviemplea/01-08-registro-persona.webp', caption: 'Registro de persona o empresa' },
+      { src: '/images/projects/proviemplea/01-13-panel-accesibilidad.webp', caption: 'Widget de accesibilidad' },
+      { src: '/images/projects/proviemplea/02-01-panel-persona.webp', caption: 'Panel persona: perfil laboral y carga de CV' },
+      { src: '/images/projects/proviemplea/02-02-perfil-laboral-carga-cv-protegido.webp', caption: 'Consentimiento y estado del CV protegido' },
+      { src: '/images/projects/proviemplea/03-01-panel-empresa-vitrina-talentos.webp', caption: 'Panel empresa: vitrina de talentos' },
+      { src: '/images/projects/proviemplea/03-03-cv-protegido-educacion-experiencia.webp', caption: 'CV ciego: educación y experiencia sin datos de contacto' },
+      { src: '/images/projects/proviemplea/03-04-contacto-intermediado.webp', caption: 'Solicitud de contacto intermediado' },
+      { src: '/images/projects/proviemplea/04-01-panel-admin-metricas.webp', caption: 'Panel de administración con indicadores' },
+      { src: '/images/projects/proviemplea/04-02-gestion-talentos-empresas-solicitudes.webp', caption: 'Gestión de talentos, empresas y solicitudes' },
+      { src: '/images/projects/proviemplea/04-03-notas-reportes-configuracion-ia.webp', caption: 'Notas internas, reportes y configuración de IA' }
+    ]
+  },
+  {
+    slug: 'ventasfix',
+    title: 'VentasFix',
+    category: 'Proyecto académico · Full stack',
+    kind: 'web',
+    description: 'Plataforma full stack con un backoffice administrativo protegido por roles y una tienda pública independiente, ambas sobre una API REST compartida.',
+    objective: 'Construir una solución de extremo a extremo y reproducible: autenticación, autorización por roles, CRUD de usuarios, productos y clientes, y un catálogo público con carrito y checkout.',
+    solution: 'El backoffice permite administrar usuarios, productos con imagen y clientes empresa, con un dashboard alimentado desde la base de datos. La tienda ofrece catálogo con búsqueda, filtros, orden y paginación, carrito persistente y un checkout demostrativo para personas o empresas, sin pago real.',
+    architecture: 'Monorepo con dos SPA React independientes y un backend FastAPI común. El backend sigue el flujo Router → Controller → Service → Repository → SQLAlchemy, con RBAC como dependencia, validación con Pydantic y un contrato de errores uniforme. En el frontend, TanStack Query administra el estado remoto y Zustand la sesión, el carrito y las preferencias.',
+    infrastructure: 'Docker Compose con la API FastAPI, PostgreSQL con migraciones Alembic, Redis para sesiones y almacenamiento local de imágenes. Seguridad con Argon2, access tokens JWT en memoria, refresh tokens en cookies HttpOnly con rotación y revocación, y rate limiting en el login. Calidad verificada con Pytest, Ruff, mypy, Vitest y ESLint.',
+    publicationNote: 'Proyecto académico individual para Desarrollo de Software Web I (IPSS). Todas las capturas usan datos de demostración y el checkout no procesa pagos.',
+    technologies: ['React', 'TypeScript', 'Vite', 'TanStack Query', 'Zustand', 'Tailwind CSS', 'FastAPI', 'SQLAlchemy', 'PostgreSQL', 'Redis', 'Docker'],
+    image: {
+      src: '/images/projects/ventasfix/tienda-02-inicio.webp',
+      alt: 'Portada de la tienda pública de VentasFix.'
+    },
+    gallery: [
+      { src: '/images/projects/ventasfix/tienda-02-inicio.webp', caption: 'Tienda: productos destacados' },
+      { src: '/images/projects/ventasfix/tienda-03-catalogo.webp', caption: 'Catálogo con búsqueda, filtros y orden' },
+      { src: '/images/projects/ventasfix/tienda-04-detalle-producto.webp', caption: 'Detalle de producto' },
+      { src: '/images/projects/ventasfix/tienda-05-carrito.webp', caption: 'Carrito persistente' },
+      { src: '/images/projects/ventasfix/tienda-10-checkout-empresa.webp', caption: 'Checkout demostrativo para empresas' },
+      { src: '/images/projects/ventasfix/tienda-07-login.webp', caption: 'Inicio de sesión opcional' },
+      { src: '/images/projects/ventasfix/tienda-08-accesibilidad.webp', caption: 'Preferencias de accesibilidad' },
+      { src: '/images/projects/ventasfix/backoffice-01-login.webp', caption: 'Backoffice: acceso de trabajadores' },
+      { src: '/images/projects/ventasfix/backoffice-02-dashboard.webp', caption: 'Dashboard con datos de la base' },
+      { src: '/images/projects/ventasfix/backoffice-03-usuarios.webp', caption: 'Usuarios y roles' },
+      { src: '/images/projects/ventasfix/backoffice-05-productos.webp', caption: 'Productos: precios y existencias' },
+      { src: '/images/projects/ventasfix/backoffice-11-detalle-producto.webp', caption: 'Ficha de producto' },
+      { src: '/images/projects/ventasfix/backoffice-08-nuevo-cliente.webp', caption: 'Alta de cliente empresa' },
+      { src: '/images/projects/ventasfix/backoffice-error-403.webp', caption: 'Vista de error 403 por permisos' }
+    ]
   }
 ];

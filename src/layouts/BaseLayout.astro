@@ -1,16 +1,26 @@
 ---
 import '../styles/global.css';
-import { ClientRouter } from 'astro:transitions';
-const { title = 'Jorge Troncoso | Desarrollo web e IA local', description = 'Portafolio profesional de Jorge Troncoso: desarrollo web, infraestructura local de IA, RAG y procesamiento documental.', hideFooter = false, panelNavigation = false } = Astro.props;
+import { site } from '../data/site';
+
+interface Props { title?: string; description?: string; home?: boolean }
+const { title = 'Jorge Troncoso | Desarrollo web e IA local y en la nube', description = 'Portafolio profesional de Jorge Troncoso: desarrollo web, infraestructura de IA local y en la nube, RAG y procesamiento documental.', home = false } = Astro.props;
+const href = (id: string) => (home ? `#${id}` : `/#${id}`);
+
+/* Iconos (feather, MIT) */
+const ICON: Record<string, string> = {
+  github: '<path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>',
+  linkedin: '<path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/>',
+  mail: '<rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/>',
+  whatsapp: '<path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>'
+};
 ---
 <!doctype html>
 <html lang="es">
   <head>
-    <ClientRouter />
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
-    <meta name="theme-color" content="#050814" />
+    <meta name="theme-color" content="#06070c" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
@@ -18,112 +28,50 @@ const { title = 'Jorge Troncoso | Desarrollo web e IA local', description = 'Por
     <meta property="og:site_name" content="Jorge Troncoso" />
     <meta name="twitter:card" content="summary" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
     <title>{title}</title>
   </head>
-  <body class="viewport-locked">
+  <body class:list={{ 'is-loading': home }} data-page={home ? 'home' : 'page'}>
     <a class="skip-link" href="#contenido">Saltar al contenido</a>
-    <header transition:persist="site-header" class="fixed inset-x-0 top-0 z-50 border-b border-white/5 bg-[#050814]/75 backdrop-blur-xl">
-      <nav class="container-shell flex h-16 items-center justify-between" aria-label="Navegación principal">
-        <a href="/#inicio" data-view-link="inicio" class="nav-brand font-black tracking-tight"><span class="text-cyan-300">&lt;</span>JORGE<span class="text-violet-400">/&gt;</span></a>
-        <div class="nav-view-switcher hidden md:flex" aria-label="Vistas del portafolio">
-          <a data-view-link="perfil" class="nav-view-link" href="/#perfil"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.25" /><path d="M5.5 20c.65-3.75 3.05-5.6 6.5-5.6s5.85 1.85 6.5 5.6" /></svg><span>Perfil</span></a>
-          <a data-view-link="proyectos" class="nav-view-link" href="/#proyectos"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="14" rx="2" /><path d="M8 5V3.5h8V5M3.5 10.5h17M10 10.5v2h4v-2" /></svg><span>Proyectos</span></a>
-          <a data-view-link="inicio" class="nav-view-link" href="/#inicio"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1V10Z" /></svg><span>Inicio</span></a>
-          <a data-view-link="tecnologias" class="nav-view-link" href="/#tecnologias"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="6" height="6" rx="1" /><rect x="14" y="4" width="6" height="6" rx="1" /><rect x="9" y="14" width="6" height="6" rx="1" /><path d="m10 7h4m-2 3v4" /></svg><span>Tecnologías</span></a>
-          <a data-view-link="ia-local" class="nav-view-link" href="/#ia-local"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5 19 7v10l-7 3.5L5 17V7l7-3.5Z" /><path d="M8.5 10.5h7M8.5 13.5h4" /></svg><span>IA local</span></a>
+    <header class="nav" id="nav" data-theme="light">
+      <a class="logo" href={href('home')} data-go={home ? 'home' : undefined} aria-label="Inicio"><b>{site.brand.logo}</b><i></i></a>
+      <nav class="pill links" aria-label="Principal">
+        {site.nav.map(([id, label]) => <a href={href(id)} data-go={home ? id : undefined} data-nav-link>{label}</a>)}
+      </nav>
+      <div class="nav-right">
+        <div class="pill socials">
+          {site.social.map((s) => <a href={s.href} aria-label={s.label} target={s.id === 'mail' ? undefined : '_blank'} rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true" set:html={ICON[s.id]} /></a>)}
         </div>
-        <div class="flex items-center gap-3">
-          <a href="mailto:jorge.troncoso4@gmail.com" data-contact-trigger class="inline-flex min-h-11 items-center rounded-full border border-cyan-300/30 bg-cyan-300/10 px-4 py-2 text-sm font-bold text-cyan-100">Contacto</a>
-          <details class="relative md:hidden" data-mobile-menu>
-            <summary class="nav-menu-trigger flex min-h-11 cursor-pointer items-center gap-2 rounded-full border border-white/15 bg-white/[.04] px-4 py-2 text-sm font-bold text-white"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" /></svg>Menú</summary>
-            <div class="nav-mobile-panel absolute right-0 top-13 w-60 p-2 shadow-2xl">
-              <a data-view-link="perfil" class="nav-view-link" href="/#perfil"><span>Perfil</span><small>Trayectoria</small></a>
-              <a data-view-link="proyectos" class="nav-view-link" href="/#proyectos"><span>Proyectos</span><small>Casos de trabajo</small></a>
-              <a data-view-link="inicio" class="nav-view-link" href="/#inicio"><span>Inicio</span><small>Resumen</small></a>
-              <a data-view-link="tecnologias" class="nav-view-link" href="/#tecnologias"><span>Tecnologías</span><small>Stack técnico</small></a>
-              <a data-view-link="ia-local" class="nav-view-link" href="/#ia-local"><span>IA local</span><small>Infraestructura</small></a>
-            </div>
-          </details>
-        </div>
+        <button class="pill menu-btn" type="button" aria-expanded="false" aria-controls="mnav">Menú</button>
+      </div>
+      <nav class="mnav" id="mnav" aria-label="Principal (móvil)" hidden>
+        {site.nav.map(([id, label]) => <a href={href(id)} data-go={home ? id : undefined} data-nav-link>{label}</a>)}
+        <a href={href('contact')} data-go={home ? 'contact' : undefined}>Contacto</a>
       </nav>
     </header>
-    <div class:list={{ 'site-viewport': true, 'site-viewport-panels': panelNavigation }}>
-      <div class="site-window">
-        <slot />
-        {!hideFooter && <footer transition:persist="site-footer" class="border-t border-white/5 py-8">
-          <div class="container-shell flex flex-col gap-5 text-sm text-slate-300 md:flex-row md:items-center md:justify-between">
-            <div><p class="font-bold text-white">Jorge Troncoso</p><p class="mt-1 text-slate-400">Contáctame por:</p><div class="footer-contact-links"><a href="https://wa.me/56950254516" target="_blank" rel="noopener noreferrer" aria-label="Contactar por WhatsApp" title="WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 2.8 9.2 5a1.9 1.9 0 0 1 .5 2.3l-1 2a14.5 14.5 0 0 0 6.1 6.1l2-1a1.9 1.9 0 0 1 2.3.5l2.2 2.6a1.9 1.9 0 0 1-.1 2.6l-1.5 1.5c-1.1 1.1-2.8 1.5-4.3 1C9.2 20.8 3.2 14.8 1.7 8.6c-.5-1.5-.1-3.2 1-4.3l1.5-1.5a1.9 1.9 0 0 1 2.4 0Z" /></svg></a><a href="mailto:jorge.troncoso4@gmail.com" aria-label="Enviar correo electrónico" title="Correo electrónico"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2" /><path d="m4 7 8 6 8-6" /></svg></a></div></div>
-            <div class="md:text-right"><p>Página web desarrollada en Astro</p><p class="mt-1 text-slate-400">Todos los derechos reservados.</p></div>
-          </div>
-        </footer>}
-      </div>
-    </div>
-    <dialog id="contact-dialog" class="contact-dialog" aria-labelledby="contact-dialog-title" aria-describedby="contact-dialog-description">
-      <div class="contact-dialog-content">
-        <button type="button" class="contact-dialog-close" data-contact-close aria-label="Cerrar opciones de contacto">Cerrar</button>
-        <p class="eyebrow">Contacto</p>
-        <h2 id="contact-dialog-title">¿Cómo prefieres contactar?</h2>
-        <p id="contact-dialog-description">Selecciona un canal para iniciar la conversación.</p>
-        <div class="contact-dialog-actions">
-          <a href="mailto:jorge.troncoso4@gmail.com" data-contact-action class="contact-email-action">✉️ Correo: jorge.troncoso4@gmail.com</a>
-          <a href="https://wa.me/56950254516" data-contact-action class="contact-whatsapp-action" target="_blank" rel="noreferrer">💬 WhatsApp: +56950254516</a>
-        </div>
-      </div>
-    </dialog>
+    <slot />
     <script>
-      const projectPath = /^\/proyectos\/([^/?#]+)\/?$/;
-      let lastContactTrigger: HTMLElement | null = null;
+      const btn = document.querySelector<HTMLButtonElement>('.menu-btn')!, menu = document.querySelector<HTMLElement>('#mnav')!;
+      const setMenu = (open: boolean) => { btn.setAttribute('aria-expanded', String(open)); menu.hidden = !open; };
+      btn.addEventListener('click', () => setMenu(btn.getAttribute("aria-expanded") !== "true"));
+      menu.addEventListener('click', (e) => { if ((e.target as Element).closest('a')) setMenu(false); });
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setMenu(false); });
+      document.addEventListener('click', (e) => { if (!(e.target as Element).closest('.nav')) setMenu(false); });
 
-      const prepareProjectTransitions = (root: ParentNode = document) => {
-        root.querySelectorAll<HTMLAnchorElement>('a[href^="/proyectos/"]').forEach((link) => {
-          const slug = new URL(link.href).pathname.match(projectPath)?.[1];
-          const card = link.closest<HTMLElement>('article');
-          if (slug && card) card.style.viewTransitionName = `project-${slug}`;
-        });
-      };
-
-      prepareProjectTransitions();
-      document.addEventListener('astro:page-load', () => prepareProjectTransitions());
-      document.addEventListener('click', (event) => {
-        if (!(event.target instanceof Element)) return;
-
-        const contactTrigger = event.target.closest<HTMLElement>('[data-contact-trigger], a[href="mailto:jorge.troncoso4@gmail.com"]');
-        const isContactButton = contactTrigger?.hasAttribute('data-contact-trigger') || contactTrigger?.textContent?.trim() === 'Contactar';
-        const contactDialog = document.querySelector<HTMLDialogElement>('#contact-dialog');
-        if (isContactButton && contactTrigger && contactDialog) {
-          event.preventDefault();
-          lastContactTrigger = contactTrigger;
-          contactDialog.showModal();
-          return;
-        }
-
-        if (event.target.closest('[data-contact-close]')) {
-          contactDialog?.close();
-          return;
-        }
-
-        if (event.target.closest('[data-contact-action]')) contactDialog?.close();
-
-        const link = event.target.closest<HTMLAnchorElement>('[data-mobile-menu] a');
-        if (link) link.closest<HTMLDetailsElement>('[data-mobile-menu]')?.removeAttribute('open');
-      });
-      document.addEventListener('click', (event) => {
-        if (event.target instanceof Element && !event.target.closest('[data-mobile-menu]')) {
-          document.querySelector<HTMLDetailsElement>('[data-mobile-menu]')?.removeAttribute('open');
-        }
-      });
-      document.addEventListener('keydown', (event) => {
-        if (event.key === 'Escape') document.querySelector<HTMLDetailsElement>('[data-mobile-menu]')?.removeAttribute('open');
-      });
-      document.querySelector<HTMLDialogElement>('#contact-dialog')?.addEventListener('close', () => {
-        lastContactTrigger?.focus();
-        lastContactTrigger = null;
-      });
-      document.addEventListener('astro:before-swap', (event) => {
-        const slug = event.to.pathname.match(projectPath)?.[1];
-        const hero = event.newDocument.querySelector<HTMLElement>('main > section');
-        if (slug && hero) hero.style.viewTransitionName = `project-${slug}`;
-      });
+      // En páginas internas el tema de la barra sigue a la sección bajo ella (en la portada lo maneja echo.ts).
+      if (document.body.dataset.page !== 'home') {
+        const nav = document.querySelector<HTMLElement>('#nav')!, themed = [...document.querySelectorAll<HTMLElement>('[data-nav-theme]')];
+        const update = () => {
+          const s = themed.find((el) => { const r = el.getBoundingClientRect(); return r.top <= 40 && r.bottom > 40; });
+          nav.dataset.theme = s?.dataset.navTheme ?? 'light';
+        };
+        addEventListener('scroll', update, { passive: true }); update();
+        document.body.classList.add('ready');
+        const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: .15 });
+        document.querySelectorAll('[data-reveal], .case-body').forEach((el) => io.observe(el));
+      }
     </script>
   </body>
 </html>

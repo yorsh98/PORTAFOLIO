@@ -1,0 +1,135 @@
+- generic [active] [ref=e1]:
+  - link "Saltar al contenido" [ref=e2] [cursor=pointer]:
+    - /url: "#contenido"
+  - banner [ref=e3]:
+    - link "Inicio" [ref=e4] [cursor=pointer]:
+      - /url: /#home
+      - generic [ref=e5]: JT
+    - navigation "Principal" [ref=e7]:
+      - link "Inicio" [ref=e8] [cursor=pointer]:
+        - /url: /#home
+      - link "Sobre mí" [ref=e9] [cursor=pointer]:
+        - /url: /#about
+      - link "Experiencia" [ref=e10] [cursor=pointer]:
+        - /url: /#experience
+      - link "Proyectos" [ref=e11] [cursor=pointer]:
+        - /url: /#projects
+      - link "Stack" [ref=e12] [cursor=pointer]:
+        - /url: /#stack
+      - link "Servicios" [ref=e13] [cursor=pointer]:
+        - /url: /#services
+    - generic [ref=e15]:
+      - link "GitHub" [ref=e16] [cursor=pointer]:
+        - /url: https://github.com/vorsh98
+      - link "WhatsApp" [ref=e19] [cursor=pointer]:
+        - /url: https://wa.me/56950254516
+      - link "Correo" [ref=e22] [cursor=pointer]:
+        - /url: mailto:jorge.troncoso4@gmail.com
+  - main [ref=e26]:
+    - generic [ref=e27]:
+      - link "← Volver a proyectos" [ref=e28] [cursor=pointer]:
+        - /url: /#projects
+      - paragraph [ref=e29]: 06 · Proyecto académico · Full stack
+      - heading "ProviEmplea 2026" [level=1] [ref=e30]
+      - paragraph [ref=e31]: "Plataforma de intermediación laboral municipal con búsqueda inversa: empresas validadas buscan talentos mediante CV protegidos y solicitan el contacto a través del Departamento de Empleo."
+      - list [ref=e32]:
+        - listitem [ref=e33]: Laravel
+        - listitem [ref=e34]: Sanctum
+        - listitem [ref=e35]: React
+        - listitem [ref=e36]: TypeScript
+        - listitem [ref=e37]: Inertia
+        - listitem [ref=e38]: Tailwind CSS
+        - listitem [ref=e39]: MySQL
+        - listitem [ref=e40]: Swagger/OpenAPI
+        - listitem [ref=e41]: Docker
+        - listitem [ref=e42]: Ollama
+      - figure [ref=e43]:
+        - button "Ampliar imagen de ProviEmplea 2026" [ref=e44] [cursor=pointer]:
+          - img "Portada pública de ProviEmplea 2026." [ref=e45]
+    - generic [ref=e46]:
+      - generic [ref=e47]:
+        - article [ref=e48]:
+          - text: "01"
+          - heading "Objetivo" [level=2] [ref=e49]
+          - paragraph [ref=e50]: Ordenar y digitalizar la intermediación laboral municipal (inscripción, perfilamiento, derivación y seguimiento) sin exponer datos personales de quienes buscan empleo.
+        - article [ref=e51]:
+          - text: "02"
+          - heading "Solución" [level=2] [ref=e52]
+          - paragraph [ref=e53]: "Tres portales sobre una misma API: personas completan su perfil y cargan su CV con consentimiento; empresas validadas revisan una vitrina de CV ciegos y piden contacto; el equipo municipal valida perfiles, gestiona solicitudes, deja notas internas y exporta reportes."
+        - article [ref=e54]:
+          - text: "03"
+          - heading "Arquitectura" [level=2] [ref=e55]
+          - paragraph [ref=e56]: Monorepo con backend y frontend separados. Una API REST Laravel versionada bajo /api/v1, autenticada con Bearer Token (Sanctum) y documentada con Swagger/OpenAPI, concentra reglas de privacidad, policies, auditoría y rate limiting. El frontend Laravel + React con Inertia y TypeScript consume la API mediante servicios tipados. El análisis de CV funciona con expresiones regulares por defecto, con Ollama local u OpenAI como opción configurable.
+        - article [ref=e57]:
+          - text: "04"
+          - heading "Infraestructura" [level=2] [ref=e58]
+          - paragraph [ref=e59]: Backend en Docker Compose con PHP-FPM, Nginx, MySQL, cola en base de datos, scheduler, Mailpit y LibreOffice para procesar documentos. El frontend se ejecuta con Vite. Incluye un widget de accesibilidad propio con opciones de texto, contraste y navegación.
+        - article [ref=e60]:
+          - text: "05"
+          - heading "Alcance de publicación" [level=2] [ref=e61]
+          - paragraph [ref=e62]: Proyecto académico desarrollado para una evaluación de IPSS; no es un sistema oficial de la Municipalidad de Providencia. Todas las capturas usan cuentas y datos de demostración.
+      - generic [ref=e63]:
+        - paragraph [ref=e64]: INTERFAZ DEL SISTEMA
+        - heading "GALERÍA" [level=2] [ref=e65]
+        - list [ref=e66]:
+          - listitem [ref=e67]:
+            - 'button "Ampliar: Portada pública" [ref=e68] [cursor=pointer]':
+              - img "Portada pública" [ref=e69]
+            - paragraph [ref=e70]: Portada pública
+          - listitem [ref=e71]:
+            - 'button "Ampliar: Accesos para personas, empresas y gestión municipal" [ref=e72] [cursor=pointer]':
+              - img "Accesos para personas, empresas y gestión municipal" [ref=e73]
+            - paragraph [ref=e74]: Accesos para personas, empresas y gestión municipal
+          - listitem [ref=e75]:
+            - 'button "Ampliar: Flujo: del perfil laboral a la solicitud intermediada" [ref=e76] [cursor=pointer]':
+              - 'img "Flujo: del perfil laboral a la solicitud intermediada" [ref=e77]'
+            - paragraph [ref=e78]: "Flujo: del perfil laboral a la solicitud intermediada"
+          - listitem [ref=e79]:
+            - 'button "Ampliar: Registro de persona o empresa" [ref=e80] [cursor=pointer]':
+              - img "Registro de persona o empresa" [ref=e81]
+            - paragraph [ref=e82]: Registro de persona o empresa
+          - listitem [ref=e83]:
+            - 'button "Ampliar: Widget de accesibilidad" [ref=e84] [cursor=pointer]':
+              - img "Widget de accesibilidad" [ref=e85]
+            - paragraph [ref=e86]: Widget de accesibilidad
+          - listitem [ref=e87]:
+            - 'button "Ampliar: Panel persona: perfil laboral y carga de CV" [ref=e88] [cursor=pointer]':
+              - 'img "Panel persona: perfil laboral y carga de CV" [ref=e89]'
+            - paragraph [ref=e90]: "Panel persona: perfil laboral y carga de CV"
+          - listitem [ref=e91]:
+            - 'button "Ampliar: Consentimiento y estado del CV protegido" [ref=e92] [cursor=pointer]':
+              - img "Consentimiento y estado del CV protegido" [ref=e93]
+            - paragraph [ref=e94]: Consentimiento y estado del CV protegido
+          - listitem [ref=e95]:
+            - 'button "Ampliar: Panel empresa: vitrina de talentos" [ref=e96] [cursor=pointer]':
+              - 'img "Panel empresa: vitrina de talentos" [ref=e97]'
+            - paragraph [ref=e98]: "Panel empresa: vitrina de talentos"
+          - listitem [ref=e99]:
+            - 'button "Ampliar: CV ciego: educación y experiencia sin datos de contacto" [ref=e100] [cursor=pointer]':
+              - 'img "CV ciego: educación y experiencia sin datos de contacto" [ref=e101]'
+            - paragraph [ref=e102]: "CV ciego: educación y experiencia sin datos de contacto"
+          - listitem [ref=e103]:
+            - 'button "Ampliar: Solicitud de contacto intermediado" [ref=e104] [cursor=pointer]':
+              - img "Solicitud de contacto intermediado" [ref=e105]
+            - paragraph [ref=e106]: Solicitud de contacto intermediado
+          - listitem [ref=e107]:
+            - 'button "Ampliar: Panel de administración con indicadores" [ref=e108] [cursor=pointer]':
+              - img "Panel de administración con indicadores" [ref=e109]
+            - paragraph [ref=e110]: Panel de administración con indicadores
+          - listitem [ref=e111]:
+            - 'button "Ampliar: Gestión de talentos, empresas y solicitudes" [ref=e112] [cursor=pointer]':
+              - img "Gestión de talentos, empresas y solicitudes" [ref=e113]
+            - paragraph [ref=e114]: Gestión de talentos, empresas y solicitudes
+          - listitem [ref=e115]:
+            - 'button "Ampliar: Notas internas, reportes y configuración de IA" [ref=e116] [cursor=pointer]':
+              - img "Notas internas, reportes y configuración de IA" [ref=e117]
+            - paragraph [ref=e118]: Notas internas, reportes y configuración de IA
+      - link "SIGUIENTE PROYECTO VentasFix ↗" [ref=e119] [cursor=pointer]:
+        - /url: /proyectos/ventasfix
+        - generic [ref=e120]: SIGUIENTE PROYECTO
+        - generic [ref=e121]: VentasFix ↗
+  - generic [ref=e124]:
+    - button [ref=e125]
+    - button [ref=e131]
+    - button [ref=e135]
+    - button [ref=e140]

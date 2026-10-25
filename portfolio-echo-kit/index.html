@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Jorge Troncoso — Portafolio</title>
+<meta name="description" content="Portafolio de Jorge Troncoso: IA local, RAG, backend y sistemas web.">
+<meta name="theme-color" content="#06070c">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="is-loading">
+
+<!-- 1 · PRELOADER -->
+<div id="preloader" aria-hidden="true">
+  <svg class="pl-svg" viewBox="0 0 220 130" fill="none">
+    <path id="plPath" d="M30 96 C 52 6, 150 -8, 160 62 C 166 104, 128 118, 116 92"/>
+    <circle id="plDot" r="3.4"/>
+  </svg>
+  <div class="pl-word" id="plWord"></div>
+</div>
+
+<!-- 2 · NAV -->
+<header class="nav" id="nav" data-theme="light">
+  <a class="logo" href="#home" data-go="home" id="logo"></a>
+  <nav class="pill links" id="navLinks" aria-label="Principal"></nav>
+  <div class="pill socials" id="navSocial"></div>
+</header>
+
+<main>
+  <!-- 3 + 4 · HERO → SOBRE MÍ (escenario fijo, controlado por scroll) -->
+  <section class="pin" id="s-home">
+    <div class="stage">
+      <div class="ha-bg" id="haBg"><canvas id="swirl"></canvas></div>
+      <div class="ha-card" id="haCard">
+        <div class="hero-layer" id="heroLayer">
+          <h1 class="hero-title">
+            <span class="ln l1"><span data-bind="hero.line1"></span></span>
+            <span class="ln l2"><span data-bind="hero.line2"></span></span>
+          </h1>
+          <figure class="hero-portrait" id="portrait"></figure>
+          <p class="hero-est mono" data-bind="hero.est"></p>
+          <div class="hero-side"><p data-bind="hero.tagline"></p><ul id="heroSide"></ul></div>
+          <a class="hero-cue" href="#about" data-go="about" aria-label="Bajar">↘</a>
+        </div>
+        <div class="about-layer" id="aboutLayer">
+          <div class="beam"></div><div class="figure"></div>
+          <div class="about-content" id="aboutContent">
+            <p class="ab-kicker" data-bind="about.kicker"></p>
+            <div class="ab-bottom">
+              <h2 class="ab-head" data-bind="about.headline"></h2>
+              <div class="ab-cols" id="aboutCols"></div>
+              <div class="ab-cta" id="aboutCta"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="about-words" id="aboutWords" aria-hidden="true">
+        <span id="wA" data-bind="about.words.0"></span><span id="wB" data-bind="about.words.1"></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 · EXPERIENCIA -->
+  <section class="pin exp" id="s-experience">
+    <div class="stage">
+      <div class="ghost" id="ghost"></div>
+      <div class="exp-track" id="expTrack"></div>
+      <div class="exp-tabs" id="expTabs"></div>
+      <div class="exp-bar"><i id="expBar"></i></div>
+      <div class="wipe" id="wipe"></div>
+    </div>
+  </section>
+
+  <!-- 6 · PROYECTO DESTACADO -->
+  <section class="pin feat" id="s-projects">
+    <div class="stage">
+      <p class="eyebrow mono" data-bind="featured.eyebrow"></p>
+      <canvas id="beltCanvas" aria-label="Carrusel de proyectos"></canvas>
+      <div class="cap" id="cap"><b id="capTitle"></b><span id="capSub"></span><small id="capIdx"></small></div>
+      <div class="cat" data-bind="featured.category"></div>
+    </div>
+  </section>
+
+  <!-- 7 · OBRAS -->
+  <section class="pin works" id="s-works">
+    <div class="stage" id="worksStage">
+      <div class="ring" id="ring"></div>
+      <div class="works-center" id="worksCenter" data-bind="works.center"></div>
+      <div class="works-label" id="worksLabel"></div>
+      <ul class="works-index" id="worksIndex"></ul>
+      <div class="works-hint mono" data-bind="works.hint"></div>
+    </div>
+  </section>
+
+  <!-- 8 · SERVICIOS -->
+  <section class="services" id="s-services">
+    <h2 data-bind="services.title" data-reveal></h2>
+    <p class="sv-text" data-bind="services.text" data-reveal></p>
+    <div class="acc" id="acc"></div>
+  </section>
+
+  <!-- 9 · CONTACTO -->
+  <section class="talk" id="s-contact">
+    <div class="talk-line"></div>
+    <h2 class="chrome" id="talkTitle" aria-label=""></h2>
+    <nav class="tpills" id="talkPills"></nav>
+    <footer class="foot mono" id="foot"></footer>
+  </section>
+</main>
+
+<script src="js/content.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

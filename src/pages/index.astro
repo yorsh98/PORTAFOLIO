@@ -1,569 +1,235 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { projects } from '../data/projects';
+import { site } from '../data/site';
 import { technologies, categoryLabels } from '../data/technologies';
 import iconSet from '@iconify-json/simple-icons/icons.json';
 
-const technologyCustomIcons: Record<string, string> = {
+const { hero, about, experience: X, featured, works, stack, localAi, credentials, services, contact } = site;
+
+const customIcons: Record<string, string> = {
+  llamacpp: '<path d="M7 3.5v5.2M10.2 3.5v5.2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M5.6 8.7h6.2a2 2 0 0 1 2 2v1.8h3.4a2.3 2.3 0 0 1 2.3 2.3v5.7h-2.2v-3.6h-1.5v3.6h-2.2v-3.6H8.9v3.6H6.7v-3.6H5.2v3.6H3V12a3.3 3.3 0 0 1 2.6-3.3Z" fill="currentColor"/><circle cx="8.4" cy="11" r=".9" fill="#06070c"/>',
+  argon2: '<rect x="4.5" y="10.5" width="15" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 14.2v2.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>',
   cuda: '<rect x="4" y="4" width="16" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 9h8v6H8zM2 8h2m16 0h2M2 12h2m16 0h2M2 16h2m16 0h2M8 2v2m4-2v2m4-2v2M8 20v2m4-2v2m4-2v2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>'
 };
-const selectedTech = technologies.map((tech) => ({ ...tech, iconBody: technologyCustomIcons[tech.slug] ?? iconSet.icons[tech.slug as keyof typeof iconSet.icons]?.body }));
-const featuredStack = [['Laravel + React/Vue', 'laravel'], ['FastAPI + Celery + Redis', 'fastapi'], ['Ollama + LangGraph + LLMs', 'ollama'], ['Docker Compose + NVIDIA CUDA', 'docker']].map(([name, slug]) => ({ name, slug, iconBody: iconSet.icons[slug as keyof typeof iconSet.icons]?.body }));
-const technologyBySlug = new Map(selectedTech.map((tech) => [tech.slug, tech]));
-const technologyMapPositions = [
-  ['html5', 13.5, 69],
-  ['css3', 22, 64],
-  ['javascript', 30.5, 59],
-  ['typescript', 29.5, 75],
-  ['react', 14.5, 48],
-  ['vuedotjs', 20.4, 44],
-  ['livewire', 38, 69],
-  ['tailwindcss', 20.4, 53.5],
-  ['vite', 22, 80],
-  ['astro', 8.5, 52],
-  ['bootstrap', 14.5, 57],
-  ['laravel', 69.8, 19.2],
-  ['php', 69.8, 26.2],
-  ['fastapi', 80.7, 20.6],
-  ['python', 81, 26.9],
-  ['ollama', 84.5, 35],
-  ['langchain', 75.4, 42.5],
-  ['langgraph', 94, 42.5],
-  ['huggingface', 75.4, 53.5],
-  ['modelcontextprotocol', 93.4, 53.5],
-  ['pgvector', 84.2, 59],
-  ['postgresql', 42.6, 82.8],
-  ['mariadb', 47.8, 85.2],
-  ['redis', 53.1, 87.8],
-  ['docker', 64, 65],
-  ['ubuntu', 61.2, 79.1],
-  ['nvidia', 71.8, 72.6],
-  ['cuda', 54.3, 72]
-] as const;
-const technologyMapItems = technologyMapPositions.map(([slug, x, y]) => {
-  const technology = technologyBySlug.get(slug);
-  return { slug, x, y, name: technology?.name ?? slug, category: technology?.category ?? 'frontend', iconBody: technology?.iconBody };
-});
-const webProjects = projects.filter((project) => project.kind === 'web');
-const modelProject = projects.find((project) => project.kind === 'model');
-const profileTechnologies = [
-  ['PHP', 'php'], ['Laravel', 'laravel'], ['Python', 'python'], ['HTML5', 'html5'], ['CSS3', 'css3'], ['JavaScript', 'javascript'], ['Ollama', 'ollama'], ['Hugging Face', 'huggingface'], ['ChatGPT / Codex App', 'openai'], ['OpenCode CLI', 'opencode'], ['Antigravity CLI', 'antigravity'], ['MCPs', 'modelcontextprotocol'], ['SKILL.md', 'agentskills'], ['SOLID', 'solid-principles'], ['MVC', 'mvc-pattern'], ['RAG documental', 'rag'], ['PostgreSQL', 'postgresql'], ['MySQL', 'mysql'], ['MariaDB', 'mariadb'], ['SQL', 'sql'], ['Git', 'git'], ['GitHub', 'github'], ['Windows', 'windows'], ['Linux', 'linux'], ['macOS', 'apple'], ['Redes', 'network']
-] as const;
-const profileCustomIcons: Record<string, string> = {
-  antigravity: '<defs><linearGradient id="antigravity-gradient" x1="3" y1="20" x2="21" y2="4" gradientUnits="userSpaceOnUse"><stop stop-color="#4785ff"/><stop offset=".35" stop-color="#54d8e7"/><stop offset=".63" stop-color="#95d83e"/><stop offset=".82" stop-color="#ffd63d"/><stop offset="1" stop-color="#ed5b6d"/></linearGradient></defs><path fill="url(#antigravity-gradient)" d="M2.7 20.5 9.2 5.7a3.06 3.06 0 0 1 5.6 0l6.5 14.8h-4.54L12 9.72 7.24 20.5H2.7Z"/><path fill="#07101f" d="m8.88 20.5 3.12-7.08 3.12 7.08h-2.2L12 17.86l-.8 2.64H8.88Z"/>',
-  'solid-principles': '<path fill="none" stroke="currentColor" stroke-width="1.8" d="m12 2.7 7.55 4.35v8.9L12 20.3l-7.55-4.35v-8.9L12 2.7Z"/><path fill="none" stroke="currentColor" stroke-width="1.8" d="M8.4 8.2h7.2M8.4 12h7.2M8.4 15.8h4.1" stroke-linecap="round"/>',
-  'mvc-pattern': '<rect x="3" y="4" width="6.2" height="5.4" rx="1" fill="none" stroke="currentColor" stroke-width="1.7"/><rect x="14.8" y="4" width="6.2" height="5.4" rx="1" fill="none" stroke="currentColor" stroke-width="1.7"/><rect x="8.9" y="14.6" width="6.2" height="5.4" rx="1" fill="none" stroke="currentColor" stroke-width="1.7"/><path fill="none" stroke="currentColor" stroke-width="1.7" d="m9.2 9.2 2.8 5.1m2.8-5.1-2.8 5.1" stroke-linecap="round"/>',
-  rag: '<path fill="none" stroke="currentColor" stroke-width="1.8" d="M6 3.5h8.2l3.8 3.8v13.2H6V3.5Z"/><path fill="none" stroke="currentColor" stroke-width="1.8" d="M14.2 3.5v3.8H18M9 12h5.7M9 15.5h3.4" stroke-linecap="round"/><circle cx="16.6" cy="17.1" r="2.1" fill="none" stroke="currentColor" stroke-width="1.6"/><path fill="none" stroke="currentColor" stroke-width="1.6" d="m18.2 18.7 2 2" stroke-linecap="round"/>',
-  sql: '<ellipse cx="12" cy="5.6" rx="6.8" ry="2.6" fill="none" stroke="currentColor" stroke-width="1.8"/><path fill="none" stroke="currentColor" stroke-width="1.8" d="M5.2 5.6v6.4c0 1.44 3.05 2.6 6.8 2.6s6.8-1.16 6.8-2.6V5.6m-13.6 6.4v6.4c0 1.44 3.05 2.6 6.8 2.6s6.8-1.16 6.8-2.6V12"/>',
-  network: '<circle cx="5" cy="12" r="2.2" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="18.5" cy="5.5" r="2.2" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="18.5" cy="18.5" r="2.2" fill="none" stroke="currentColor" stroke-width="1.8"/><path fill="none" stroke="currentColor" stroke-width="1.8" d="m7.1 10.95 9.25-4.4M7.1 13.05l9.25 4.4" stroke-linecap="round"/>'
-};
-const selectedProfileTechnologies = profileTechnologies.map(([name, slug]) => ({ name, slug, iconBody: profileCustomIcons[slug] ?? iconSet.icons[slug as keyof typeof iconSet.icons]?.body }));
-const credentialFans = [
-  {
-    title: 'Diplomado y formación INACAP',
-    credentials: [
-      { title: 'Diplomado Inteligencia Artificial aplicada a negocios', image: '/images/profile/Captura desde 2026-07-28 21-51-24.webp', alt: 'Certificado redactado del Diplomado Inteligencia Artificial aplicada a negocios de INACAP.' },
-      { title: 'Fundamentos de Inteligencia Artificial aplicada a negocios', image: '/images/profile/Captura desde 2026-07-28 21-52-26.webp', alt: 'Certificado redactado del curso Fundamentos de Inteligencia Artificial aplicada a negocios.' },
-      { title: 'Incorporación de Inteligencia Artificial', image: '/images/profile/Captura desde 2026-07-28 21-52-40.webp', alt: 'Certificado redactado del curso Incorporación de Inteligencia Artificial.' },
-      { title: 'Desarrollo y gestión de bases de datos', image: '/images/profile/Captura desde 2026-07-28 21-52-16.webp', alt: 'Certificado redactado del curso Desarrollo y gestión de bases de datos.' }
-    ]
-  },
-  {
-    title: 'Especialización complementaria',
-    credentials: [
-      { title: 'Adopción de Machine Learning para la toma de decisiones', image: '/images/profile/Captura desde 2026-07-28 21-51-47.webp', alt: 'Certificado redactado del curso Adopción de Machine Learning para la toma de decisiones.' },
-      { title: 'Curso de Bases y Conceptos de Inteligencia Artificial', image: '/images/profile/Captura desde 2026-07-28 21-50-37.webp', alt: 'Certificado redactado del Curso de Bases y Conceptos de Inteligencia Artificial de Código Facilito.' },
-      { title: 'Curso a fondo de GitHub', image: '/images/profile/Captura desde 2026-07-28 21-50-29.webp', alt: 'Certificado redactado del Curso a fondo de GitHub de Código Facilito.' },
-      { title: 'Curso de Laravel Profesional', image: '/images/profile/Captura desde 2026-07-28 21-50-47.webp', alt: 'Certificado redactado del Curso de Laravel Profesional de Código Facilito.' }
-    ]
-  }
-] as const;
+const iconOf = (slug: string) => customIcons[slug] ?? iconSet.icons[slug as keyof typeof iconSet.icons]?.body;
+const techGroups = (Object.keys(categoryLabels) as (keyof typeof categoryLabels)[]).map((cat) => ({
+  label: categoryLabels[cat],
+  items: technologies.filter((t) => t.category === cat).map((t) => ({ ...t, icon: iconOf(t.slug) }))
+}));
+
+const echoData = JSON.stringify({ word: site.preloader.word, featured: featured.items, works: works.items });
+const CHEV = '<path d="m6 9 6 6 6-6"/>';
 ---
-<BaseLayout hideFooter={true} panelNavigation={true}>
-  <main id="contenido" class="cube-stage">
-    <section id="perfil" data-view="perfil" class="cube-panel" aria-labelledby="perfil-title" aria-hidden="true">
-      <div class="cube-panel-content container-shell py-10 sm:py-14">
-        <div class="profile-layout">
-          <header class="profile-intro">
-            <p class="eyebrow">Perfil profesional</p>
-            <h1 id="perfil-title" class="section-title" tabindex="-1">Tecnología que resuelve, automatiza y sostiene la operación.</h1>
-            <p class="section-copy text-lg">Profesional TI con experiencia desde 2019 en soporte tecnológico, continuidad operativa y desarrollo de soluciones internas para instituciones del Poder Judicial. Combino resolución de incidencias, infraestructura local y desarrollo web para convertir necesidades operativas en herramientas útiles.</p>
-            <div class="mt-6 flex flex-wrap gap-2"><span class="tag">Soporte TI</span><span class="tag">Soluciones a medida</span><span class="tag">Automatización</span><span class="tag">Infraestructura local</span></div>
-          </header>
+<BaseLayout home>
+  <script type="application/json" id="echo-data" set:html={echoData} />
 
-          <section class="profile-section" aria-labelledby="capacidades-title">
-            <div class="profile-section-heading"><p class="eyebrow">Enfoque de trabajo</p><h2 id="capacidades-title">Del incidente a la solución</h2></div>
-            <div class="grid gap-3 md:grid-cols-3">
-              <article class="profile-capability"><span class="profile-number">01</span><h3>Continuidad operativa</h3><p>Soporte a usuarios y equipamiento, configuración de puestos, redes, impresoras, audio y salas de audiencias híbridas.</p></article>
-              <article class="profile-capability"><span class="profile-number">02</span><h3>Soluciones internas</h3><p>Desarrollo y mantención de sistemas web, automatizaciones y herramientas orientadas a procesos institucionales reales.</p></article>
-              <article class="profile-capability"><span class="profile-number">03</span><h3>Entornos técnicos</h3><p>Servidores locales, bases de datos, Linux, redes y herramientas de IA aplicada para apoyar flujos de trabajo.</p></article>
-            </div>
-          </section>
+  <!-- 1 · PRELOADER -->
+  <div id="preloader" aria-hidden="true">
+    <svg class="pl-svg" viewBox="0 0 220 130" fill="none"><path id="plPath" d="M30 96 C 52 6, 150 -8, 160 62 C 166 104, 128 118, 116 92" /><circle id="plDot" r="3.4" /></svg>
+    <div class="pl-word" id="plWord"></div>
+  </div>
 
-          <section class="profile-section" aria-labelledby="experiencia-title">
-            <div class="profile-section-heading"><p class="eyebrow">Experiencia aplicada</p><h2 id="experiencia-title">Resolver primero. Mejorar después.</h2></div>
-            <div class="grid gap-3">
-              <article class="profile-experience profile-experience-featured"><div><p class="profile-period">2024 - 2026</p><h3>4to Tribunal de Juicio Oral en lo Penal de Santiago</h3><p class="profile-role">Administrativo tercero Informatico</p></div><div class="profile-experience-details"><p>Impulso mejoras tecnológicas, actualizaciones de flujos de trabajo locales y procedimientos internos, con desarrollos que integran inteligencia artificial local para la gestión documental judicial.</p><ul class="profile-project-list"><li><strong>Plataforma IA Unificada:</strong> ecosistema institucional que centraliza herramientas de IA con portal de usuarios, roles, permisos, auditoría y acceso a módulos; analizador documental; anonimizador de datos personales; transcriptor con seguimiento de tareas; y chatbots respaldados por citas.</li><li><strong>4toTOP:</strong> sistema web para gestión judicial y administrativa, con control de usuarios y permisos, carga y procesamiento de archivos Excel, consulta de correos IMAP, tablas dinámicas y reportes.</li><li><strong>Chatbot UNIJUD:</strong> asistente jurídico conversacional basado en RAG para consultar documentación institucional, recuperar información relevante y generar respuestas con fuentes y citas verificables.</li></ul></div></article>
-              <article class="profile-experience"><p class="profile-period">2019 - 2024</p><h3>Soporte tecnologico CAPJ y TOP San bernardo</h3><p class="profile-role">Administrativo Informatico</p><p>Labores administrando equipos, respaldo de audios, redes local, sistemas remotos, salas de audiencia hibridas, sistema de archivos compartidos y atencion de emergencias informaticas, ademas de entregar soporte a distintas competencias jurisdiccionales.</p></article>
-            </div>
-          </section>
-
-          <section class="profile-section" aria-labelledby="stack-perfil-title">
-            <div class="profile-section-heading"><p class="eyebrow">Tecnologías utilizadas</p><h2 id="stack-perfil-title">Una base práctica, de la red al software</h2></div>
-            <div class="profile-tech-strip" data-profile-tech-strip tabindex="0" role="region" aria-label="Tecnologías utilizadas. Arrastra o usa las flechas izquierda y derecha para recorrer la lista.">
-              {[...selectedProfileTechnologies, ...selectedProfileTechnologies].map((tech, index) => <div class="profile-tech-item" aria-hidden={index >= selectedProfileTechnologies.length ? 'true' : undefined}><div class="profile-tech-icon">{tech.iconBody ? <svg viewBox="0 0 24 24" aria-hidden="true" set:html={tech.iconBody} /> : <span aria-hidden="true">{tech.slug}</span>}</div><span>{tech.name}</span></div>)}
-            </div>
-          </section>
-
-          <section class="profile-section" aria-labelledby="credenciales-title">
-            <div class="profile-section-heading"><p class="eyebrow">Formación continua</p><h2 id="credenciales-title">Credenciales que respaldan el aprendizaje</h2></div>
-            <p class="section-copy">Una selección ordenada de formación en inteligencia artificial, datos y desarrollo. Selecciona una credencial para verla en detalle.</p>
-            <div class="credential-fans">
-              {credentialFans.map((fan) => <section class="credential-fan" data-credential-fan aria-label={fan.title}><h3>{fan.title}</h3><div class="credential-fan-stack">{fan.credentials.map((credential, index) => <button type="button" class="credential-thumbnail" style={`--fan-index: ${index}; --fan-angle: ${index * 12}deg; --fan-x: ${index * 9}rem;`} data-credential-open data-credential-title={credential.title} data-credential-image={credential.image} data-credential-alt={credential.alt}><span class="credential-thumbnail-media"><img src={credential.image} alt="" loading="lazy" decoding="async" /></span><span class="credential-thumbnail-title">{credential.title}</span></button>)}</div></section>)}
-            </div>
-            <footer class="profile-footer">
-              <div class="flex flex-col gap-5 text-sm text-slate-300 md:flex-row md:items-center md:justify-between">
-                <div><p class="font-bold text-white">Jorge Troncoso</p><p class="mt-1 text-slate-400">Contáctame por:</p><div class="footer-contact-links"><a href="https://wa.me/56950254516" target="_blank" rel="noopener noreferrer" aria-label="Contactar por WhatsApp" title="WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 2.8 9.2 5a1.9 1.9 0 0 1 .5 2.3l-1 2a14.5 14.5 0 0 0 6.1 6.1l2-1a1.9 1.9 0 0 1 2.3.5l2.2 2.6a1.9 1.9 0 0 1-.1 2.6l-1.5 1.5c-1.1 1.1-2.8 1.5-4.3 1C9.2 20.8 3.2 14.8 1.7 8.6c-.5-1.5-.1-3.2 1-4.3l1.5-1.5a1.9 1.9 0 0 1 2.4 0Z" /></svg></a><a href="mailto:jorge.troncoso4@gmail.com" aria-label="Enviar correo electrónico" title="Correo electrónico"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2" /><path d="m4 7 8 6 8-6" /></svg></a></div></div>
-                <div class="md:text-right"><p>Página web desarrollada en Astro</p><p class="mt-1 text-slate-400">Todos los derechos reservados.</p></div>
+  <main id="contenido">
+    <!-- 3 + 4 · HERO → SOBRE MÍ -->
+    <section class="pin" id="home" data-nav-theme="dyn" aria-label="Inicio y presentación">
+      <span class="anchor-about" id="about" aria-hidden="true"></span>
+      <div class="stage">
+        <div class="ha-bg"><canvas id="swirl"></canvas></div>
+        <div class="ha-card" id="haCard">
+          <div class="hero-layer" id="heroLayer">
+            <h1 class="hero-title" aria-label={`${hero.line1} ${hero.line2}`}>
+              <span class="ln l1" aria-hidden="true"><span>{hero.line1}</span></span>
+              <span class="ln l2" aria-hidden="true"><span>{hero.line2}</span></span>
+            </h1>
+            <figure class="hero-portrait">
+              {hero.portrait ? <img src={hero.portrait} alt="" /> : (
+                <div class="core" data-core aria-label="Mapa del stack: pasa el mouse sobre cada componente">
+                  <span class="core-orbit" aria-hidden="true"></span><span class="core-orbit o2" aria-hidden="true"></span>
+                  <svg class="core-links" aria-hidden="true">{hero.core.nodes.map(() => <line />)}</svg>
+                  <div class="core-box"><small>{hero.core.kicker}</small><b>{hero.core.title}</b></div>
+                  <ul class="core-nodes">
+                    {hero.core.nodes.map((n, i) => <li class="node" tabindex="0" style={`--d:${.9 + i * .1}s`}><span>{n.label}</span><em class="tip">{n.info}</em></li>)}
+                  </ul>
+                </div>
+              )}
+            </figure>
+            <p class="hero-est mono">{hero.est}</p>
+            <div class="hero-side"><p>{hero.tagline}</p><ul>{hero.side.map((t) => <li>{t}</li>)}</ul></div>
+            <a class="hero-cue" href="#about" data-go="about" aria-label="Bajar a Sobre mí">↘</a>
+          </div>
+          <div class="about-layer" id="aboutLayer">
+            <div class="beam"></div><div class="figure"></div>
+            <div class="about-content" id="aboutContent">
+              <div class="ab-top">
+                <p class="ab-kicker">{about.kicker}</p>
+                <ul class="ab-facts mono">{about.facts.map((f) => <li>{f}</li>)}</ul>
               </div>
-            </footer>
-          </section>
-        </div>
-      </div>
-    </section>
-
-    <dialog id="credential-dialog" class="credential-dialog" aria-labelledby="credential-dialog-title"><div class="credential-dialog-content"><button type="button" class="credential-dialog-close" aria-label="Cerrar certificado">Cerrar</button><button type="button" class="credential-dialog-image" aria-label="Cerrar vista ampliada del certificado"><img src="" alt="" /></button><p id="credential-dialog-title"></p></div></dialog>
-
-    <section id="proyectos" data-view="proyectos" class="cube-panel" aria-labelledby="proyectos-title" aria-hidden="true">
-      <div class="cube-panel-content container-shell py-28"><p class="eyebrow">Casos de trabajo</p><h1 id="proyectos-title" class="section-title" tabindex="-1">Proyectos destacados</h1><p class="section-copy">Una selección de aplicaciones web y trabajo aplicado con modelos de inteligencia artificial.</p><div class="mt-10 grid gap-5 md:grid-cols-3">{webProjects.map((project, index) => <article class="glass group flex min-h-[320px] flex-col rounded-3xl p-6 transition duration-300 hover:-translate-y-1 hover:border-cyan-300/25"><div class="mb-8 flex items-center justify-between"><span class="text-xs font-bold uppercase tracking-[.16em] text-cyan-300">{project.category}</span><span class="text-4xl font-black text-white/10">0{index + 1}</span></div><h2 class="text-2xl font-black tracking-tight">{project.title}</h2><p class="mt-3 flex-1 text-sm leading-6 text-slate-300">{project.description}</p><div class="mt-5 flex flex-wrap gap-2">{project.technologies.slice(0, 5).map((tech) => <span class="tag">{tech}</span>)}</div><a href={`/proyectos/${project.slug}`} class="mt-6 inline-flex items-center gap-2 text-sm font-bold text-white">Ver caso de estudio <span class="transition group-hover:translate-x-1" aria-hidden="true">→</span></a></article>)}</div>{modelProject && <article class="glass mt-5 grid gap-6 rounded-3xl p-7 md:grid-cols-[1.2fr_.8fr] md:p-9"><div><p class="eyebrow">{modelProject.category}</p><h2 class="mt-3 text-3xl font-black tracking-tight">{modelProject.title}</h2><p class="mt-4 max-w-2xl leading-7 text-slate-300">{modelProject.description}</p><a href={`/proyectos/${modelProject.slug}`} class="mt-7 inline-flex rounded-xl bg-white px-5 py-3 font-bold text-slate-950">Explorar el proyecto</a></div><div class="rounded-2xl border border-violet-300/20 bg-violet-300/[.04] p-6"><p class="text-xs font-bold uppercase tracking-[.16em] text-violet-200">Dominio legal chileno</p><p class="mt-4 text-lg font-bold">Gemma + LoRA/QLoRA</p><p class="mt-3 text-sm leading-6 text-slate-300">Datos legales, legislación y un agente de extracción de información jurídica desde fuentes web públicas.</p></div></article>}<div class="mt-8 text-center"><a href="/proyectos" class="inline-flex rounded-xl border border-white/15 bg-white/[.04] px-5 py-3 font-bold">Ver los cuatro proyectos</a></div></div>
-    </section>
-
-    <section id="inicio" data-view="inicio" class="cube-panel is-active" aria-labelledby="inicio-title" aria-hidden="false">
-      <div class="cube-panel-content container-shell flex min-h-full items-center py-24"><div class="grid w-full items-center gap-12 lg:grid-cols-[1.12fr_.88fr]"><div class="reveal"><p class="eyebrow">Desarrollo web · IA local · RAG</p><h1 id="inicio-title" class="mt-5 max-w-4xl text-5xl font-black leading-[.98] tracking-[-.055em] sm:text-7xl" tabindex="-1">Construyo software que conecta <span class="bg-gradient-to-r from-cyan-300 via-blue-400 to-violet-400 bg-clip-text text-transparent">datos, procesos e inteligencia artificial.</span></h1><p class="mt-7 max-w-2xl text-lg leading-8 text-slate-300">Desarrollador enfocado en aplicaciones web, servicios backend e infraestructura local de IA para flujos documentales, recuperación de información y automatización.</p><div class="mt-9 flex flex-wrap gap-3"><a href="#proyectos" data-view-link="proyectos" class="rounded-xl bg-white px-5 py-3 font-bold text-slate-950">Ver proyectos</a><a href="mailto:jorge.troncoso4@gmail.com" class="rounded-xl border border-white/15 bg-white/[.04] px-5 py-3 font-bold text-white">Contactar</a></div><div class="mt-10 flex flex-wrap gap-2"><span class="tag">Laravel + React/Vue</span><span class="tag">FastAPI + Celery</span><span class="tag">Ollama + LangGraph</span><span class="tag">Docker + NVIDIA GPU</span></div></div><div class="glass relative min-h-[440px] overflow-hidden rounded-[2rem] p-6"><div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(103,232,249,.10),transparent_55%)]"></div><div class="relative flex h-full min-h-[390px] items-center justify-center"><div class="absolute h-72 w-72 rounded-full border border-cyan-300/15"></div><div class="absolute h-48 w-48 rounded-full border border-violet-300/15"></div><div class="z-10 rounded-3xl border border-cyan-300/30 bg-[#07101f] px-7 py-6 text-center shadow-[0_0_60px_rgba(34,211,238,.16)]"><p class="text-xs font-black tracking-[.22em] text-cyan-300">LOCAL AI CORE</p><p class="mt-2 text-2xl font-black">Desarrollo + IA</p><p class="mt-1 text-sm text-slate-300">Aplicaciones · APIs · modelos locales</p></div>{['Laravel UI', 'FastAPI', 'Workers', 'PostgreSQL', 'pgvector', 'RAG'].map((label, i) => <span class={`absolute rounded-full border border-white/10 bg-[#0b1020] px-3 py-2 text-xs text-slate-200 node-${i}`}>{label}</span>)}</div></div></div></div>
-    </section>
-
-    <section id="tecnologias" data-view="tecnologias" class="cube-panel" aria-labelledby="tecnologias-title" aria-hidden="true">
-      <div class="cube-panel-content technology-view">
-        <div class="technology-shell">
-          <div class="technology-map-scroll" role="region" aria-label="Mapa completo de tecnologías organizado por especialidad.">
-            <section class="technology-map" aria-labelledby="tecnologias-title">
-              <img src="/images/technologies/technology-map.webp" alt="Mapa isométrico de una arquitectura tecnológica con zonas para frontend, backend, inteligencia artificial, infraestructura, datos, documentos y calidad." width="2392" height="1792" />
-              <header class="technology-map-heading">
-                <p>Stack técnico / arquitectura aplicada</p>
-                <h1 id="tecnologias-title" tabindex="-1">Tecnologías</h1>
-                <span>Herramientas conectadas para construir productos web, servicios, datos e inteligencia artificial local.</span>
-              </header>
-              <div class="technology-featured-heading"><span>Flujos integrados</span><h2>Stack destacado</h2></div>
-              <div class="technology-featured-list">
-                {featuredStack.map((stack, index) =>
-                  <article class={`technology-featured technology-featured-${index + 1}`} tabindex="0">
-                    <div>{stack.iconBody && <svg viewBox="0 0 24 24" aria-hidden="true" set:html={stack.iconBody} />}</div>
-                    {index === 0 && <small>Interfaz Usuario</small>}
-                    {index === 1 && <small>Intercomunicación asíncrona</small>}
-                    {index === 2 && <small>Orquestación de Inteligencia Artificial</small>}
-                    {index === 3 && <small>Infraestructura de Cómputo</small>}
-                    <span>{stack.name}</span>
-                  </article>
-                )}
+              <div class="ab-mark" aria-hidden="true"><span>{site.brand.logo}</span></div>
+              <div class="ab-bottom">
+                <div class="ab-lead">
+                  <h2 class="ab-head">{about.headline}</h2>
+                  <p class="ab-intro">{about.intro}</p>
+                  <div class="ab-cta">{about.ctas.map((c) => <a class:list={['btn', { primary: c.primary }]} href={`#${c.go}`} data-go={c.go}>{c.label}</a>)}</div>
+                </div>
+                <div class="ab-cols">{about.cols.map((c) => <div><b>{c.k}</b>{c.v}</div>)}</div>
               </div>
-              <div class="technology-map-items" role="list" aria-label="Tecnologías por especialidad">
-                {technologyMapItems.map((tech) =>
-                  <div class={`technology-map-item technology-map-item-${tech.category} technology-map-item-${tech.slug}`} style={`--map-x: ${tech.x}%; --map-y: ${tech.y}%`} role="listitem" tabindex="0" aria-label={`${tech.name}, ${categoryLabels[tech.category]}`}>
-                    <span class="technology-map-icon">{tech.iconBody ? <svg viewBox="0 0 24 24" aria-hidden="true" set:html={tech.iconBody} /> : <b aria-hidden="true">{tech.name.slice(0, 2)}</b>}</span>
-                    <span class="technology-map-name">{tech.name}</span>
-                  </div>
-                )}
-              </div>
-            </section>
+            </div>
           </div>
         </div>
+        <div class="about-words" id="aboutWords" aria-hidden="true"><span id="wA">{about.words[0]}</span><span id="wB">{about.words[1]}</span></div>
       </div>
     </section>
 
-    <section id="ia-local" data-view="ia-local" class="cube-panel" aria-labelledby="ia-local-title" aria-hidden="true">
-      <div class="cube-panel-content container-shell">
-        <div class="local-ai-layout">
-          <header class="local-ai-intro">
-            <p class="eyebrow">Entorno de cómputo</p>
-            <h1 id="ia-local-title" class="section-title" tabindex="-1">Infraestructura local de IA</h1>
-            <p class="section-copy">Una plataforma propia para ejecutar modelos, agentes, recuperación documental y servicios de procesamiento con aceleración GPU, manteniendo el control técnico sobre los datos y cada componente.</p>
-
-            <div class="local-ai-principles" aria-label="Criterios de diseño de la infraestructura">
-              <article>
-                <span>01</span>
-                <div><h2>Procesamiento local</h2><p>Los flujos sensibles pueden mantenerse dentro del entorno administrado.</p></div>
-              </article>
-              <article>
-                <span>02</span>
-                <div><h2>Servicios desacoplados</h2><p>Portales, APIs, workers y modelos evolucionan de forma independiente.</p></div>
-              </article>
-              <article>
-                <span>03</span>
-                <div><h2>Resultados trazables</h2><p>RAG con recuperación de contexto, fuentes y citas verificables.</p></div>
-              </article>
-            </div>
-
-          </header>
-
-          <section class="local-ai-architecture glass" aria-labelledby="local-ai-architecture-title">
-            <div class="local-ai-architecture-heading">
-              <div><p class="eyebrow">Arquitectura por capas</p><h2 id="local-ai-architecture-title">Del sistema base a la aplicación</h2></div>
-              <span class="local-ai-status"><i aria-hidden="true"></i> Entorno local</span>
-            </div>
-
-            <div class="local-ai-layers">
-              <svg class="local-ai-circuits" viewBox="0 0 1000 620" preserveAspectRatio="none" aria-hidden="true">
-                <path d="M500 310 C430 310 445 98 390 98 H360" />
-                <path d="M500 310 C570 310 555 98 610 98 H640" />
-                <path d="M500 310 H360" />
-                <path d="M500 310 H640" />
-                <path d="M500 310 C430 310 445 522 390 522 H360" />
-                <path d="M500 310 C570 310 555 522 610 522 H640" />
-                <circle cx="500" cy="310" r="5" />
-                <circle cx="360" cy="98" r="4" /><circle cx="640" cy="98" r="4" />
-                <circle cx="360" cy="310" r="4" /><circle cx="640" cy="310" r="4" />
-                <circle cx="360" cy="522" r="4" /><circle cx="640" cy="522" r="4" />
-              </svg>
-
-              <div class="local-ai-core" aria-label="Núcleo de infraestructura local de inteligencia artificial">
-                <span class="local-ai-core-orbit" aria-hidden="true"></span>
-                <span class="local-ai-core-content">
-                  <span class="local-ai-core-mark" aria-hidden="true">AI</span>
-                  <strong>Local AI<br />Core</strong>
-                  <small>PRIVATE · GPU</small>
-                </span>
-              </div>
-
-              <article class="local-ai-layer local-ai-layer-base">
-                <span class="local-ai-layer-number">01</span>
-                <div><p class="local-ai-layer-label">Plataforma base</p><h3>Ubuntu 26.04 LTS</h3><p>Sistema operativo anfitrión para servicios, almacenamiento, red local y administración del entorno.</p></div>
-                <div class="local-ai-tags"><span>Linux</span><span>Docker Compose</span></div>
-              </article>
-
-              <article class="local-ai-layer local-ai-layer-gpu">
-                <span class="local-ai-layer-number">02</span>
-                <div><p class="local-ai-layer-label">Procesamiento</p><h3>NVIDIA GPU</h3><p>Drivers, CUDA y NVIDIA Container Toolkit habilitan inferencia y entrenamiento dentro de contenedores.</p></div>
-                <div class="local-ai-tags"><span>CUDA</span><span>Container Toolkit</span></div>
-              </article>
-
-              <article class="local-ai-layer local-ai-layer-models">
-                <span class="local-ai-layer-number">03</span>
-                <div><p class="local-ai-layer-label">Modelos locales</p><h3>Ollama · Gemma · Qwen</h3><p>Inferencia, embeddings y adaptación especializada mediante LoRA y QLoRA.</p></div>
-                <div class="local-ai-tags"><span>LLMs</span><span>Fine-tuning</span></div>
-              </article>
-
-              <article class="local-ai-layer local-ai-layer-agents">
-                <span class="local-ai-layer-number">04</span>
-                <div><p class="local-ai-layer-label">Entornos de agentes</p><h3>OpenClaw · Hermes Agent</h3><p>Agentes con herramientas para ejecutar tareas, coordinar flujos y apoyar automatizaciones.</p></div>
-                <div class="local-ai-tags"><span>Tools</span><span>Workflows</span></div>
-              </article>
-
-              <article class="local-ai-layer local-ai-layer-data">
-                <span class="local-ai-layer-number">05</span>
-                <div><p class="local-ai-layer-label">Datos y conocimiento</p><h3>PostgreSQL · pgvector · Redis</h3><p>Persistencia, búsqueda semántica, estados, colas e índices para aplicaciones con contexto.</p></div>
-                <div class="local-ai-tags"><span>RAG</span><span>Embeddings</span></div>
-              </article>
-
-              <article class="local-ai-layer local-ai-layer-services">
-                <span class="local-ai-layer-number">06</span>
-                <div><p class="local-ai-layer-label">Servicios aplicados</p><h3>APIs · Workers · Procesamiento</h3><p>OCR, audio, NLP, transcripción y tareas asíncronas operadas como servicios desacoplados.</p></div>
-                <div class="local-ai-tags"><span>Health checks</span><span>Logs</span></div>
-              </article>
-            </div>
-          </section>
+    <!-- 5 · EXPERIENCIA -->
+    <section class="pin exp" id="experience" data-nav-theme="dark" aria-label="Experiencia">
+      <div class="stage">
+        <div class="ghost" id="ghost" aria-hidden="true">{X.ghost.map((t) => <span>{t}&nbsp;&nbsp;{t}</span>)}</div>
+        <div class="exp-track" id="expTrack">
+          <div class="panel" data-tab="0"><div class="meta"><em>{X.kicker}</em></div><h2 class="ttl">{X.title[0]}<br />{X.title[1]}</h2><p class="desc">{X.intro}</p></div>
+          {X.items.map((it) => (
+            <article class="panel" data-tab={it.tab}>
+              <div class="meta"><span>{it.dates}</span><span>{it.org}</span><em>{it.kind}</em></div>
+              <h3 class="ttl">{it.title[0]}<br />{it.title[1]}</h3>
+              <p class="desc">{it.text}</p>
+              <div class="ms" style={`--milestone-columns: ${it.milestones.length}`}>{it.milestones.map((m) => <div><b>{m.k}</b>{m.v}</div>)}</div>
+            </article>
+          ))}
         </div>
+        <div class="exp-tabs" id="expTabs">{X.tabs.map((t, i) => <button type="button" data-tab={i}>{t}</button>)}</div>
+        <div class="exp-bar"><i id="expBar"></i></div>
+        <div class="wipe" id="wipe"></div>
       </div>
+    </section>
+
+    <!-- 6 · PROYECTOS DESTACADOS -->
+    <section class="pin feat" id="projects" data-nav-theme="light" aria-labelledby="feat-title">
+      <div class="stage">
+        <h2 class="eyebrow mono" id="feat-title">{featured.eyebrow}</h2>
+        <canvas id="beltCanvas" aria-hidden="true"></canvas>
+        <div class="cap" id="cap" aria-live="polite"><b id="capTitle"></b><span id="capSub"></span><small id="capIdx"></small><a id="capLink" class="cap-link" href="#" hidden>Ver caso de estudio ↗</a></div>
+        <div class="cat">{featured.category}</div>
+        <ul class="sr-only">{featured.items.map((it) => <li>{it.href ? <a href={it.href}>{it.title}: {it.sub}</a> : `${it.title}: ${it.sub}`}</li>)}</ul>
+      </div>
+    </section>
+
+    <!-- 7 · OBRAS -->
+    <section class="pin works" id="works" data-nav-theme="light" aria-label="Obras">
+      <div class="stage" id="worksStage">
+        <div class="ring">{works.items.map((it, i) => <div class="wcard" data-i={i} role="button" tabindex="0" aria-label={it.title}></div>)}</div>
+        <div class="works-center" id="worksCenter">{works.center}</div>
+        <a class="works-label" id="worksLabel"></a>
+        <ul class="works-index" id="worksIndex">{works.items.map((it, i) => <li><button type="button" data-i={i}>{it.title}</button></li>)}</ul>
+        <div class="works-hint mono">{works.hint}</div>
+      </div>
+    </section>
+
+    <!-- STACK -->
+    <section class="stack" id="stack" data-nav-theme="dark" aria-labelledby="stack-title">
+      <div class="sec-line"></div>
+      <p class="eyebrow-s mono" data-reveal>{stack.eyebrow}</p>
+      <h2 class="big-title" id="stack-title" data-reveal>{stack.title}</h2>
+      <p class="sec-text" data-reveal>{stack.text}</p>
+      <div class="tech-groups">
+        {techGroups.map((g, gi) => (
+          <div class="tech-row" data-reveal style={`--delay:${gi * 80}ms`}>
+            <h3 class="mono">{String(gi + 1).padStart(2, '0')} · {g.label}</h3>
+            <ul>{g.items.map((t, ti) => <li style={`--i:${ti}`}>{t.icon ? <svg viewBox="0 0 24 24" aria-hidden="true" set:html={t.icon} /> : <b aria-hidden="true">{t.name.slice(0, 2)}</b>}<span>{t.name}</span></li>)}</ul>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- IA LOCAL -->
+    <section class="ai" id="ai" data-nav-theme="dark" aria-labelledby="ai-title">
+      <p class="eyebrow-s mono" data-reveal>{localAi.eyebrow}</p>
+      <h2 class="ai-title" id="ai-title" data-reveal><span>{localAi.title[0]}</span> <small>{localAi.title[1]}</small></h2>
+      <p class="sec-text" data-reveal>{localAi.text}</p>
+      <div class="models">
+        <p class="eyebrow-s mono" data-reveal>{localAi.models.label}</p>
+        <ul>{localAi.models.items.map((m) => <li data-reveal="seq"><b>{m.k}</b><span>{m.name}</span><p>{m.v}</p></li>)}</ul>
+      </div>
+      <ol class="layers">
+        {localAi.layers.map((l, i) => (
+          <li data-reveal="seq">
+            <span class="n mono">{String(i + 1).padStart(2, '0')}</span>
+            <p class="mono lbl">{l.label}</p>
+            <h3>{l.title}</h3>
+            <p>{l.text}</p>
+            <div class="tags">{l.tags.map((t) => <span>{t}</span>)}</div>
+          </li>
+        ))}
+        <li class="hybrid" data-reveal="seq">
+          <span class="n mono">07</span>
+          <p class="mono lbl">{localAi.hybrid.label}</p>
+          <h3>{localAi.hybrid.title}</h3>
+          <div class="hybrid-flow" aria-hidden="true"><span>IA local</span><i></i><b>APIs</b><i></i><span>IA en la nube</span></div>
+          <p>{localAi.hybrid.text}</p>
+          <div class="tags">{localAi.hybrid.tags.map((t) => <span>{t}</span>)}</div>
+        </li>
+      </ol>
+    </section>
+
+    <!-- CREDENCIALES -->
+    <section class="creds" id="credentials" data-nav-theme="light" aria-labelledby="cred-title">
+      <p class="eyebrow-s mono" data-reveal>{credentials.eyebrow}</p>
+      <h2 class="big-title" id="cred-title" data-reveal>{credentials.title}</h2>
+      <p class="sec-text" data-reveal>{credentials.text}</p>
+      <ol class="cred-acc" data-reveal="acc">
+        {credentials.items.map((c, i) => (
+          <li class:list={['cred-panel', { open: i === 0 }]} style={`--i:${i}`}>
+            <button type="button" class="cred-tab" aria-expanded={i === 0 ? 'true' : 'false'} aria-controls={`cred-${i}`}>
+              <span class="n mono">{String(i + 1).padStart(2, '0')}</span>
+              <span class="t">{c.title}</span>
+            </button>
+            <div class="cred-body" id={`cred-${i}`} inert={i !== 0}>
+              <button type="button" class="cred-img" data-cred={c.image} data-title={c.title} aria-label={`Ampliar certificado: ${c.title}`}>
+                <img src={c.image} alt="" loading="lazy" decoding="async" width="640" height="420" />
+              </button>
+              <div class="cred-meta">
+                <small class="mono">{c.kind} · {c.org}</small>
+                <h3>{c.title}</h3>
+                {c.verify && <a class="cred-verify mono" href={c.verify} target="_blank" rel="noopener noreferrer">Verificar credencial ↗</a>}
+                <span class="cred-zoom mono">Clic en la imagen para ampliar</span>
+              </div>
+            </div>
+          </li>
+        ))}
+      </ol>
+      <dialog class="lightbox" id="credDialog" aria-label="Certificado ampliado">
+        <button type="button" class="lb-close" data-close>Cerrar</button>
+        <figure><img src="" alt="" /><figcaption></figcaption></figure>
+      </dialog>
+    </section>
+
+    <!-- 8 · SERVICIOS -->
+    <section class="services" id="services" data-nav-theme="light" aria-labelledby="sv-title">
+      <h2 id="sv-title" data-reveal>{services.title}</h2>
+      <p class="sv-text" data-reveal>{services.text}</p>
+      <div class="acc">
+        {services.items.map((s, i) => (
+          <div class:list={['acc-item', { open: i === 0 }]}>
+            <button type="button" class="acc-head" aria-expanded={i === 0 ? 'true' : 'false'} aria-controls={`acc-${i}`}><span class="n">{i + 1}</span><span>{s.title}</span><svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true" set:html={CHEV} /></button>
+            <div class="acc-body" id={`acc-${i}`}><div><div class="in">{s.text}<div class="row"><span>{s.deliverables}</span><a href="#contact" data-go="contact">{s.cta} ↗</a></div></div></div></div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- 9 · CONTACTO -->
+    <section class="talk" id="contact" data-nav-theme="dark" aria-labelledby="talkTitle">
+      <div class="talk-line"></div>
+      <h2 class="chrome" id="talkTitle" aria-label={contact.title}>{[...contact.title].map((ch, i) => <span class="ch" style={`--i:${i}`} aria-hidden="true">{ch}</span>)}</h2>
+      <nav class="tpills" aria-label="Canales de contacto">{contact.pills.map((p) => <a class:list={{ primary: p.primary }} href={p.href} target={p.href.startsWith('mailto:') ? undefined : '_blank'} rel="noopener noreferrer">{p.label}</a>)}</nav>
+      <footer class="foot mono">{contact.footer.map((t) => <span>{t}</span>)}</footer>
     </section>
   </main>
-  <template id="project-panel-footer-template"><footer class="project-panel-footer"><div class="flex flex-col gap-5 text-sm text-slate-300 md:flex-row md:items-center md:justify-between"><div><p class="font-bold text-white">Jorge Troncoso</p><p class="mt-1 text-slate-400">Contáctame por:</p><div class="footer-contact-links"><a href="https://wa.me/56950254516" target="_blank" rel="noopener noreferrer" aria-label="Contactar por WhatsApp" title="WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 2.8 9.2 5a1.9 1.9 0 0 1 .5 2.3l-1 2a14.5 14.5 0 0 0 6.1 6.1l2-1a1.9 1.9 0 0 1 2.3.5l2.2 2.6a1.9 1.9 0 0 1-.1 2.6l-1.5 1.5c-1.1 1.1-2.8 1.5-4.3 1C9.2 20.8 3.2 14.8 1.7 8.6c-.5-1.5-.1-3.2 1-4.3l1.5-1.5a1.9 1.9 0 0 1 2.4 0Z" /></svg></a><a href="mailto:jorge.troncoso4@gmail.com" aria-label="Enviar correo electrónico" title="Correo electrónico"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2" /><path d="m4 7 8 6 8-6" /></svg></a></div></div><div class="md:text-right"><p>Página web desarrollada en Astro</p><p class="mt-1 text-slate-400">Todos los derechos reservados.</p></div></div></footer></template>
 
   <script>
-    const initializeCredentialGallery = () => {
-      const dialog = document.querySelector<HTMLDialogElement>('#credential-dialog');
-      if (!dialog || dialog.dataset.bound === 'true') return;
-      const image = dialog.querySelector<HTMLImageElement>('img');
-      const title = dialog.querySelector<HTMLElement>('#credential-dialog-title');
-      const close = dialog.querySelector<HTMLButtonElement>('.credential-dialog-close');
-      const imageButton = dialog.querySelector<HTMLButtonElement>('.credential-dialog-image');
-      if (!image || !title || !close || !imageButton) return;
-      dialog.dataset.bound = 'true';
-      let opener: HTMLButtonElement | null = null;
-      document.querySelectorAll<HTMLButtonElement>('[data-credential-open]').forEach((button) => button.addEventListener('click', () => {
-        opener = button;
-        image.src = button.dataset.credentialImage ?? '';
-        image.alt = button.dataset.credentialAlt ?? '';
-        title.textContent = button.dataset.credentialTitle ?? '';
-        dialog.showModal();
-      }));
-      const closeDialog = () => dialog.close();
-      close.addEventListener('click', closeDialog);
-      imageButton.addEventListener('click', closeDialog);
-      dialog.addEventListener('click', (event) => { if (event.target === dialog) closeDialog(); });
-      dialog.addEventListener('close', () => { opener?.focus(); opener = null; });
-    };
-
-    initializeCredentialGallery();
-    document.addEventListener('astro:page-load', initializeCredentialGallery);
-
-    const initializeCredentialFans = () => {
-      const fans = document.querySelectorAll<HTMLElement>('[data-credential-fan]');
-      if (!fans.length || !('IntersectionObserver' in window)) {
-        fans.forEach((fan) => fan.classList.add('is-active'));
-        return;
-      }
-      const observer = new IntersectionObserver((entries, activeObserver) => entries.forEach((entry) => {
-        if (!entry.isIntersecting) return;
-        (entry.target as HTMLElement).classList.add('is-active');
-        activeObserver.unobserve(entry.target);
-      }), { threshold: .3 });
-      fans.forEach((fan) => {
-        if (fan.dataset.fanObserved === 'true') return;
-        fan.dataset.fanObserved = 'true';
-        observer.observe(fan);
-      });
-    };
-
-    initializeCredentialFans();
-    document.addEventListener('astro:page-load', initializeCredentialFans);
-
-    const initializeProfileTechStrips = () => {
-      document.querySelectorAll<HTMLElement>('[data-profile-tech-strip]').forEach((strip) => {
-        if (strip.dataset.bound === 'true') return;
-        strip.dataset.bound = 'true';
-        let startX = 0;
-        let startScrollLeft = 0;
-        let dragging = false;
-        let paused = false;
-        let animationFrame = 0;
-        let lastFrame = 0;
-        let currentScrollLeft = strip.scrollLeft;
-        let loopAt = 0;
-        const animate = (timestamp: number) => {
-          if (!lastFrame) lastFrame = timestamp;
-          const elapsed = timestamp - lastFrame;
-          lastFrame = timestamp;
-          if (!loopAt) loopAt = strip.scrollWidth / 2;
-          if (!paused && loopAt && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-            currentScrollLeft += elapsed * .06;
-            if (currentScrollLeft >= loopAt) currentScrollLeft -= loopAt;
-            strip.scrollLeft = currentScrollLeft;
-          }
-          animationFrame = window.requestAnimationFrame(animate);
-        };
-        animationFrame = window.requestAnimationFrame(animate);
-        strip.addEventListener('pointerdown', (event) => {
-          dragging = true;
-          paused = true;
-          startX = event.clientX;
-          startScrollLeft = strip.scrollLeft;
-          currentScrollLeft = startScrollLeft;
-          strip.setPointerCapture(event.pointerId);
-          strip.classList.add('is-dragging');
-        });
-        strip.addEventListener('pointermove', (event) => {
-          if (!dragging) return;
-          strip.scrollLeft = startScrollLeft - (event.clientX - startX);
-          currentScrollLeft = strip.scrollLeft;
-        });
-        const stopDragging = (event: PointerEvent) => {
-          if (!dragging) return;
-          dragging = false;
-          strip.releasePointerCapture(event.pointerId);
-          strip.classList.remove('is-dragging');
-          paused = false;
-        };
-        strip.addEventListener('pointerup', stopDragging);
-        strip.addEventListener('pointercancel', stopDragging);
-        strip.addEventListener('mouseenter', () => { paused = true; });
-        strip.addEventListener('mouseleave', () => { if (!dragging) paused = false; });
-        strip.addEventListener('focusin', () => { paused = true; });
-        strip.addEventListener('focusout', () => { paused = false; });
-        strip.addEventListener('keydown', (event) => {
-          if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
-          event.preventDefault();
-          currentScrollLeft = Math.max(0, currentScrollLeft + (event.key === 'ArrowRight' ? 180 : -180));
-          strip.scrollLeft = currentScrollLeft;
-        });
-        document.addEventListener('astro:before-swap', () => window.cancelAnimationFrame(animationFrame), { once: true });
-      });
-    };
-
-    initializeProfileTechStrips();
-    document.addEventListener('astro:page-load', initializeProfileTechStrips);
-
-    const makeProjectCardsClickable = () => {
-      const projectsPanel = document.querySelector<HTMLElement>('#proyectos');
-      if (!projectsPanel) return;
-      const links = Array.from(projectsPanel.querySelectorAll<HTMLAnchorElement>('a[href^="/proyectos/"]'));
-      links.forEach((link) => {
-        const card = link.closest<HTMLElement>('article');
-        if (!card || card.dataset.cardLinkBound === 'true') return;
-        card.dataset.cardLinkBound = 'true';
-        card.tabIndex = 0;
-        card.style.cursor = 'pointer';
-        card.setAttribute('role', 'link');
-        card.setAttribute('aria-label', `Ver proyecto: ${card.querySelector('h2')?.textContent?.trim() ?? ''}`);
-        link.tabIndex = -1;
-        const navigate = () => window.location.assign(link.href);
-        card.addEventListener('click', (event) => {
-          if (event.target instanceof Element && event.target.closest('a, button')) return;
-          navigate();
-        });
-        card.addEventListener('keydown', (event) => {
-          if (event.key !== 'Enter' && event.key !== ' ') return;
-          event.preventDefault();
-          navigate();
-        });
-      });
-    };
-
-    makeProjectCardsClickable();
-    document.addEventListener('astro:page-load', makeProjectCardsClickable);
-
-    const arrangeProjectCards = () => {
-      const projectsPanel = document.querySelector<HTMLElement>('#proyectos');
-      const grid = projectsPanel?.querySelector<HTMLElement>('.mt-10.grid');
-      const modelCard = projectsPanel?.querySelector<HTMLAnchorElement>('a[href="/proyectos/legal-chile-gemma"]')?.closest<HTMLElement>('article');
-      if (!projectsPanel || !grid || !modelCard) return;
-      let anchor = projectsPanel.querySelector<HTMLElement>('[data-project-model-anchor]');
-      if (!anchor) {
-        anchor = document.createElement('span');
-        anchor.hidden = true;
-        anchor.dataset.projectModelAnchor = 'true';
-        modelCard.before(anchor);
-      }
-      const compactLayout = window.matchMedia('(min-width: 768px) and (max-width: 1279px)').matches;
-      if (compactLayout) {
-        modelCard.classList.add('project-model-card');
-        grid.append(modelCard);
-      } else {
-        modelCard.classList.remove('project-model-card');
-        anchor.after(modelCard);
-      }
-    };
-
-    arrangeProjectCards();
-    window.addEventListener('resize', arrangeProjectCards);
-    document.addEventListener('astro:page-load', arrangeProjectCards);
-
-    const initializeProjectPanelFooter = () => {
-      const panelContent = document.querySelector<HTMLElement>('#proyectos .cube-panel-content');
-      const template = document.querySelector<HTMLTemplateElement>('#project-panel-footer-template');
-      if (!panelContent || !template || panelContent.querySelector('.project-panel-footer')) return;
-      panelContent.append(template.content.cloneNode(true));
-    };
-
-    initializeProjectPanelFooter();
-    document.addEventListener('astro:page-load', initializeProjectPanelFooter);
-
-    const initializeHomePanelFooter = () => {
-      const panelContent = document.querySelector<HTMLElement>('#inicio .cube-panel-content');
-      const template = document.querySelector<HTMLTemplateElement>('#project-panel-footer-template');
-      if (!panelContent || !template || panelContent.querySelector('.home-panel-footer')) return;
-      const footer = template.content.firstElementChild?.cloneNode(true) as HTMLElement | undefined;
-      if (!footer) return;
-      footer.classList.replace('project-panel-footer', 'home-panel-footer');
-      const contactLabel = footer.querySelector<HTMLElement>('p.font-bold');
-      if (contactLabel) contactLabel.textContent = 'Jorge Troncoso';
-      panelContent.append(footer);
-    };
-
-    initializeHomePanelFooter();
-    document.addEventListener('astro:page-load', initializeHomePanelFooter);
-
-    const layoutTechnologyMap = (resetPosition = false) => {
-      const viewport = document.querySelector<HTMLElement>('.technology-map-scroll');
-      const map = viewport?.querySelector<HTMLElement>('.technology-map');
-      if (!viewport || !map) return;
-      if (!window.matchMedia('(max-width: 767px)').matches) {
-        map.style.removeProperty('width');
-        map.style.removeProperty('height');
-        return;
-      }
-      const height = viewport.clientHeight;
-      if (!height) return;
-      map.style.width = `${height * (2392 / 1792)}px`;
-      map.style.height = `${height}px`;
-      if (resetPosition) {
-        viewport.scrollLeft = 0;
-        viewport.scrollTop = 0;
-      }
-    };
-
-    const initializeTechnologyMapLayout = () => {
-      const viewport = document.querySelector<HTMLElement>('.technology-map-scroll');
-      if (!viewport) return;
-      layoutTechnologyMap(true);
-      if (viewport.dataset.layoutObserved === 'true') return;
-      viewport.dataset.layoutObserved = 'true';
-      new ResizeObserver(() => layoutTechnologyMap()).observe(viewport);
-    };
-
-    initializeTechnologyMapLayout();
-    document.addEventListener('astro:page-load', initializeTechnologyMapLayout);
-
-    const views = ['perfil', 'proyectos', 'inicio', 'tecnologias', 'ia-local'] as const;
-    type View = typeof views[number];
-    const isView = (view: string): view is View => (views as readonly string[]).includes(view);
-
-    let showView: ((next: string) => void) | undefined;
-    const initializeViews = () => {
-      if (location.pathname !== '/') {
-        showView = undefined;
-        return;
-      }
-
-      const panels = new Map(views.map((view) => [view, document.querySelector<HTMLElement>(`[data-view="${view}"]`)]));
-      if (views.some((view) => !panels.get(view))) return;
-
-      const resetPanelScroll = (panel: HTMLElement) => {
-        const content = panel.querySelector<HTMLElement>('.cube-panel-content');
-        if (content) content.scrollTop = 0;
-      };
-      const updateLinks = (view: string) => document.querySelectorAll<HTMLAnchorElement>('[data-view-link]').forEach((link) => {
-        if (link.dataset.viewLink === view) link.setAttribute('aria-current', 'page');
-        else link.removeAttribute('aria-current');
-      });
-      const activateView = (next: View) => {
-        panels.forEach((panel, view) => {
-          if (!panel) return;
-          panel.classList.remove('is-active', 'cube-enter-left', 'cube-enter-right', 'cube-enter-top', 'cube-enter-bottom', 'cube-enter-front', 'cube-leave-left', 'cube-leave-right', 'cube-leave-top', 'cube-leave-bottom', 'cube-leave-front');
-          const isActive = view === next;
-          panel.setAttribute('aria-hidden', String(!isActive));
-          if (isActive) {
-            resetPanelScroll(panel);
-            panel.classList.add('is-active');
-          }
-        });
-        updateLinks(next);
-        if (next === 'tecnologias') layoutTechnologyMap(true);
-      };
-      showView = (next) => {
-        if (!isView(next)) return;
-        activateView(next);
-      };
-
-      const initial = location.hash.slice(1);
-      activateView(isView(initial) ? initial : 'inicio');
-    };
-
-    initializeViews();
-    if (document.documentElement.dataset.viewNavigationBound !== 'true') {
-      document.documentElement.dataset.viewNavigationBound = 'true';
-      document.addEventListener('astro:page-load', initializeViews);
-      document.addEventListener('click', (event) => {
-      if (!(event.target instanceof Element)) return;
-      const link = event.target.closest<HTMLAnchorElement>('[data-view-link]');
-      const next = link?.dataset.viewLink;
-      if (!next || !isView(next) || location.pathname !== '/') return;
-      event.preventDefault();
-      if (location.hash !== `#${next}`) {
-        history.pushState(null, '', `#${next}`);
-      }
-      showView?.(next);
-      });
-      window.addEventListener('popstate', () => showView?.(location.hash.slice(1)));
-      window.addEventListener('hashchange', () => showView?.(location.hash.slice(1)));
-    }
+    import '../scripts/echo';
+    document.querySelectorAll<HTMLElement>('.acc-item').forEach((it, _, all) => it.querySelector('.acc-head')!.addEventListener('click', () => {
+      const open = !it.classList.contains('open');
+      all.forEach((o) => { o.classList.remove('open'); o.querySelector('.acc-head')!.setAttribute('aria-expanded', 'false'); });
+      if (open) { it.classList.add('open'); it.querySelector('.acc-head')!.setAttribute('aria-expanded', 'true'); }
+    }));
   </script>
 </BaseLayout>
