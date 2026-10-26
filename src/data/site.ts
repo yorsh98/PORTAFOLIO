@@ -170,7 +170,8 @@ export const site = {
     text: 'Formación en inteligencia artificial, datos y desarrollo. Selecciona un curso para ver su certificado.',
     items: [
       { title: 'Claude Code 101', org: 'Claude Academy', kind: 'Destacado', image: '/images/profile/claude-code-101.webp', verify: 'https://academy.claude.com/verify/93acc051fa6fd30931a68ea8313b9e93' },
-      { title: 'Diplomado Inteligencia Artificial aplicada a negocios', org: 'INACAP', kind: 'Diplomado', image: '/images/profile/Captura desde 2026-07-28 21-51-24.webp' },
+      { title: 'Claude Platform 101', org: 'Claude Academy', kind: 'Destacado', image: '/images/profile/claude-platform-101.webp', verify: 'https://academy.claude.com/verify/ca4776b64581e1b0547961e4490a11b2' },
+      { title: 'Diplomado Inteligencia Artificial aplicada a negocios', org: 'INACAP', kind: 'Destacado', image: '/images/profile/Captura desde 2026-07-28 21-51-24.webp' },
       { title: 'Fundamentos de Inteligencia Artificial aplicada a negocios', org: 'INACAP', kind: 'Curso del diplomado', image: '/images/profile/Captura desde 2026-07-28 21-52-26.webp' },
       { title: 'Incorporación de Inteligencia Artificial', org: 'INACAP', kind: 'Curso del diplomado', image: '/images/profile/Captura desde 2026-07-28 21-52-40.webp' },
       { title: 'Desarrollo y gestión de bases de datos', org: 'INACAP', kind: 'Curso del diplomado', image: '/images/profile/Captura desde 2026-07-28 21-52-16.webp' },
