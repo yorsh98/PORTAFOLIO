@@ -343,7 +343,7 @@ function updateNav() {
   navLinks.forEach(a => { const on = a.dataset.go === act; a.classList.toggle('on', on); if (on) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current'); });
 }
 // Secciones sin enlace propio en el menú iluminan el de su grupo
-const navKeyOf: Record<string, string> = { intro: 'home', works: 'projects', ai: 'stack', credentials: 'experience', contact: 'about' };
+const navKeyOf: Record<string, string> = { intro: 'home', works: 'projects', ai: 'stack', about: 'credentials', contact: 'credentials' };
 document.addEventListener('click', e => {
   const a = (e.target as Element).closest<HTMLElement>('[data-go]'); if (!a) return; e.preventDefault();
   TG = targets(); const key = a.dataset.go!;

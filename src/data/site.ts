@@ -22,7 +22,8 @@ export const site = {
 
   nav: [
     ['home', 'Inicio'], ['projects', 'Proyectos'], ['services', 'Servicios'],
-    ['stack', 'Stack'], ['experience', 'Experiencia'], ['about', 'Sobre mí']
+    ['stack', 'Stack'], ['experience', 'Experiencia'],
+    ['credentials', 'Sobre mí'] // "Sobre mí" empieza en Cursos y diplomados
   ] as const,
 
   // LinkedIn en standby: se agrega cuando el perfil esté actualizado.
