@@ -33,8 +33,8 @@ export const projects: Project[] = [
     publicationNote: 'El caso presenta la arquitectura y las capacidades a nivel general. Las capturas de JusticIA se tomaron con una cuenta y datos ficticios de demostración; se excluyeron las vistas de administración de usuarios, perfil, seguridad y supervisión. No incluye documentos, flujos internos ni credenciales.',
     technologies: ['Laravel', 'React', 'TypeScript', 'PHP', 'Python', 'FastAPI', 'Celery', 'Redis', 'PostgreSQL', 'pgvector', 'LangChain', 'LangGraph', 'NER', 'STT', 'Gemma 4', 'Ollama', 'Docker'],
     image: {
-      src: '/images/projects/PLATAFORMA%20IA/1.webp',
-      alt: 'Vista principal de la Plataforma IA Unificada.'
+      src: '/images/projects/JUSTICIA/03-asistente.webp',
+      alt: 'Chat de JusticIA: asistente con accesos directos a anonimizar, transcribir y analizar documentos.'
     },
     gallery: [
       { src: '/images/projects/JUSTICIA/01-acceso.webp', caption: 'JusticIA: acceso al portal' },
