@@ -107,7 +107,7 @@ export const site = {
       { tab: 0, dates: '2024 — 2026', org: '4.º Tribunal de Juicio Oral en lo Penal de Santiago', kind: 'Administrativo informático', title: ['DESARROLLO', 'IA Y WEB'],
         text: 'Mejoras tecnológicas, flujos de trabajo locales y desarrollos que integran IA local para la gestión documental.',
         milestones: [
-          { k: 'PLATAFORMA', v: 'Plataforma IA Unificada: portal, roles y módulos de IA.' },
+          { k: 'PLATAFORMA', v: 'Plataforma IA JusticIA: portal, roles y módulos de IA.' },
           { k: 'SISTEMA', v: '4toTOP: permisos, archivos, correo IMAP y reportes.' },
           { k: 'ASISTENTE', v: 'Chatbot UNIJUD: RAG con fuentes y citas.' }
         ] }
@@ -118,7 +118,7 @@ export const site = {
     eyebrow: 'PROYECTOS DESTACADOS',
     category: 'CASOS DE TRABAJO',
     items: [
-      { title: 'Plataforma IA Unificada', sub: 'Agentes especializados · Laravel, FastAPI, Ollama', image: '/images/echo/plataforma-ia-chat.webp', href: caseUrl('plataforma-ia-unificada') },
+      { title: 'Plataforma IA JusticIA', sub: 'Agentes especializados · Laravel, FastAPI, Ollama', image: '/images/echo/plataforma-ia-chat.webp', href: caseUrl('plataforma-ia-unificada') },
       { title: '4toTOP', sub: 'Gestión operativa · Laravel, Livewire', image: '/images/echo/4totop.webp', href: caseUrl('4totop') },
       { title: 'Chatbot UNIJUD', sub: 'RAG documental · Vue 3, FastAPI, LangGraph', image: '/images/echo/chatbot-unijud.webp', href: caseUrl('chatbot-unijud') },
       { title: 'CRM para WhatsApp', sub: 'Atención comercial · Laravel, React, FastAPI', image: '/images/echo/crm-whatsapp.webp', href: caseUrl('crm-whatsapp') },
@@ -130,7 +130,7 @@ export const site = {
     center: "OBRAS '26",
     hint: 'SCROLL O ARRASTRA EL TAMBOR',
     items: [
-      { title: 'Plataforma IA Unificada', image: '/images/echo/plataforma-ia-chat.webp', href: caseUrl('plataforma-ia-unificada') },
+      { title: 'Plataforma IA JusticIA', image: '/images/echo/plataforma-ia-chat.webp', href: caseUrl('plataforma-ia-unificada') },
       { title: '4toTOP', image: '/images/echo/4totop.webp', href: caseUrl('4totop') },
       { title: 'Chatbot UNIJUD', image: '/images/echo/chatbot-unijud.webp', href: caseUrl('chatbot-unijud') },
       { title: 'Anonimizador', image: '/images/echo/anonimizador.webp', href: caseUrl('anonimizador') },
