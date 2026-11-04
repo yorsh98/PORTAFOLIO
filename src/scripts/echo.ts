@@ -351,6 +351,13 @@ document.addEventListener('click', e => {
   go(TG[key] + 1);
 });
 
+/* ---------- Servicios: pausa breve al terminar de mostrarse ---------- */
+// Si el bloque cabe en pantalla se centra; si es más alto, se fija cuando su borde inferior llega al pie de la pantalla.
+const svHold = $('#svHold');
+const svFit = () => { const h = svHold.offsetHeight; svHold.style.setProperty('--sv-top', `${innerHeight >= h ? (innerHeight - h) / 2 : innerHeight - h}px`); };
+new ResizeObserver(() => { svFit(); TG = targets(); }).observe(svHold); // abrir otro servicio cambia la altura
+addEventListener('resize', svFit);
+
 /* ---------- Contacto: foco de luz que sigue al cursor + reveal ---------- */
 const talk = $('#contact'), talkTitle = $('#talkTitle');
 talk.addEventListener('pointermove', e => { const r = talkTitle.getBoundingClientRect(); talk.style.setProperty('--mx', (e.clientX - r.left) + 'px'); talk.style.setProperty('--my', (e.clientY - r.top) + 'px'); });

@@ -112,6 +112,8 @@ const serviceWords = words([services.title]), stackWords = words([stack.title]);
 
     <!-- 4 · SERVICIOS -->
     <section class="services" id="services" data-nav-theme="light" aria-labelledby="sv-title">
+      <!-- Pausa breve: el bloque se queda fijo un tramo corto cuando ya se ve completo (scroll nativo, sticky) -->
+      <div class="sv-hold" id="svHold">
       <h2 class="split" id="sv-title" data-reveal="split" aria-label={services.title}>{serviceWords.map((ws) => <span class="ln" aria-hidden="true">{ws.map((w) => <><span class="w"><span style={`--i:${w.i}`}>{w.t}</span></span>{' '}</>)}</span>)}</h2>
       <p class="sv-text" data-reveal>{services.text}</p>
       <div class="acc">
@@ -122,6 +124,8 @@ const serviceWords = words([services.title]), stackWords = words([stack.title]);
           </div>
         ))}
       </div>
+      </div>
+      <div class="sv-dwell" aria-hidden="true"></div>
     </section>
 
     <!-- 5 · STACK -->
