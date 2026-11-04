@@ -73,11 +73,53 @@ function makeTexture(item: Item, seed: number, onready: () => void): Texture {
 const NF = D.featured.length, NW = D.works.length;
 const panelEls = $$('.panel', $('#expTrack')), titleEls = $$('.ttl', $('#expTrack')), NP = panelEls.length;
 function setHeights() {
-  $('#home').style.height = '520vh';
+  $('#home').style.height = '580vh'; // .anchor-about en global.css depende de este valor
   $('#experience').style.height = (NP * 85 + 100) + 'vh';
   $('#projects').style.height = (NF * 70 + 100) + 'vh';
   $('#works').style.height = (NW * 70 + 160) + 'vh';
+  setCredHeight();
 }
+/* ---------- Módulo 5 (E05): galería horizontal fijada + curva 3D (Cursos y diplomados) ---------- */
+const crPin = $('#credPin'), crStage = $('#credStage'), crTrack = $('#credTrack'), crCards = $$('.cred-card', crTrack);
+const crIdx = $('#credIdx'), crBar = $('#credBar'), NC = crCards.length;
+let crTravel = 0, crNative = false, crActive = -1;
+function setCredHeight() {
+  // En móvil y con movimiento reducido el carrusel usa scroll horizontal nativo (más usable que fijar la sección)
+  crNative = reduce || innerWidth <= 820;
+  crPin.classList.toggle('native', crNative);
+  crTrack.style.transform = ''; crCards.forEach(c => { c.style.transform = ''; c.style.opacity = ''; });
+  crTravel = crNative ? 0 : Math.max(0, crTrack.scrollWidth - innerWidth);
+  crPin.style.height = crNative || NC < 2 ? '' : `calc(100vh + ${crTravel}px)`;
+}
+function crSetIdx(i: number) {
+  if (i === crActive) return; crActive = i;
+  crIdx.textContent = `${String(i + 1).padStart(2, '0')} / ${String(NC).padStart(2, '0')}`;
+}
+function updateCR(p: number) {
+  if (crNative) return;
+  const x = p * crTravel, vw = innerWidth, half = vw / 2;
+  crTrack.style.transform = `translate3d(${-x}px,0,0)`;
+  let best = 0, bestD = Infinity;
+  crCards.forEach((c, i) => {
+    const d = clamp((c.offsetLeft + c.offsetWidth / 2 - x - half) / half, -1.6, 1.6), ad = Math.abs(d);
+    c.style.transform = `perspective(1400px) rotateY(${-d * 22}deg) translateZ(${-ad * 90}px)`;
+    c.style.opacity = String(1 - clamp(ad - .9) * .6);
+    if (ad < bestD) { bestD = ad; best = i; }
+  });
+  crSetIdx(best); crBar.style.width = (p * 100) + '%';
+}
+crTrack.addEventListener('scroll', () => { // modo nativo: el contador sigue a la tarjeta centrada
+  if (!crNative) return; const mid = crTrack.scrollLeft + crTrack.clientWidth / 2;
+  let best = 0; crCards.forEach((c, i) => { if (Math.abs(c.offsetLeft + c.offsetWidth / 2 - mid) < Math.abs(crCards[best].offsetLeft + crCards[best].offsetWidth / 2 - mid)) best = i; });
+  crSetIdx(best); crBar.style.width = (crTrack.scrollWidth > crTrack.clientWidth ? crTrack.scrollLeft / (crTrack.scrollWidth - crTrack.clientWidth) * 100 : 100) + '%';
+}, { passive: true });
+// Teclado: al enfocar un certificado fuera de vista, el scroll lleva la galería hasta él
+crTrack.addEventListener('focusin', e => {
+  if (crNative || !crTravel) return; const c = (e.target as Element).closest<HTMLElement>('.cred-card'); if (!c) return;
+  const x = clamp(c.offsetLeft + c.offsetWidth / 2 - innerWidth / 2, 0, crTravel);
+  scrollTo({ top: pageTop(crPin) + (crPin.offsetHeight - innerHeight) * (x / crTravel), behavior: 'auto' });
+});
+
 setHeights();
 
 const wrapProg = (el: HTMLElement) => { const r = el.getBoundingClientRect(); return clamp(-r.top / (r.height - innerHeight)); };
@@ -86,7 +128,7 @@ const step = (pos: number, a = .25, b = .75) => { const i = Math.floor(pos), f =
 const pageTop = (el: HTMLElement) => el.getBoundingClientRect().top + scrollY;
 const go = (top: number) => scrollTo({ top, behavior: reduce ? 'auto' : 'smooth' });
 
-/* ---------- Remolinos (fondo del "Sobre mí") ---------- */
+/* ---------- Remolinos (fondo de la presentación) ---------- */
 function drawSwirl() {
   const cv = $<HTMLCanvasElement>('#swirl'), w = cv.width = innerWidth, h = cv.height = innerHeight, x = cv.getContext('2d')!, r = rng(7);
   x.fillStyle = '#0a0b0e'; x.fillRect(0, 0, w, h);
@@ -99,14 +141,14 @@ function drawSwirl() {
   const g = x.createRadialGradient(w / 2, h / 2, h * .2, w / 2, h / 2, h * .9); g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(1, 'rgba(0,0,0,.65)'); x.fillStyle = g; x.fillRect(0, 0, w, h);
 }
 
-/* ---------- Módulo 1: Hero → Sobre mí ---------- */
+/* ---------- Módulo 1: Hero → Qué hago → barrido hacia Proyectos ---------- */
 type Mod = { el: HTMLElement; cur: number; seen?: boolean };
-const M: Record<'ha' | 'ex' | 'ft' | 'wk', Mod> = { ha: { el: $('#home'), cur: 0 }, ex: { el: $('#experience'), cur: 0 }, ft: { el: $('#projects'), cur: 0 }, wk: { el: $('#works'), cur: 0 } };
+const M: Record<'ha' | 'ex' | 'ft' | 'wk' | 'cr', Mod> = { ha: { el: $('#home'), cur: 0 }, ex: { el: $('#experience'), cur: 0 }, ft: { el: $('#projects'), cur: 0 }, wk: { el: $('#works'), cur: 0 }, cr: { el: $('#credPin'), cur: 0 } };
 const haCard = $('#haCard'), heroLayer = $('#heroLayer'), aboutContent = $('#aboutContent'), aboutLayer = $('#aboutLayer');
-const aboutWords = $('#aboutWords'), wA = $('#wA'), wB = $('#wB'), heroTitle = $('.hero-title');
+const haBeam = $('#haBeam'), haWipe = $('#haWipe'), aboutWords = $('#aboutWords'), wA = $('#wA'), wB = $('#wB'), heroTitle = $('.hero-title');
 let navOverride: 'light' | 'dark' | null = null;
 function updateHA(p: number) {
-  const s1 = ease(clamp(p / .28)), appear = clamp((p - .2) / .08), split = ease(clamp((p - .34) / .14)), grow = ease(clamp((p - .46) / .3)), cont = clamp((p - .8) / .14);
+  const s1 = ease(clamp(p / .28)), appear = clamp((p - .2) / .08), split = ease(clamp((p - .34) / .14)), grow = ease(clamp((p - .46) / .3)), cont = clamp((p - .76) / .1);
   const sc = p < .46 ? lerp(1, .3, s1) : lerp(.3, 1, grow);
   haCard.style.transform = `translateZ(0) scale(${sc})`;
   haCard.style.borderRadius = sc >= .999 ? '0' : `${(1 - sc) * 70 / sc}px`;
@@ -122,24 +164,52 @@ function updateHA(p: number) {
   aboutContent.style.opacity = String(cont);
   aboutContent.style.visibility = cont > 0 ? 'visible' : 'hidden';
   aboutContent.style.transform = `translateY(${(1 - cont) * 24}px)`;
-  navOverride = p < .24 ? 'light' : 'dark';
+  // E03 · el haz de luz barre la presentación mientras está en pantalla
+  if (!reduce) { const b = clamp((p - .7) / .24); haBeam.style.transform = `rotate(${lerp(-12, 7, ease(b))}deg) scaleY(${lerp(.92, 1.06, b)})`; }
+  // Barrido claro: une la tarjeta oscura con el fondo papel de Proyectos (mismo recurso que Experiencia → Formación)
+  const wp = ease(clamp((p - .92) / .08));
+  haWipe.style.display = wp > 0 ? 'block' : 'none'; haWipe.style.transform = `scaleY(${wp})`;
+  navOverride = p < .24 || wp > .6 ? 'light' : 'dark';
 }
 
 /* ---------- Módulo 2: Experiencia ---------- */
-const expTrack = $('#expTrack'), wipe = $('#wipe'), expBar = $('#expBar'), ghostRows = $$('#ghost span'), tabBtns = $$<HTMLButtonElement>('#expTabs button');
-let activeTab = -1, exLast = 0, exWipe = 0;
+const expTrack = $('#expTrack'), expLine = $('#expLine'), expTabs = $('#expTabs'), wipe = $('#wipe'), expBar = $('#expBar'), ghostRows = $$('#ghost span'), tabBtns = $$<HTMLButtonElement>('#expTabs button');
+let activeTab = -1, exLast = 0, exWipe = 0, exEnter = reduce ? 1 : 0;
+const exFirst = $$('.meta, .ttl, .desc', panelEls[0]);
+const exMs = panelEls.map(pe => $$('.ms > div', pe));
+// Entrada: mientras la sección sube a la pantalla (antes de fijarse) la línea de luz recorre el borde,
+// el texto fantasma llega desde los costados y el primer panel sube y se enfoca por partes.
+function enterEX() {
+  const top = M.ex.el.getBoundingClientRect().top, goal = reduce ? 1 : clamp(1 - top / innerHeight);
+  exEnter = Math.abs(goal - exEnter) < .001 ? goal : lerp(exEnter, goal, SM);
+  const e = exEnter, part = (d: number) => ease(clamp((e - d) / (1 - d)));
+  expLine.style.transform = `scaleX(${ease(clamp(e / .7))})`;
+  expLine.style.opacity = String(1 - clamp((M.ex.cur - .01) / .05));
+  exFirst.forEach((el, i) => {
+    const k = part(.25 + i * .15);
+    el.style.transform = `translate3d(0,${(1 - k) * 70}px,0)`;
+    if (!el.classList.contains('ttl')) el.style.opacity = String(k);
+  });
+  expTabs.style.opacity = String(part(.7)); expTabs.style.transform = `translateY(${(1 - part(.7)) * 20}px)`;
+  return e;
+}
 function updateEX(p: number) {
+  const en = enterEX(), enT = ease(clamp((en - .4) / .6));
   const q = clamp(p / .84), pos = step(q * (NP - 1));
   const vw = innerWidth, vel = clamp(Math.abs(pos - exLast) * 22, 0, 1.4); exLast = pos;
   expTrack.style.transform = `translate3d(${-pos * vw}px,0,0)`;
   titleEls.forEach((t, i) => {
     const d = i - pos, ad = Math.abs(d), ox = clamp(d * 22, -26, 26) * Math.min(1, ad * 1.6);
-    t.style.filter = `blur(${Math.min(ad, 1) * 5 * Math.max(vel, ad)}px)`;
+    t.style.filter = `blur(${Math.min(ad, 1) * 5 * Math.max(vel, ad) + (i === 0 ? (1 - enT) * 14 : 0)}px)`;
     t.style.textShadow = `${ox}px 0 rgba(255,255,255,.55), ${-ox * .6}px 0 rgba(120,140,255,.35), 0 0 28px rgba(255,255,255,${.45 * (1 - Math.min(ad, 1))})`;
-    t.style.opacity = String(1 - Math.min(ad, 1) * .75);
+    t.style.opacity = String((1 - Math.min(ad, 1) * .75) * (i === 0 ? enT : 1));
   });
   panelEls.forEach((pe, i) => { pe.inert = Math.abs(i - pos) > .5; });
-  ghostRows.forEach((g, i) => { g.style.transform = `translate3d(${(i % 2 ? 1 : -1) * (pos * .28 * vw) - (i % 2 ? vw * .5 : 0)}px,0,0)`; });
+  // Hitos del panel: entran en cascada al centrarse y se retiran al salir
+  if (!reduce) exMs.forEach((ms, i) => { const d = Math.abs(i - pos); ms.forEach((m, j) => {
+    const k = clamp((1 - d * 2) * 1.6 - j * .25); m.style.opacity = String(k); m.style.transform = `translate3d(0,${(1 - k) * 26}px,0)`;
+  }); });
+  ghostRows.forEach((g, i) => { const side = i % 2 ? 1 : -1; g.style.transform = `translate3d(${side * (pos * .28 * vw) - (i % 2 ? vw * .5 : 0) + side * (1 - ease(en)) * vw * .45}px,0,0)`; });
   expBar.style.width = (pos / (NP - 1) * 100) + '%';
   const tab = Number(panelEls[Math.round(pos)].dataset.tab);
   if (tab !== activeTab) { activeTab = tab; tabBtns.forEach((b, i) => b.classList.toggle('on', i === tab)); }
@@ -148,6 +218,7 @@ function updateEX(p: number) {
 }
 tabBtns.forEach(b => b.addEventListener('click', () => {
   const i = panelEls.findIndex(pe => pe.dataset.tab === b.dataset.tab);
+  if (i < 0) { TG = targets(); go(TG.credentials + 1); return; } // la formación vive en su propia sección
   const el = M.ex.el, span = el.offsetHeight - innerHeight;
   go(pageTop(el) + span * .84 * (i / (NP - 1)) + 2);
 }));
@@ -250,10 +321,10 @@ function updateWK(p: number, now: number) {
 
 /* ---------- Nav: tema + enlace activo + saltos ---------- */
 const nav = $('#nav'), themed = $$('[data-nav-theme]');
-const legacy: Record<string, string> = { inicio: 'home', perfil: 'about', proyectos: 'projects', tecnologias: 'stack', 'ia-local': 'ai' };
+const legacy: Record<string, string> = { inicio: 'home', perfil: 'about', presentacion: 'intro', proyectos: 'projects', tecnologias: 'stack', 'ia-local': 'ai' };
 function targets(): Record<string, number> {
-  const h = $('#home'), out: Record<string, number> = { home: pageTop(h), about: pageTop(h) + (h.offsetHeight - innerHeight) * .86 };
-  for (const id of ['experience', 'projects', 'works', 'stack', 'ai', 'credentials', 'services', 'contact']) out[id] = pageTop($('#' + id));
+  const h = $('#home'), out: Record<string, number> = { home: pageTop(h), intro: pageTop(h) + (h.offsetHeight - innerHeight) * .87 };
+  for (const id of ['projects', 'works', 'services', 'stack', 'ai', 'experience', 'credentials', 'about', 'contact']) out[id] = pageTop($('#' + id));
   return out;
 }
 let TG = targets();
@@ -272,7 +343,7 @@ function updateNav() {
   navLinks.forEach(a => { const on = a.dataset.go === act; a.classList.toggle('on', on); if (on) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current'); });
 }
 // Secciones sin enlace propio en el menú iluminan el de su grupo
-const navKeyOf: Record<string, string> = { works: 'projects', ai: 'stack', credentials: 'stack', contact: 'services' };
+const navKeyOf: Record<string, string> = { intro: 'home', works: 'projects', ai: 'stack', credentials: 'experience', contact: 'about' };
 document.addEventListener('click', e => {
   const a = (e.target as Element).closest<HTMLElement>('[data-go]'); if (!a) return; e.preventDefault();
   TG = targets(); const key = a.dataset.go!;
@@ -289,21 +360,7 @@ const io = new IntersectionObserver(es => { let q = 0; es.forEach(e => {
   if (el.dataset.reveal === 'seq') el.style.setProperty('--delay', `${q++ * 160}ms`);
   el.classList.add('in'); io.unobserve(el);
 }); }, { threshold: .2 });
-$$('[data-reveal]').forEach(el => io.observe(el)); io.observe(talk); io.observe($('#stack'));
-
-/* ---------- Cursos y diplomados: acordeón lateral (hover con mouse, clic o teclado) ---------- */
-{
-  const panels = $$('.cred-panel'); let hoverT = 0;
-  const open = (p: HTMLElement) => panels.forEach(o => {
-    const on = o === p; o.classList.toggle('open', on);
-    $('.cred-tab', o).setAttribute('aria-expanded', String(on)); $('.cred-body', o).inert = !on;
-  });
-  panels.forEach(p => {
-    $('.cred-tab', p).addEventListener('click', () => open(p));
-    p.addEventListener('pointerenter', e => { if (e.pointerType === 'mouse') { clearTimeout(hoverT); hoverT = setTimeout(() => open(p), 140); } });
-    p.addEventListener('pointerleave', () => clearTimeout(hoverT));
-  });
-}
+$$('[data-reveal]').forEach(el => io.observe(el)); io.observe(talk); io.observe($('#stack')); io.observe($('#about')); io.observe(crStage);
 
 /* ---------- Credenciales: vista ampliada ---------- */
 {
@@ -359,6 +416,42 @@ function updateCore(now: number) {
   });
 }
 
+/* ---------- Efectos ligados al scroll fuera de las escenas fijas ---------- */
+// Líneas de luz: se trazan mientras la sección sube (borde coordinado con el cambio de fondo).
+const lines = $$('.stack .sec-line, .about-s .sec-line, .talk-line');
+lines.forEach(l => l.classList.add('scrub'));
+// E04 · títulos grandes que se desplazan en sentidos opuestos según avanza la sección.
+const drifts = $$('[data-drift]');
+// E09 · firma final: el pie se enfoca y concentra el tracking al acercarse al final real del scroll.
+const sign = $('#sign');
+// E09 también en "DEL INCIDENTE / A LA SOLUCIÓN": se enfoca al entrar y se desenfoca al salir, línea a línea.
+const abLines = $$('#about-title .ln');
+const GLOW = ' drop-shadow(0 0 22px rgba(255,255,255,.35))';
+function updateFlow() {
+  const vh = innerHeight, vw = innerWidth;
+  for (const l of lines) {
+    const r = l.parentElement!.getBoundingClientRect(); if (r.top > vh || r.bottom < 0) continue;
+    l.style.transform = `scaleX(${reduce ? 1 : ease(clamp((vh - r.top) / (vh * .6)))})`;
+  }
+  if (reduce) return;
+  const amp = vw < 700 ? .03 : .06;
+  for (const d of drifts) {
+    const r = d.getBoundingClientRect(); if (r.top > vh || r.bottom < 0) continue;
+    const q = clamp((vh - r.top) / (vh + r.height));
+    d.style.translate = `${(.5 - q) * 2 * amp * vw * Number(d.dataset.drift)}px 0`;
+  }
+  abLines.forEach((ln, i) => {
+    const r = ln.getBoundingClientRect(); if (r.top > vh * 1.2 || r.bottom < -vh * .2) return;
+    const c = r.top + r.height / 2 + i * vh * .05; // la segunda línea va un paso detrás
+    const s = ease(clamp((vh * 1.02 - c) / (vh * .42))) * (1 - ease(clamp((vh * .2 - c) / (vh * .35))));
+    ln.style.letterSpacing = `${lerp(.3, -.05, s)}em`;
+    ln.style.filter = `blur(${(1 - s) * 12}px)${i === 0 ? GLOW : ''}`;
+    ln.style.opacity = String(lerp(.15, 1, s));
+  });
+  const rest = document.documentElement.scrollHeight - (scrollY + vh), s = clamp(1.1 - rest / (vh * .5));
+  sign.style.letterSpacing = `${lerp(.4, .04, s)}em`; sign.style.filter = s >= 1 ? '' : `blur(${(1 - s) * 8}px)`; sign.style.opacity = String(lerp(.15, 1, s));
+}
+
 /* ---------- Bucle principal ---------- */
 function frame(now: number) {
   for (const m of Object.values(M)) { if (!near(m.el) && m.seen) continue; m.seen = true; const t = wrapProg(m.el); m.cur = Math.abs(t - m.cur) < .0004 ? t : lerp(m.cur, t, SM); }
@@ -366,7 +459,8 @@ function frame(now: number) {
   if (near(M.ex.el)) updateEX(M.ex.cur);
   if (near(M.ft.el)) updateFT(M.ft.cur);
   if (near(M.wk.el)) updateWK(M.wk.cur, now);
-  updateNav(); requestAnimationFrame(frame);
+  if (near(M.cr.el)) updateCR(M.cr.cur);
+  updateFlow(); updateNav(); requestAnimationFrame(frame);
 }
 let lastW = 0, lastH = 0;
 function resize() {

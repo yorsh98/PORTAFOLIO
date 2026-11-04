@@ -21,8 +21,8 @@ export const site = {
   preloader: { word: 'JORGE' },
 
   nav: [
-    ['home', 'Inicio'], ['about', 'Sobre mí'], ['experience', 'Experiencia'],
-    ['projects', 'Proyectos'], ['stack', 'Stack'], ['services', 'Servicios']
+    ['home', 'Inicio'], ['projects', 'Proyectos'], ['services', 'Servicios'],
+    ['stack', 'Stack'], ['experience', 'Experiencia'], ['about', 'Sobre mí']
   ] as const,
 
   // LinkedIn en standby: se agrega cuando el perfil esté actualizado.
@@ -55,18 +55,38 @@ export const site = {
     portrait: null as string | null
   },
 
-  about: {
-    words: ['SOBRE', 'MÍ'],
+  // Presentación breve dentro del hero (qué hago). La historia personal va en "about", al final.
+  intro: {
+    words: ['QUÉ', 'HAGO'],
     kicker: 'Tecnología que resuelve, automatiza y sostiene la operación',
-    headline: 'Del incidente a la solución',
-    intro: 'Soy Jorge Troncoso. Empecé en 2019 dando soporte TI en tribunales —equipos, redes, servidores y salas de audiencia— y hoy desarrollo plataformas web, servicios de IA y automatizaciones para la gestión documental.',
+    headline: 'Software web e IA para la operación diaria',
+    intro: 'Desarrollo aplicaciones web, servicios de IA y automatizaciones para la gestión documental: modelos locales cuando los datos deben quedarse en el entorno administrado y modelos en la nube cuando se necesita más capacidad.',
     facts: ['TI desde 2019', 'Santiago, Chile', 'Diplomado en IA · INACAP', 'Desarrollo para un tribunal oral en lo penal'],
     cols: [
-      { k: 'Oficio', v: 'Aplicaciones web, servicios backend e infraestructura de IA local y en la nube para flujos documentales, recuperación de información y automatización.' },
-      { k: 'Fundamentos', v: 'Soporte tecnológico y continuidad operativa desde 2019: equipos, redes, servidores locales y salas de audiencias híbridas.' },
-      { k: 'Método', v: 'Desarrollo agéntico con Claude Code, Codex y opencode: reglas por repositorio, skills y servidores MCP. Reviso cada cambio y el build verificado decide qué se entrega.' }
+      { k: 'Web a medida', v: 'Portales y sistemas internos con Laravel, React o Vue: roles, permisos, archivos y reportes.' },
+      { k: 'IA aplicada', v: 'RAG con fuentes y citas, agentes, transcripción de audio y anonimización de documentos.' },
+      { k: 'Infraestructura', v: 'Modelos locales con GPU y APIs en la nube, detrás de una misma capa de servicios.' }
     ],
     ctas: [{ label: 'Ver proyectos', go: 'projects', primary: true }, { label: 'Contactar', go: 'contact', primary: false }]
+  },
+
+  about: {
+    eyebrow: 'SOBRE MÍ',
+    title: ['DEL INCIDENTE', 'A LA SOLUCIÓN'],
+    text: 'Soy Jorge Troncoso. Empecé en 2019 dando soporte TI en tribunales —equipos, redes, servidores y salas de audiencia— y hoy desarrollo plataformas web, servicios de IA y automatizaciones para la gestión documental.',
+    // Foto opcional (WebP/AVIF en /public/images/profile). null → se muestra el monograma.
+    photo: null as string | null,
+    path: [
+      { k: '2019', v: 'Soporte TI en CAPJ y TOP San Bernardo' },
+      { k: '2024', v: 'Desarrollo web e IA en el 4.º TOP de Santiago' },
+      { k: 'Hoy', v: 'Plataformas de IA local y en la nube' }
+    ],
+    cols: [
+      { k: 'Fundamentos', v: 'Soporte tecnológico y continuidad operativa desde 2019: equipos, redes, servidores locales y salas de audiencias híbridas.' },
+      { k: 'Oficio', v: 'Aplicaciones web, servicios backend e infraestructura de IA local y en la nube para flujos documentales, recuperación de información y automatización.' },
+      { k: 'Método', v: 'Desarrollo agéntico con Claude Code, Codex y opencode: reglas por repositorio, skills y servidores MCP. Reviso cada cambio y el build verificado decide qué se entrega.' }
+    ],
+    ctas: [{ label: 'Hablemos', go: 'contact', primary: true }, { label: 'Ver experiencia', go: 'experience', primary: false }]
   },
 
   experience: {
@@ -74,7 +94,7 @@ export const site = {
     kicker: 'EXPERIENCIA APLICADA',
     intro: 'Resolver primero. Mejorar después. Un recorrido por los entornos donde aprendí a construir herramientas que se usan todos los días.',
     ghost: ['DESARROLLO · IA LOCAL Y EN LA NUBE', 'SOPORTE TI · DESDE 2019'],
-    tabs: ['EXPERIENCIA', 'FORMACIÓN'],
+    tabs: ['EXPERIENCIA', 'FORMACIÓN ↓'], // FORMACIÓN salta a la sección de cursos y diplomados
     items: [
       { tab: 0, dates: '2019 — 2024', org: 'CAPJ y TOP San Bernardo', kind: 'Administrativo Encargado Informática', title: ['SOPORTE', 'TECNOLÓGICO'],
         text: 'Administración de equipos, respaldo de audios, red local, sistemas remotos, archivos compartidos y atención de emergencias informáticas para distintas competencias jurisdiccionales.',
@@ -89,14 +109,6 @@ export const site = {
           { k: 'PLATAFORMA', v: 'Plataforma IA Unificada: portal, roles y módulos de IA.' },
           { k: 'SISTEMA', v: '4toTOP: permisos, archivos, correo IMAP y reportes.' },
           { k: 'ASISTENTE', v: 'Chatbot UNIJUD: RAG con fuentes y citas.' }
-        ] },
-      { tab: 1, dates: 'Formación continua', org: 'INACAP · Desafío Latam · Claude Academy · Código Facilito', kind: 'Credenciales', title: ['FORMACIÓN', 'CONTINUA'],
-        text: 'Diplomado en Inteligencia Artificial aplicada a negocios, curso de Transformación Digital con IA y Automatización, y formación complementaria en datos, Machine Learning y desarrollo asistido por IA.',
-        milestones: [
-          { k: 'IA', v: 'Diplomado IA aplicada a negocios (INACAP) y Transformación Digital con IA y Automatización (Desafío Latam, 150 h).' },
-          { k: 'DATOS', v: 'Bases de datos y Machine Learning para decisiones.' },
-          { k: 'CÓDIGO', v: 'Claude Code 101, GitHub a fondo y Laravel profesional.' },
-          { k: 'A FUTURO · CIBERSEGURIDAD', v: 'Diplomado en Ethical Hacking / Pentesting (INACAP), actualmente en curso.' }
         ] }
     ]
   },
@@ -167,7 +179,8 @@ export const site = {
   credentials: {
     eyebrow: 'FORMACIÓN CONTINUA',
     title: 'CURSOS Y DIPLOMADOS',
-    text: 'Formación en inteligencia artificial, datos y desarrollo. Selecciona un curso para ver su certificado.',
+    text: 'Diplomado en Inteligencia Artificial aplicada a negocios, Transformación Digital con IA y Automatización, y formación complementaria en datos, Machine Learning y desarrollo asistido por IA. Selecciona un curso para ver su certificado.',
+    ongoing: [{ title: 'Diplomado en Ethical Hacking / Pentesting', org: 'INACAP' }],
     items: [
       { title: 'Claude Code 101', org: 'Claude Academy', kind: 'Destacado', image: '/images/profile/claude-code-101.webp', verify: 'https://academy.claude.com/verify/93acc051fa6fd30931a68ea8313b9e93' },
       { title: 'Claude Platform 101', org: 'Claude Academy', kind: 'Destacado', image: '/images/profile/claude-platform-101.webp', verify: 'https://academy.claude.com/verify/ca4776b64581e1b0547961e4490a11b2' },

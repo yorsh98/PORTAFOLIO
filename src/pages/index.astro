@@ -4,7 +4,7 @@ import { site } from '../data/site';
 import { technologies, categoryLabels } from '../data/technologies';
 import iconSet from '@iconify-json/simple-icons/icons.json';
 
-const { hero, about, experience: X, featured, works, stack, localAi, credentials, services, contact } = site;
+const { hero, intro, about, experience: X, featured, works, stack, localAi, credentials, services, contact } = site;
 
 const customIcons: Record<string, string> = {
   llamacpp: '<path d="M7 3.5v5.2M10.2 3.5v5.2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M5.6 8.7h6.2a2 2 0 0 1 2 2v1.8h3.4a2.3 2.3 0 0 1 2.3 2.3v5.7h-2.2v-3.6h-1.5v3.6h-2.2v-3.6H8.9v3.6H6.7v-3.6H5.2v3.6H3V12a3.3 3.3 0 0 1 2.6-3.3Z" fill="currentColor"/><circle cx="8.4" cy="11" r=".9" fill="#06070c"/>',
@@ -19,20 +19,27 @@ const techGroups = (Object.keys(categoryLabels) as (keyof typeof categoryLabels)
 
 const echoData = JSON.stringify({ word: site.preloader.word, featured: featured.items, works: works.items });
 const CHEV = '<path d="m6 9 6 6 6-6"/>';
+// Títulos que entran palabra por palabra: [{ t, i, dim }] con índice global para el desfase
+const words = (lines: string[]) => {
+  let i = 0;
+  return lines.map((line) => line.split(' ').map((t) => ({ t, i: i++ })));
+};
+const credWords = words([credentials.title]);
+const serviceWords = words([services.title]), stackWords = words([stack.title]);
 ---
 <BaseLayout home>
   <script type="application/json" id="echo-data" set:html={echoData} />
 
-  <!-- 1 · PRELOADER -->
+  <!-- 0 · PRELOADER -->
   <div id="preloader" aria-hidden="true">
     <svg class="pl-svg" viewBox="0 0 220 130" fill="none"><path id="plPath" d="M30 96 C 52 6, 150 -8, 160 62 C 166 104, 128 118, 116 92" /><circle id="plDot" r="3.4" /></svg>
     <div class="pl-word" id="plWord"></div>
   </div>
 
   <main id="contenido">
-    <!-- 3 + 4 · HERO → SOBRE MÍ -->
+    <!-- 1 · HERO → QUÉ HAGO (termina con un barrido claro hacia Proyectos) -->
     <section class="pin" id="home" data-nav-theme="dyn" aria-label="Inicio y presentación">
-      <span class="anchor-about" id="about" aria-hidden="true"></span>
+      <span class="anchor-about" id="intro" aria-hidden="true"></span>
       <div class="stage">
         <div class="ha-bg"><canvas id="swirl"></canvas></div>
         <div class="ha-card" id="haCard">
@@ -55,53 +62,33 @@ const CHEV = '<path d="m6 9 6 6 6-6"/>';
             </figure>
             <p class="hero-est mono">{hero.est}</p>
             <div class="hero-side"><p>{hero.tagline}</p><ul>{hero.side.map((t) => <li>{t}</li>)}</ul></div>
-            <a class="hero-cue" href="#about" data-go="about" aria-label="Bajar a Sobre mí">↘</a>
+            <a class="hero-cue" href="#intro" data-go="intro" aria-label="Bajar a la presentación">↘</a>
           </div>
           <div class="about-layer" id="aboutLayer">
-            <div class="beam"></div><div class="figure"></div>
+            <div class="beam" id="haBeam"></div><div class="figure"></div>
             <div class="about-content" id="aboutContent">
               <div class="ab-top">
-                <p class="ab-kicker">{about.kicker}</p>
-                <ul class="ab-facts mono">{about.facts.map((f) => <li>{f}</li>)}</ul>
+                <p class="ab-kicker">{intro.kicker}</p>
+                <ul class="ab-facts mono">{intro.facts.map((f) => <li>{f}</li>)}</ul>
               </div>
               <div class="ab-mark" aria-hidden="true"><span>{site.brand.logo}</span></div>
               <div class="ab-bottom">
                 <div class="ab-lead">
-                  <h2 class="ab-head">{about.headline}</h2>
-                  <p class="ab-intro">{about.intro}</p>
-                  <div class="ab-cta">{about.ctas.map((c) => <a class:list={['btn', { primary: c.primary }]} href={`#${c.go}`} data-go={c.go}>{c.label}</a>)}</div>
+                  <h2 class="ab-head">{intro.headline}</h2>
+                  <p class="ab-intro">{intro.intro}</p>
+                  <div class="ab-cta">{intro.ctas.map((c) => <a class:list={['btn', { primary: c.primary }]} href={`#${c.go}`} data-go={c.go}>{c.label}</a>)}</div>
                 </div>
-                <div class="ab-cols">{about.cols.map((c) => <div><b>{c.k}</b>{c.v}</div>)}</div>
+                <div class="ab-cols">{intro.cols.map((c) => <div><b>{c.k}</b>{c.v}</div>)}</div>
               </div>
             </div>
           </div>
         </div>
-        <div class="about-words" id="aboutWords" aria-hidden="true"><span id="wA">{about.words[0]}</span><span id="wB">{about.words[1]}</span></div>
+        <div class="about-words" id="aboutWords" aria-hidden="true"><span id="wA">{intro.words[0]}</span><span id="wB">{intro.words[1]}</span></div>
+        <div class="wipe" id="haWipe"></div>
       </div>
     </section>
 
-    <!-- 5 · EXPERIENCIA -->
-    <section class="pin exp" id="experience" data-nav-theme="dark" aria-label="Experiencia">
-      <div class="stage">
-        <div class="ghost" id="ghost" aria-hidden="true">{X.ghost.map((t) => <span>{t}&nbsp;&nbsp;{t}</span>)}</div>
-        <div class="exp-track" id="expTrack">
-          <div class="panel" data-tab="0"><div class="meta"><em>{X.kicker}</em></div><h2 class="ttl">{X.title[0]}<br />{X.title[1]}</h2><p class="desc">{X.intro}</p></div>
-          {X.items.map((it) => (
-            <article class="panel" data-tab={it.tab}>
-              <div class="meta"><span>{it.dates}</span><span>{it.org}</span><em>{it.kind}</em></div>
-              <h3 class="ttl">{it.title[0]}<br />{it.title[1]}</h3>
-              <p class="desc">{it.text}</p>
-              <div class="ms" style={`--milestone-columns: ${it.milestones.length}`}>{it.milestones.map((m) => <div><b>{m.k}</b>{m.v}</div>)}</div>
-            </article>
-          ))}
-        </div>
-        <div class="exp-tabs" id="expTabs">{X.tabs.map((t, i) => <button type="button" data-tab={i}>{t}</button>)}</div>
-        <div class="exp-bar"><i id="expBar"></i></div>
-        <div class="wipe" id="wipe"></div>
-      </div>
-    </section>
-
-    <!-- 6 · PROYECTOS DESTACADOS -->
+    <!-- 2 · PROYECTOS DESTACADOS -->
     <section class="pin feat" id="projects" data-nav-theme="light" aria-labelledby="feat-title">
       <div class="stage">
         <h2 class="eyebrow mono" id="feat-title">{featured.eyebrow}</h2>
@@ -112,7 +99,7 @@ const CHEV = '<path d="m6 9 6 6 6-6"/>';
       </div>
     </section>
 
-    <!-- 7 · OBRAS -->
+    <!-- 3 · OBRAS: índice completo, incluye trabajos sin caso de estudio -->
     <section class="pin works" id="works" data-nav-theme="light" aria-label="Obras">
       <div class="stage" id="worksStage">
         <div class="ring">{works.items.map((it, i) => <div class="wcard" data-i={i} role="button" tabindex="0" aria-label={it.title}></div>)}</div>
@@ -123,11 +110,25 @@ const CHEV = '<path d="m6 9 6 6 6-6"/>';
       </div>
     </section>
 
-    <!-- STACK -->
+    <!-- 4 · SERVICIOS -->
+    <section class="services" id="services" data-nav-theme="light" aria-labelledby="sv-title">
+      <h2 class="split" id="sv-title" data-reveal="split" aria-label={services.title}>{serviceWords.map((ws) => <span class="ln" aria-hidden="true">{ws.map((w) => <><span class="w"><span style={`--i:${w.i}`}>{w.t}</span></span>{' '}</>)}</span>)}</h2>
+      <p class="sv-text" data-reveal>{services.text}</p>
+      <div class="acc">
+        {services.items.map((s, i) => (
+          <div class:list={['acc-item', { open: i === 0 }]} data-reveal="side" style={`--delay:${i * 80}ms`}>
+            <button type="button" class="acc-head" aria-expanded={i === 0 ? 'true' : 'false'} aria-controls={`acc-${i}`}><span class="n">{i + 1}</span><span>{s.title}</span><svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true" set:html={CHEV} /></button>
+            <div class="acc-body" id={`acc-${i}`}><div><div class="in">{s.text}<div class="row"><span>{s.deliverables}</span><a href="#contact" data-go="contact">{s.cta} ↗</a></div></div></div></div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- 5 · STACK -->
     <section class="stack" id="stack" data-nav-theme="dark" aria-labelledby="stack-title">
       <div class="sec-line"></div>
       <p class="eyebrow-s mono" data-reveal>{stack.eyebrow}</p>
-      <h2 class="big-title" id="stack-title" data-reveal>{stack.title}</h2>
+      <h2 class="big-title split" id="stack-title" data-reveal="split" data-drift="1" aria-label={stack.title}>{stackWords.map((ws) => <span class="ln" aria-hidden="true">{ws.map((w) => <><span class="w"><span style={`--i:${w.i}`}>{w.t}</span></span>{' '}</>)}</span>)}</h2>
       <p class="sec-text" data-reveal>{stack.text}</p>
       <div class="tech-groups">
         {techGroups.map((g, gi) => (
@@ -139,10 +140,10 @@ const CHEV = '<path d="m6 9 6 6 6-6"/>';
       </div>
     </section>
 
-    <!-- IA LOCAL -->
+    <!-- 5b · IA LOCAL Y EN LA NUBE -->
     <section class="ai" id="ai" data-nav-theme="dark" aria-labelledby="ai-title">
       <p class="eyebrow-s mono" data-reveal>{localAi.eyebrow}</p>
-      <h2 class="ai-title" id="ai-title" data-reveal><span>{localAi.title[0]}</span> <small>{localAi.title[1]}</small></h2>
+      <h2 class="ai-title" id="ai-title" data-reveal data-drift="-1"><span>{localAi.title[0]}</span> <small>{localAi.title[1]}</small></h2>
       <p class="sec-text" data-reveal>{localAi.text}</p>
       <div class="models">
         <p class="eyebrow-s mono" data-reveal>{localAi.models.label}</p>
@@ -169,58 +170,90 @@ const CHEV = '<path d="m6 9 6 6 6-6"/>';
       </ol>
     </section>
 
-    <!-- CREDENCIALES -->
+    <!-- 6 · EXPERIENCIA (termina con un barrido claro hacia Formación) -->
+    <section class="pin exp" id="experience" data-nav-theme="dark" aria-label="Experiencia">
+      <div class="stage">
+        <div class="ghost" id="ghost" aria-hidden="true">{X.ghost.map((t) => <span>{t}&nbsp;&nbsp;{t}</span>)}</div>
+        <div class="exp-track" id="expTrack">
+          <div class="panel" data-tab="0"><div class="meta"><em>{X.kicker}</em></div><h2 class="ttl">{X.title[0]}<br />{X.title[1]}</h2><p class="desc">{X.intro}</p></div>
+          {X.items.map((it) => (
+            <article class="panel" data-tab={it.tab}>
+              <div class="meta"><span>{it.dates}</span><span>{it.org}</span><em>{it.kind}</em></div>
+              <h3 class="ttl">{it.title[0]}<br />{it.title[1]}</h3>
+              <p class="desc">{it.text}</p>
+              <div class="ms" style={`--milestone-columns: ${it.milestones.length}`}>{it.milestones.map((m) => <div><b>{m.k}</b>{m.v}</div>)}</div>
+            </article>
+          ))}
+        </div>
+        <div class="exp-tabs" id="expTabs">{X.tabs.map((t, i) => <button type="button" data-tab={i}>{t}</button>)}</div>
+        <div class="exp-bar"><i id="expBar"></i></div>
+        <div class="exp-line" id="expLine" aria-hidden="true"></div>
+        <div class="wipe" id="wipe"></div>
+      </div>
+    </section>
+
+    <!-- 6b · FORMACIÓN: cursos y diplomados -->
     <section class="creds" id="credentials" data-nav-theme="light" aria-labelledby="cred-title">
       <p class="eyebrow-s mono" data-reveal>{credentials.eyebrow}</p>
-      <h2 class="big-title" id="cred-title" data-reveal>{credentials.title}</h2>
+      <h2 class="big-title split" id="cred-title" data-reveal="split" aria-label={credentials.title}>{credWords.map((ws) => <span class="ln" aria-hidden="true">{ws.map((w) => <><span class="w"><span style={`--i:${w.i}`}>{w.t}</span></span>{' '}</>)}</span>)}</h2>
       <p class="sec-text" data-reveal>{credentials.text}</p>
-      <ol class="cred-acc" data-reveal="acc">
-        {credentials.items.map((c, i) => (
-          <li class:list={['cred-panel', { open: i === 0 }]} style={`--i:${i}`}>
-            <button type="button" class="cred-tab" aria-expanded={i === 0 ? 'true' : 'false'} aria-controls={`cred-${i}`}>
-              <span class="n mono">{String(i + 1).padStart(2, '0')}</span>
-              <span class="t">{c.title}</span>
-            </button>
-            <div class="cred-body" id={`cred-${i}`} inert={i !== 0}>
-              <button type="button" class="cred-img" data-cred={c.image} data-title={c.title} aria-label={`Ampliar certificado: ${c.title}`}>
-                <img src={c.image} alt="" loading="lazy" decoding="async" width="640" height="420" />
-              </button>
-              <div class="cred-meta">
-                <small class="mono">{c.kind} · {c.org}</small>
-                <h3>{c.title}</h3>
-                {c.verify && <a class="cred-verify mono" href={c.verify} target="_blank" rel="noopener noreferrer">Verificar credencial ↗</a>}
-                <span class="cred-zoom mono">Clic en la imagen para ampliar</span>
-              </div>
-            </div>
-          </li>
-        ))}
-      </ol>
+      <ul class="cred-ongoing" data-reveal>{credentials.ongoing.map((o) => <li><span class="mono">En curso</span><b>{o.title}</b><small class="mono">{o.org}</small></li>)}</ul>
+      <!-- E05 · scroll horizontal fijado + carrusel curvo 3D: el scroll vertical recorre los certificados -->
+      <div class="cred-pin" id="credPin">
+        <div class="stage cred-stage" id="credStage">
+          <ol class="cred-track" id="credTrack" aria-label="Certificados">
+            {credentials.items.map((c, i) => (
+              <li class="cred-card" style={`--i:${i}`}>
+                <div class="cc-in">
+                  <button type="button" class="cred-img" data-cred={c.image} data-title={c.title} aria-label={`Ampliar certificado: ${c.title}`}>
+                    <img src={c.image} alt="" loading="lazy" decoding="async" width="640" height="420" />
+                  </button>
+                  <div class="cred-meta">
+                    <small class="mono">{String(i + 1).padStart(2, '0')} · {c.kind} · {c.org}</small>
+                    <h3>{c.title}</h3>
+                    {c.verify && <a class="cred-verify mono" href={c.verify} target="_blank" rel="noopener noreferrer">Verificar credencial ↗</a>}
+                  </div>
+                </div>
+              </li>
+            ))}
+          </ol>
+          <div class="cred-foot mono" aria-hidden="true"><span id="credIdx">01 / {String(credentials.items.length).padStart(2, '0')}</span><div class="cred-bar"><i id="credBar"></i></div><span>Clic en un certificado para ampliarlo</span></div>
+        </div>
+      </div>
       <dialog class="lightbox" id="credDialog" aria-label="Certificado ampliado">
         <button type="button" class="lb-close" data-close>Cerrar</button>
         <figure><img src="" alt="" /><figcaption></figcaption></figure>
       </dialog>
     </section>
 
-    <!-- 8 · SERVICIOS -->
-    <section class="services" id="services" data-nav-theme="light" aria-labelledby="sv-title">
-      <h2 id="sv-title" data-reveal>{services.title}</h2>
-      <p class="sv-text" data-reveal>{services.text}</p>
-      <div class="acc">
-        {services.items.map((s, i) => (
-          <div class:list={['acc-item', { open: i === 0 }]}>
-            <button type="button" class="acc-head" aria-expanded={i === 0 ? 'true' : 'false'} aria-controls={`acc-${i}`}><span class="n">{i + 1}</span><span>{s.title}</span><svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true" set:html={CHEV} /></button>
-            <div class="acc-body" id={`acc-${i}`}><div><div class="in">{s.text}<div class="row"><span>{s.deliverables}</span><a href="#contact" data-go="contact">{s.cta} ↗</a></div></div></div></div>
-          </div>
-        ))}
+    <!-- 7 · SOBRE MÍ -->
+    <section class="about-s" id="about" data-nav-theme="dark" aria-labelledby="about-title">
+      <div class="sec-line"></div>
+      <div class="as-mark" aria-hidden="true"><span>{site.brand.logo}</span></div>
+      <div class="as-head">
+        <p class="eyebrow-s mono" data-reveal>{about.eyebrow}</p>
+        <!-- E09 · blur-to-sharp + tracking ligado al scroll, a la entrada y a la salida -->
+        <h2 class="big-title sig" id="about-title"><span class="ln">{about.title[0]}</span> <span class="ln dim">{about.title[1]}</span></h2>
+      </div>
+      <div class="as-body">
+        {about.photo
+          ? <figure class="as-photo" data-reveal><img src={about.photo} alt="Retrato de Jorge Troncoso" loading="lazy" decoding="async" /></figure>
+          : null}
+        <div class="as-lead">
+          <p class="as-text" data-reveal>{about.text}</p>
+          <ol class="as-path" data-reveal="path">{about.path.map((m, i) => <li style={`--i:${i}`}><b class="mono">{m.k}</b><span>{m.v}</span></li>)}</ol>
+          <div class="ab-cta" data-reveal>{about.ctas.map((c) => <a class:list={['btn', { primary: c.primary }]} href={`#${c.go}`} data-go={c.go}>{c.label}</a>)}</div>
+        </div>
+        <ul class="as-cols">{about.cols.map((c) => <li data-reveal="seq"><b class="mono">{c.k}</b><p>{c.v}</p></li>)}</ul>
       </div>
     </section>
 
-    <!-- 9 · CONTACTO -->
+    <!-- 8 · CONTACTO -->
     <section class="talk" id="contact" data-nav-theme="dark" aria-labelledby="talkTitle">
       <div class="talk-line"></div>
       <h2 class="chrome" id="talkTitle" aria-label={contact.title}>{[...contact.title].map((ch, i) => <span class="ch" style={`--i:${i}`} aria-hidden="true">{ch}</span>)}</h2>
-      <nav class="tpills" aria-label="Canales de contacto">{contact.pills.map((p) => <a class:list={{ primary: p.primary }} href={p.href} target={p.href.startsWith('mailto:') ? undefined : '_blank'} rel="noopener noreferrer">{p.label}</a>)}</nav>
-      <footer class="foot mono">{contact.footer.map((t) => <span>{t}</span>)}</footer>
+      <nav class="tpills" aria-label="Canales de contacto">{contact.pills.map((p, i) => <a class:list={{ primary: p.primary }} style={`--i:${i}`} href={p.href} target={p.href.startsWith('mailto:') ? undefined : '_blank'} rel="noopener noreferrer">{p.label}</a>)}</nav>
+      <footer class="foot mono" id="sign">{contact.footer.map((t) => <span>{t}</span>)}</footer>
     </section>
   </main>
 
