@@ -237,7 +237,7 @@ body.ready .node{opacity:1}
 .lb-nav button:hover{background:rgba(255,255,255,.14)}
 
 /* ---------- Servicios ---------- */
-.services{background:var(--paper);color:var(--ink);padding:16vh 6vw 0}
+.services{background:var(--paper);color:var(--ink);padding:16vh 6vw 0;overflow-x:clip} /* clip (no hidden): recorta la entrada lateral sin romper el sticky */
 .sv-hold{position:sticky;top:var(--sv-top,0px);padding-bottom:12vh}
 .sv-dwell{height:50vh} /* largo de la pausa */
 .services h2{text-align:center;font-weight:800;font-size:clamp(30px,5vw,72px);letter-spacing:-.045em;line-height:.95;text-transform:uppercase;max-width:14ch;margin:0 auto}
@@ -445,7 +445,7 @@ body.ready .node{opacity:1}
   .ab-cols{grid-template-columns:1fr;gap:10px;font-size:12px;line-height:1.45}
   .ab-cta{flex-wrap:wrap}
   .panel{padding:0 7vw}
-  .panel h2,.panel h3{font-size:clamp(40px,13vw,90px)}
+  .panel h2,.panel h3{font-size:clamp(32px,10.5vw,90px)} /* "TECNOLÓGICO" debe caber en 360px */
   .panel .ms{grid-template-columns:1fr;gap:10px;margin-top:3vh}
   .exp-tabs{left:7vw;bottom:4vh}
   .eyebrow{top:13vh}
