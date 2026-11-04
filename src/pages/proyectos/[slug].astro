@@ -7,7 +7,15 @@ export function getStaticPaths() {
 }
 
 const { project } = Astro.props;
-const gallery = (project.gallery ?? []).map((g, i) => typeof g === 'string' ? { src: g, caption: `Captura ${i + 1} de ${project.title}` } : g);
+type Shot = { src: string; caption: string };
+const toShots = (list: (string | Shot)[] | undefined): Shot[] => (list ?? []).map((g, i) => typeof g === 'string' ? { src: g, caption: `Captura ${i + 1} de ${project.title}` } : g);
+const prev = project.previous;
+// Con versión anterior, la página muestra la actual y un botón para ver la otra (portada y galería).
+const versions = [
+  { id: 'current', label: 'Versión actual', image: project.image, gallery: toShots(project.gallery) },
+  ...(prev ? [{ id: 'previous', label: prev.label, image: prev.image, gallery: toShots(prev.gallery) }] : [])
+];
+const hasGallery = versions.some((v) => v.gallery.length > 0);
 const index = projects.findIndex((p) => p.slug === project.slug);
 const next = projects[(index + 1) % projects.length];
 const blocks = [
@@ -23,13 +31,23 @@ const blocks = [
       <h1 class="case-title">{project.title}</h1>
       <p class="case-lead">{project.description}</p>
       <ul class="case-tags">{project.technologies.map((t) => <li>{t}</li>)}</ul>
-      {project.image && (
-        <figure class="case-shot">
-          <button type="button" data-shot={project.image.src} data-alt={project.image.alt} aria-label={`Ampliar imagen de ${project.title}`}>
-            <img src={project.image.src} alt={project.image.alt} width="1600" height="900" decoding="async" />
+      {prev && (
+        <div class="case-versions" data-versions>
+          <p class="case-vlabel mono"><span data-version="current">Versión actual</span><span data-version="previous" hidden>{prev.label} · {prev.note}</span></p>
+          <button type="button" class="case-vbtn" data-vtoggle aria-pressed="false" aria-controls="caseVersions">
+            <span data-version="current">Ver la {prev.label} ↺</span><span data-version="previous" hidden>Volver a la versión actual ↻</span>
           </button>
-        </figure>
+        </div>
       )}
+      <div id="caseVersions">
+        {versions.map((v) => v.image && (
+          <figure class="case-shot" data-version={v.id} hidden={v.id !== 'current'}>
+            <button type="button" data-shot={v.image.src} data-alt={v.image.alt} aria-label={`Ampliar imagen de ${project.title}`}>
+              <img src={v.image.src} alt={v.image.alt} width="1600" height="900" decoding="async" loading={v.id === 'current' ? 'eager' : 'lazy'} />
+            </button>
+          </figure>
+        ))}
+      </div>
     </section>
 
     <section class="case-body" data-nav-theme="dark">
@@ -49,20 +67,22 @@ const blocks = [
         </article>
       </div>
 
-      {gallery.length > 0 && (
+      {hasGallery && (
         <div class="case-gallery">
-          <p class="eyebrow-s mono" data-reveal>INTERFAZ DEL SISTEMA</p>
+          <p class="eyebrow-s mono" data-reveal>INTERFAZ DEL SISTEMA{prev && <><span data-version="current"> · VERSIÓN ACTUAL</span><span data-version="previous" hidden> · {prev.label}</span></>}</p>
           <h2 class="big-title" data-reveal>GALERÍA</h2>
-          <ul>
-            {gallery.map(({ src, caption }, i) => (
-              <li data-reveal style={`--delay:${(i % 3) * 70}ms`}>
-                <button type="button" data-shot={src} data-alt={caption} aria-label={`Ampliar: ${caption}`}>
-                  <img src={src} alt={caption} width="1200" height="675" loading="lazy" decoding="async" />
-                </button>
-                <p class="case-caption">{caption}</p>
-              </li>
-            ))}
-          </ul>
+          {versions.map((v) => (
+            <ul data-version={v.id} hidden={v.id !== 'current'}>
+              {v.gallery.map(({ src, caption }, i) => (
+                <li data-reveal style={`--delay:${(i % 3) * 70}ms`}>
+                  <button type="button" data-shot={src} data-alt={caption} aria-label={`Ampliar: ${caption}`}>
+                    <img src={src} alt={caption} width="1200" height="675" loading="lazy" decoding="async" />
+                  </button>
+                  <p class="case-caption">{caption}</p>
+                </li>
+              ))}
+            </ul>
+          ))}
         </div>
       )}
 
@@ -82,15 +102,42 @@ const blocks = [
   <script>
     const dlg = document.querySelector<HTMLDialogElement>('#shotDialog')!;
     const img = dlg.querySelector('img')!, cap = dlg.querySelector('figcaption')!;
-    const shots = [...document.querySelectorAll<HTMLButtonElement>('[data-shot]')];
+    // La vista ampliada recorre solo las capturas de la versión visible
+    const allShots = [...document.querySelectorAll<HTMLButtonElement>('[data-shot]')];
+    let shots = allShots;
+    const visibleShots = () => allShots.filter((b) => !b.closest('[hidden]'));
     let cur = 0, opener: HTMLElement | null = null, touchX: number | null = null;
+
+    /* ---------- Versiones (actual / anterior) ---------- */
+    const vToggle = document.querySelector<HTMLButtonElement>('[data-vtoggle]');
+    const setVersion = (previous: boolean) => {
+      document.querySelectorAll<HTMLElement>('[data-version]').forEach((el) => { el.hidden = (el.dataset.version === 'previous') !== previous; });
+      vToggle?.setAttribute('aria-pressed', String(previous));
+      history.replaceState(null, '', previous ? '#v1' : location.pathname + location.search);
+      // Las capturas recién mostradas entran con la misma animación de aparición
+      document.querySelectorAll<HTMLElement>('.case-gallery ul:not([hidden]) [data-reveal], #caseVersions .case-shot:not([hidden])').forEach((el, i) => {
+        el.classList.remove('in', 'v-in'); void el.offsetWidth;
+        if (el.matches('[data-reveal]')) { if (el.getBoundingClientRect().top < innerHeight) setTimeout(() => el.classList.add('in'), (i % 3) * 70); }
+        else el.classList.add('v-in');
+      });
+    };
+    if (vToggle) {
+      const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      vToggle.addEventListener('click', () => {
+        const next = vToggle.getAttribute('aria-pressed') !== 'true';
+        const doc = document as Document & { startViewTransition?: (cb: () => void) => unknown };
+        if (doc.startViewTransition && !reduce) doc.startViewTransition(() => setVersion(next)); else setVersion(next);
+      });
+      if (location.hash === '#v1') setVersion(true);
+      addEventListener('hashchange', () => setVersion(location.hash === '#v1'));
+    }
     const show = (i: number) => {
       cur = (i + shots.length) % shots.length;
       img.src = shots[cur].dataset.shot!; img.alt = shots[cur].dataset.alt!;
       cap.textContent = `${shots[cur].dataset.alt} · ${cur + 1} / ${shots.length}`;
       if (!dlg.open) dlg.showModal();
     };
-    shots.forEach((b, i) => b.addEventListener('click', () => { opener = b; show(i); }));
+    allShots.forEach((b) => b.addEventListener('click', () => { shots = visibleShots(); opener = b; show(shots.indexOf(b)); }));
     dlg.addEventListener('click', (e) => {
       const t = e.target as Element;
       if (t === dlg || t.closest('[data-close]')) dlg.close();

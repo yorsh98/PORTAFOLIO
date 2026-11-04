@@ -279,6 +279,15 @@ body.ready .node{opacity:1}
 .case-tags{margin-top:28px;display:flex;flex-wrap:wrap;gap:8px}
 .case-tags li{font-family:var(--mono);font-size:11px;padding:7px 13px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.6)}
 .case-shot{margin-top:8vh}
+/* Versiones del mismo sistema: botón para alternar la actual y la anterior */
+.case-versions{margin-top:7vh;display:flex;flex-wrap:wrap;align-items:center;gap:12px 18px}
+.case-vlabel{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#55575d}
+.case-vbtn{padding:12px 20px;border-radius:999px;border:1px solid var(--ink);font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink);transition:background .3s,color .3s,transform .3s var(--ease)}
+.case-vbtn:hover,.case-vbtn:focus-visible{background:var(--ink);color:#fff;transform:translateY(-2px)}
+.case-versions+#caseVersions .case-shot{margin-top:3vh}
+.case [hidden]{display:none!important} /* gana a display:grid de la galería */
+.case-shot.v-in{animation:caseVIn .9s var(--ease) both}
+@keyframes caseVIn{from{opacity:0;transform:translateY(28px) scale(.98)}}
 .case-shot button{display:block;width:100%;border-radius:22px;overflow:hidden;box-shadow:0 40px 80px -40px rgba(0,0,0,.55)}
 .case-shot img{width:100%;height:auto;transition:transform 1s var(--ease)}
 .case-shot button:hover img{transform:scale(1.015)}

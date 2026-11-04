@@ -17,6 +17,13 @@ type Project = {
     alt: string;
   };
   gallery?: (string | Shot)[];
+  // Versión anterior del mismo sistema: la página muestra la actual y un botón para ver esta.
+  previous?: {
+    label: string;
+    note: string;
+    image?: { src: string; alt: string };
+    gallery: (string | Shot)[];
+  };
 };
 
 export const projects: Project[] = [
@@ -98,31 +105,52 @@ export const projects: Project[] = [
     solution: 'La aplicación utiliza Laravel para el dominio y la persistencia, con componentes Livewire y Volt para una experiencia de administración dinámica.',
     architecture: 'Arquitectura monolítica MVC basada en Laravel. Controladores, modelos y vistas gestionan la lógica del sistema, con Livewire para interfaces dinámicas. Incluye módulos de roles, datos, archivos, correo y reportes dentro de una única aplicación.',
     infrastructure: 'Aplicación Laravel desplegable sobre servidor PHP con base de datos MariaDB. Incluye procesamiento de colas, tareas programadas, Vite para activos frontend y conectividad IMAP para integración de correo.',
-    publicationNote: 'Las capturas se tomaron sobre un entorno sin registros reales. Se excluyeron las vistas con nombres de funcionarios, planos del edificio, números de causa, correos institucionales y registros de actividad.',
+    publicationNote: 'Las capturas se tomaron sobre un entorno sin registros reales. En ambas versiones se excluyeron las vistas con nombres de funcionarios, ausencias, cumpleaños, guías telefónicas, planos del edificio, direcciones de sistemas internos, números de causa, correos institucionales y registros de actividad.',
     technologies: ['Laravel', 'Livewire', 'Volt', 'Tailwind CSS', 'Bootstrap', 'DataTables', 'Pest'],
     image: {
-      src: '/images/projects/4toTOP/1.webp',
-      alt: 'Vista principal de la plataforma 4toTOP.'
+      src: '/images/projects/4toTOP/v2/01-inicio.webp',
+      alt: 'Portada de 4toTOP V2: turnos, audiencias y herramientas del tribunal en un solo lugar.'
     },
     gallery: [
-      { src: '/images/projects/4toTOP/01-inicio.webp', caption: 'Portada pública con accesos a los módulos' },
-      { src: '/images/projects/4toTOP/04-programacion-diaria.webp', caption: 'Programación diaria de audiencias por turno' },
-      { src: '/images/projects/4toTOP/05-procedimientos.webp', caption: 'Biblioteca de procedimientos internos' },
-      { src: '/images/projects/4toTOP/08-buscador-sentencias.webp', caption: 'Índice y buscador de sentencias' },
-      { src: '/images/projects/4toTOP/09-ausencias.webp', caption: 'Calendario de ausentismo por tipo de permiso' },
-      { src: '/images/projects/4toTOP/12-bitacora-pruebas.webp', caption: 'Bitácora pública de pruebas por juicio' },
-      { src: '/images/projects/4toTOP/13-convertir-archivos.webp', caption: 'Conversión de PDF a Word y M4A a MP3' },
-      { src: '/images/projects/4toTOP/15-iniciar-sesion.webp', caption: 'Inicio de sesión' },
-      { src: '/images/projects/4toTOP/18-backoffice-inicio.webp', caption: 'Backoffice: panel de módulos según permisos' },
-      { src: '/images/projects/4toTOP/19-backoffice-funcionarios.webp', caption: 'Catálogo global de funcionarios' },
-      { src: '/images/projects/4toTOP/21-backoffice-turnos.webp', caption: 'Configuración y envío de la tabla semanal de turnos' },
-      { src: '/images/projects/4toTOP/24-backoffice-testigos-peritos.webp', caption: 'Unidad de testigos y peritos con importación desde Excel' },
-      { src: '/images/projects/4toTOP/27-backoffice-documentos.webp', caption: 'Biblioteca documental por colecciones' },
-      { src: '/images/projects/4toTOP/34-backoffice-insumos-solicitudes.webp', caption: 'Solicitudes de insumos' },
-      { src: '/images/projects/4toTOP/39-backoffice-insumos-reportes.webp', caption: 'Reportes de asignación de insumos' },
-      { src: '/images/projects/4toTOP/40-backoffice-seguridad-roles.webp', caption: 'Roles de acceso' },
-      { src: '/images/projects/4toTOP/44-backoffice-seguridad-permisos.webp', caption: 'Permisos por módulo: ver o gestionar' }
-    ]
+      { src: '/images/projects/4toTOP/v2/01-inicio.webp', caption: 'Portada con hora, audiencias del día, turnos y encargados' },
+      { src: '/images/projects/4toTOP/v2/02-ingresar.webp', caption: 'Ingreso al backoffice' },
+      { src: '/images/projects/4toTOP/v2/03-oficios-libertades.webp', caption: 'Oficios y libertades: número correlativo por causa' },
+      { src: '/images/projects/4toTOP/v2/04-programacion-diaria.webp', caption: 'Programación diaria por tipo de audiencia y turno' },
+      { src: '/images/projects/4toTOP/v2/05-testigos-peritos.webp', caption: 'Testigos y peritos por día' },
+      { src: '/images/projects/4toTOP/v2/06-bitacora-pruebas.webp', caption: 'Bitácora de pruebas por juicio y día' },
+      { src: '/images/projects/4toTOP/v2/07-documentos.webp', caption: 'Formularios y documentos para descargar' },
+      { src: '/images/projects/4toTOP/v2/08-procedimientos.webp', caption: 'Procedimientos del tribunal' },
+      { src: '/images/projects/4toTOP/v2/09-buscador-sentencias.webp', caption: 'Buscador de sentencias por RIT, RUC, partes o juez' },
+      { src: '/images/projects/4toTOP/v2/10-migracion-unijud.webp', caption: 'Migración UNIJUD: tribunales que ya trabajan en el sistema' },
+      { src: '/images/projects/4toTOP/v2/11-convertir-archivos.webp', caption: 'Conversión de archivos: PDF, Word, imágenes y audio' }
+    ],
+    previous: {
+      label: 'V1',
+      note: 'Primera versión de 4toTOP, con la portada y el backoffice originales.',
+      image: {
+        src: '/images/projects/4toTOP/1.webp',
+        alt: 'Vista principal de la plataforma 4toTOP.'
+      },
+      gallery: [
+        { src: '/images/projects/4toTOP/01-inicio.webp', caption: 'Portada pública con accesos a los módulos' },
+        { src: '/images/projects/4toTOP/04-programacion-diaria.webp', caption: 'Programación diaria de audiencias por turno' },
+        { src: '/images/projects/4toTOP/05-procedimientos.webp', caption: 'Biblioteca de procedimientos internos' },
+        { src: '/images/projects/4toTOP/08-buscador-sentencias.webp', caption: 'Índice y buscador de sentencias' },
+        { src: '/images/projects/4toTOP/09-ausencias.webp', caption: 'Calendario de ausentismo por tipo de permiso' },
+        { src: '/images/projects/4toTOP/12-bitacora-pruebas.webp', caption: 'Bitácora pública de pruebas por juicio' },
+        { src: '/images/projects/4toTOP/13-convertir-archivos.webp', caption: 'Conversión de PDF a Word y M4A a MP3' },
+        { src: '/images/projects/4toTOP/15-iniciar-sesion.webp', caption: 'Inicio de sesión' },
+        { src: '/images/projects/4toTOP/18-backoffice-inicio.webp', caption: 'Backoffice: panel de módulos según permisos' },
+        { src: '/images/projects/4toTOP/19-backoffice-funcionarios.webp', caption: 'Catálogo global de funcionarios' },
+        { src: '/images/projects/4toTOP/21-backoffice-turnos.webp', caption: 'Configuración y envío de la tabla semanal de turnos' },
+        { src: '/images/projects/4toTOP/24-backoffice-testigos-peritos.webp', caption: 'Unidad de testigos y peritos con importación desde Excel' },
+        { src: '/images/projects/4toTOP/27-backoffice-documentos.webp', caption: 'Biblioteca documental por colecciones' },
+        { src: '/images/projects/4toTOP/34-backoffice-insumos-solicitudes.webp', caption: 'Solicitudes de insumos' },
+        { src: '/images/projects/4toTOP/39-backoffice-insumos-reportes.webp', caption: 'Reportes de asignación de insumos' },
+        { src: '/images/projects/4toTOP/40-backoffice-seguridad-roles.webp', caption: 'Roles de acceso' },
+        { src: '/images/projects/4toTOP/44-backoffice-seguridad-permisos.webp', caption: 'Permisos por módulo: ver o gestionar' }
+      ]
+    }
   },
   {
     slug: 'chatbot-unijud',
