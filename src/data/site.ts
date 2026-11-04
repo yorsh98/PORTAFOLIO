@@ -133,7 +133,7 @@ export const site = {
       { title: 'Plataforma IA Unificada', image: '/images/echo/plataforma-ia.webp', href: caseUrl('plataforma-ia-unificada') },
       { title: '4toTOP', image: '/images/echo/4totop.webp', href: caseUrl('4totop') },
       { title: 'Chatbot UNIJUD', image: '/images/echo/chatbot-unijud.webp', href: caseUrl('chatbot-unijud') },
-      { title: 'Anonimizador', image: null, href: null },
+      { title: 'Anonimizador', image: '/images/echo/anonimizador.webp', href: caseUrl('anonimizador') },
       { title: 'CRM WhatsApp', image: '/images/echo/crm-whatsapp.webp', href: caseUrl('crm-whatsapp') },
       { title: 'Legal Chile Gemma', image: null, href: caseUrl('legal-chile-gemma') },
       { title: 'ProviEmplea 2026', image: '/images/echo/proviemplea.webp', href: caseUrl('proviemplea') },

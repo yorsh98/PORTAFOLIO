@@ -25,18 +25,29 @@ export const projects: Project[] = [
     title: 'Plataforma IA Unificada',
     category: 'Desarrollo web + IA',
     kind: 'web',
-    description: 'Plataforma web que orquesta agentes especializados apoyados por modelos de Machine Learning, Deep Learning e IA: analizador de autos de apertura, anonimizador de sentencias, transcriptor de audios STT y chatbot RAG con recuperación de información.',
+    description: 'Plataforma web (portal JusticIA) que orquesta agentes especializados apoyados por modelos de Machine Learning, Deep Learning e IA: analizador de autos de apertura, anonimizador de sentencias, transcriptor de audios STT y chatbot RAG con recuperación de información.',
     objective: 'Centralizar capacidades de inteligencia artificial en una experiencia web coherente para trabajar con documentos, audio y consultas asistidas.',
     solution: 'Una interfaz Laravel integra servicios especializados para procesamiento documental y flujos conversacionales, manteniendo separados los componentes de ejecución y persistencia.',
     architecture: 'Arquitectura de microservicios orientada a módulos. Un portal central Laravel administra autenticación, permisos y experiencia de usuario; los motores de IA funcionan como APIs internas independientes. PostgreSQL, Redis y colas Celery soportan persistencia, caché y procesamiento asíncrono.',
     infrastructure: 'Infraestructura contenerizada con Docker Compose. Un portal Laravel expuesto a usuarios integra servicios internos FastAPI para análisis, anonimización, transcripción y chatbots. Utiliza PostgreSQL, Redis, colas Celery, almacenamiento de archivos, Ollama para modelos locales y GPU NVIDIA para cargas de IA.',
-    publicationNote: 'El caso presenta la arquitectura y las capacidades a nivel general. No incluye documentos, flujos internos, credenciales ni capturas con información sensible.',
+    publicationNote: 'El caso presenta la arquitectura y las capacidades a nivel general. Las capturas de JusticIA se tomaron con una cuenta y datos ficticios de demostración; se excluyeron las vistas de administración de usuarios, perfil, seguridad y supervisión. No incluye documentos, flujos internos ni credenciales.',
     technologies: ['Laravel', 'React', 'TypeScript', 'PHP', 'Python', 'FastAPI', 'Celery', 'Redis', 'PostgreSQL', 'pgvector', 'LangChain', 'LangGraph', 'NER', 'STT', 'Gemma 4', 'Ollama', 'Docker'],
     image: {
       src: '/images/projects/PLATAFORMA%20IA/1.webp',
       alt: 'Vista principal de la Plataforma IA Unificada.'
     },
     gallery: [
+      { src: '/images/projects/JUSTICIA/01-acceso.webp', caption: 'JusticIA: acceso al portal' },
+      { src: '/images/projects/JUSTICIA/02-terminos.webp', caption: 'Términos de uso: procesamiento dentro de la infraestructura institucional' },
+      { src: '/images/projects/JUSTICIA/03-asistente.webp', caption: 'Asistente con accesos directos a las herramientas' },
+      { src: '/images/projects/JUSTICIA/04-conversacion.webp', caption: 'Conversación de demostración sobre las herramientas disponibles' },
+      { src: '/images/projects/JUSTICIA/05-fuentes.webp', caption: 'Fuentes: documentos, diccionarios terminológicos y plantillas' },
+      { src: '/images/projects/JUSTICIA/06-centro-agentes.webp', caption: 'Centro de agentes con su disponibilidad' },
+      { src: '/images/projects/JUSTICIA/07-centro-comando.webp', caption: 'Centro de comando: actividad por subagente' },
+      { src: '/images/projects/JUSTICIA/08-transcriptor.webp', caption: 'Transcriptor: audios ordenados por juicio' },
+      { src: '/images/projects/JUSTICIA/09-acta-transcripciones.webp', caption: 'Acta de audiencia preparada desde transcripciones' },
+      { src: '/images/projects/JUSTICIA/10-redactor-sentencias.webp', caption: 'Redactor de sentencias con revisión humana obligatoria' },
+      { src: '/images/projects/JUSTICIA/11-validador-informe.webp', caption: 'Validador de uso de IA: informe técnico con hallazgos y límites' },
       '/images/projects/PLATAFORMA%20IA/Captura%20desde%202026-07-28%2020-59-28.webp',
       '/images/projects/PLATAFORMA%20IA/Captura%20desde%202026-07-28%2020-59-52.webp',
       '/images/projects/PLATAFORMA%20IA/Captura%20desde%202026-07-28%2020-59-54.webp',
@@ -50,6 +61,31 @@ export const projects: Project[] = [
       '/images/projects/PLATAFORMA%20IA/Captura%20desde%202026-07-28%2021-01-28.webp',
       '/images/projects/PLATAFORMA%20IA/Captura%20desde%202026-07-28%2021-01-37.webp',
       '/images/projects/PLATAFORMA%20IA/Captura%20desde%202026-07-28%2021-02-00.webp'
+    ]
+  },
+  {
+    slug: 'anonimizador',
+    title: 'Anonimizador',
+    category: 'Desarrollo web + IA',
+    kind: 'web',
+    description: 'Módulo de la Plataforma IA Unificada que genera una copia de cada documento con los datos sensibles protegidos, con revisión humana antes de aplicar los cambios.',
+    objective: 'Preparar documentos para uso institucional resguardando datos personales, sin reemplazar nada hasta que una persona confirme las entidades detectadas.',
+    solution: 'Se cargan hasta 50 documentos DOC o DOCX (100 MB en total) y se elige el modo de análisis: rápido, con reconocimiento de entidades y reglas, o profundo, que suma una revisión contextual con un modelo local en Ollama. Cada documento pasa a una bandeja donde se corrigen, agregan o mantienen entidades antes de generar la versión anonimizada.',
+    architecture: 'Servicio interno de la Plataforma IA Unificada. El portal Laravel gestiona la carga, la bandeja y la revisión; un servicio FastAPI ejecuta la detección de entidades (NER) y las reglas, y el modo profundo agrega una pasada con un modelo local. Antes de habilitar la descarga, el flujo exige un control de calidad antes/después y una lista de verificación obligatoria.',
+    infrastructure: 'Se ejecuta dentro de la infraestructura contenerizada de la plataforma (Docker Compose), con colas para el procesamiento asíncrono y Ollama para el modelo local.',
+    publicationNote: 'Las capturas usan un documento ficticio de demostración. No se publican documentos reales, nombres de intervinientes ni datos de causas.',
+    technologies: ['Laravel', 'React', 'FastAPI', 'Python', 'NER', 'Ollama', 'Celery', 'Docker'],
+    image: {
+      src: '/images/projects/ANONIMIZADOR/01-general.webp',
+      alt: 'Vista general del Anonimizador con la bandeja de documentos en revisión.'
+    },
+    gallery: [
+      { src: '/images/projects/ANONIMIZADOR/01-general.webp', caption: 'Vista general: cómo funciona y cómo queda el documento' },
+      { src: '/images/projects/ANONIMIZADOR/02-proteger-documento.webp', caption: 'Carga de documentos en modo rápido: entidades y reglas' },
+      { src: '/images/projects/ANONIMIZADOR/03-analisis-profundo.webp', caption: 'Modo profundo: revisión contextual con un modelo local' },
+      { src: '/images/projects/ANONIMIZADOR/04-revision-entidades.webp', caption: 'Edición y validación de entidades sobre un documento ficticio' },
+      { src: '/images/projects/ANONIMIZADOR/05-control-calidad.webp', caption: 'Control de calidad antes/después y checklist obligatorio' },
+      { src: '/images/projects/ANONIMIZADOR/06-guia-de-uso.webp', caption: 'Guía de uso del módulo' }
     ]
   },
   {
