@@ -167,6 +167,28 @@ export const site = {
       text: 'Los servicios se desacoplan para que cada tarea use el motor adecuado: modelos locales cuando los datos deben quedarse en el entorno administrado, y modelos en la nube cuando se necesita más capacidad o disponibilidad. La aplicación consume ambos a través de la misma capa de APIs.',
       tags: ['Ollama', 'Llama.cpp', 'vLLM', 'APIs de IA en la nube', 'FastAPI']
     },
+    homelab: {
+      eyebrow: 'MI HOMELAB · SERVIDOR PROPIO',
+      title: 'Un servidor de IA montado en casa',
+      text: 'Lo armé, lo configuré y lo opero yo. Es mi laboratorio: dos GPU NVIDIA donde corren los modelos, los agentes y los servicios con los que pruebo cada idea antes de llevarla a producción.',
+      alt: 'Modelo 3D de un gabinete con panel de vidrio y dos tarjetas gráficas NVIDIA en su interior, junto a la placa madre, CPU, memoria, almacenamiento y fuente de poder.',
+      parts: [
+        { anchor: 'gpu0', angle: -78, title: 'GPU 0 · NVIDIA', text: 'Inferencia de LLMs y modelos cuantizados con llama.cpp y vLLM.' },
+        { anchor: 'gpu1', angle: -102, title: 'GPU 1 · NVIDIA', text: 'Segunda GPU para repartir modelos y cargas en paralelo: embeddings, voz y ajustes LoRA / QLoRA.' },
+        { anchor: 'cpu', angle: -60, title: 'CPU y memoria', text: 'Orquestación, workers y servicios en contenedores con Docker Compose.' },
+        { anchor: 'nvme', angle: -88, title: 'Almacenamiento NVMe', text: 'Pesos de modelos, datasets y bases vectoriales con pgvector.' },
+        { anchor: 'board', angle: -120, title: 'Ubuntu · CUDA · Container Toolkit', text: 'Cada servicio aislado en su contenedor con acceso directo a las GPU.' },
+        { anchor: 'psu', angle: -30, title: 'Fuente y refrigeración', text: 'Energía y flujo de aire para sostener ambas GPU con carga continua.' }
+      ],
+      app: {
+        eyebrow: 'DESARROLLO PROPIO',
+        title: 'Panel de control del servidor',
+        text: 'Una aplicación hecha completamente por mí para operar el servidor desde el navegador: muestra en vivo lo que pasa con la inferencia, qué modelos están cargados en cada GPU y permite ajustar su configuración sin tocar la terminal.',
+        features: ['Inferencia en tiempo real por GPU', 'Modelos cargados y disponibles para su uso', 'Configuración de cada modelo desde la interfaz'],
+        tags: ['llama.cpp', 'vLLM', 'CUDA', 'Docker', 'FastAPI']
+      },
+      note: 'CONFIGURACIÓN DEL HOMELAB A NOVIEMBRE DE 2026 · SIN DATOS DE RED NI DIRECCIONES PUBLICADAS'
+    },
     layers: [
       { label: 'Plataforma base', title: 'Ubuntu 26.04 LTS', text: 'Sistema anfitrión para servicios, almacenamiento, red local y administración del entorno.', tags: ['Linux', 'Docker Compose'] },
       { label: 'Procesamiento', title: 'NVIDIA GPU', text: 'Drivers, CUDA y NVIDIA Container Toolkit habilitan inferencia y entrenamiento en contenedores.', tags: ['CUDA', 'Container Toolkit'] },

@@ -1,0 +1,225 @@
+---
+/**
+ * Homelab de IA: gabinete en 3D (solo CSS, sin dependencias) con dos GPU visibles
+ * a través del panel de vidrio. Gira solo, se puede arrastrar y cada pieza tiene un
+ * pin numerado que coincide con la leyenda. Con prefers-reduced-motion queda fijo.
+ */
+import { site } from '../data/site';
+
+const H = site.localAi.homelab;
+
+type Part = { id: string; x: number; y: number; z: number; w: number; h: number; d: number; cls: string };
+// Coordenadas en px dentro del gabinete (centro = 0,0,0). x: ancho, y: alto (abajo +), z: profundidad.
+const CASE = { w: 220, h: 380, d: 420 };
+const parts: Part[] = [
+  { id: 'board', x: -96, y: -10, z: 10, w: 8, h: 300, d: 330, cls: 'board' },
+  { id: 'cpu', x: -66, y: -96, z: 40, w: 52, h: 66, d: 66, cls: 'cpu' },
+  { id: 'ram', x: -78, y: -96, z: -40, w: 30, h: 70, d: 34, cls: 'ram' },
+  { id: 'gpu0', x: -34, y: -10, z: 22, w: 116, h: 34, d: 300, cls: 'gpu' },
+  { id: 'gpu1', x: -34, y: 52, z: 22, w: 116, h: 34, d: 300, cls: 'gpu' },
+  { id: 'nvme', x: -88, y: 112, z: 40, w: 6, h: 16, d: 80, cls: 'nvme' },
+  { id: 'psu', x: 0, y: 160, z: -10, w: 200, h: 56, d: 160, cls: 'psu' }
+];
+// Pin de cada elemento de la leyenda (n = número que se muestra)
+const pins = H.parts.map((p, i) => {
+  const at = parts.find((q) => q.id === p.anchor);
+  const pos = at ? { x: at.x + at.w / 2 + 10, y: at.y - at.h / 2 - 8, z: at.z } : { x: 0, y: -170, z: 150 };
+  return { n: i + 1, ...pos };
+});
+
+const faces = (w: number, h: number, d: number) => [
+  { f: 'fr', fw: w, fh: h, t: `translateZ(${d / 2}px)` },
+  { f: 'bk', fw: w, fh: h, t: `rotateY(180deg) translateZ(${d / 2}px)` },
+  { f: 'rt', fw: d, fh: h, t: `rotateY(90deg) translateZ(${w / 2}px)` },
+  { f: 'lf', fw: d, fh: h, t: `rotateY(-90deg) translateZ(${w / 2}px)` },
+  { f: 'tp', fw: w, fh: d, t: `rotateX(90deg) translateZ(${h / 2}px)` },
+  { f: 'bt', fw: w, fh: d, t: `rotateX(-90deg) translateZ(${h / 2}px)` }
+];
+const px = (n: number) => `${n}px`;
+---
+<div class="rig" id="homelab" data-reveal>
+  <header class="rig-head">
+    <p class="eyebrow-s mono">{H.eyebrow}</p>
+    <h3 class="rig-title">{H.title}</h3>
+    <p class="sec-text">{H.text}</p>
+  </header>
+
+  <div class="rig-body">
+    <div class="rig-view" id="rigView" role="img" aria-label={H.alt}>
+      <div class="rig-scene">
+        <div class="rig-world" id="rigWorld">
+          <div class="rig-case">
+            {faces(CASE.w, CASE.h, CASE.d).map((f) => (
+              <div class={`face case-${f.f}`} style={`width:${px(f.fw)};height:${px(f.fh)};margin:${px(-f.fh / 2)} 0 0 ${px(-f.fw / 2)};transform:${f.t}`} />
+            ))}
+          </div>
+          {parts.map((p) => (
+            <div class={`cub ${p.cls}`} data-part={p.id} style={`transform:translate3d(${px(p.x)},${px(p.y)},${px(p.z)})`}>
+              {faces(p.w, p.h, p.d).map((f) => (
+                <div class={`face f-${f.f}`} style={`width:${px(f.fw)};height:${px(f.fh)};margin:${px(-f.fh / 2)} 0 0 ${px(-f.fw / 2)};transform:${f.t}`}>
+                  {p.cls === 'gpu' && f.f === 'rt' && <span class="fans" aria-hidden="true"><i></i><i></i><i></i></span>}
+                  {p.cls === 'gpu' && f.f === 'rt' && <b class="gpu-tag mono">{p.id === 'gpu0' ? 'GPU 0' : 'GPU 1'}</b>}
+                </div>
+              ))}
+            </div>
+          ))}
+          {pins.map((p) => (
+            <span class="pin3d" style={`--x:${px(p.x)};--y:${px(p.y)};--z:${px(p.z)}`} data-pin={p.n}><b class="mono">{p.n}</b></span>
+          ))}
+        </div>
+      </div>
+      <p class="rig-hint mono" aria-hidden="true">ARRASTRA PARA GIRAR</p>
+    </div>
+
+    <ol class="rig-legend" id="rigLegend">
+      {H.parts.map((p, i) => (
+        <li>
+          <button type="button" data-n={i + 1} data-angle={p.angle} data-anchor={p.anchor}>
+            <span class="n mono">{String(i + 1).padStart(2, '0')}</span>
+            <span class="txt"><b>{p.title}</b><small>{p.text}</small></span>
+          </button>
+        </li>
+      ))}
+    </ol>
+  </div>
+
+  <article class="rig-app">
+    <div>
+      <p class="eyebrow-s mono">{H.app.eyebrow}</p>
+      <h4>{H.app.title}</h4>
+      <p>{H.app.text}</p>
+    </div>
+    <ul>{H.app.features.map((f) => <li>{f}</li>)}</ul>
+    <div class="tags">{H.app.tags.map((t) => <span>{t}</span>)}</div>
+  </article>
+  <p class="rig-note mono">{H.note}</p>
+</div>
+
+<style>
+  .rig{margin-top:12vh;display:grid;gap:5vh}
+  .rig-title{font-weight:800;font-size:clamp(34px,5vw,72px);letter-spacing:-.04em;line-height:.95;margin-top:12px}
+  .rig-body{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:4vw;align-items:center}
+  .rig-view{position:relative;height:clamp(420px,62vh,640px);border-radius:28px;border:1px solid rgba(255,255,255,.08);
+    background:radial-gradient(ellipse 70% 60% at 50% 45%,rgba(118,185,0,.10),transparent 70%),radial-gradient(ellipse 60% 40% at 50% 100%,rgba(120,140,255,.10),transparent 70%),#0a0b11;
+    overflow:hidden;cursor:grab;touch-action:pan-y;user-select:none}
+  .rig-view.drag{cursor:grabbing}
+  .rig-view::after{content:"";position:absolute;inset:0;pointer-events:none;
+    background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);background-size:32px 32px;
+    mask-image:radial-gradient(ellipse at 50% 60%,#000 30%,transparent 75%)}
+  .rig-scene{position:absolute;inset:0;perspective:1400px;perspective-origin:50% 40%}
+  .rig-world{position:absolute;left:50%;top:50%;width:0;height:0;transform-style:preserve-3d;
+    transform:scale(var(--k,.86)) rotateX(-14deg) rotateY(var(--ry,-35deg))}
+  .rig-world *{transform-style:preserve-3d}
+  .face{position:absolute;left:0;top:0;backface-visibility:visible}
+  .cub{position:absolute;left:0;top:0;transition:filter .4s}
+
+  /* Gabinete: aluminio oscuro con panel de vidrio en el lado +x (rt) y frontal con malla */
+  .case-rt{background:linear-gradient(135deg,rgba(160,190,255,.10),rgba(255,255,255,.02) 40%,rgba(160,190,255,.06));border:1px solid rgba(190,205,255,.35);box-shadow:inset 0 0 40px rgba(120,140,255,.08)}
+  .case-lf{background:#14161d;border:1px solid #262a35}
+  .case-fr{background:repeating-linear-gradient(0deg,#15171e 0 3px,#0e1015 3px 6px);border:1px solid #2a2e3a}
+  .case-bk{background:#101219;border:1px solid #262a35}
+  .case-tp{background:repeating-linear-gradient(90deg,#14161d 0 6px,#0d0f14 6px 9px);border:1px solid #2a2e3a}
+  .case-bt{background:#0b0c11;border:1px solid #1f222b}
+
+  .board .face{background:#0f2219;border:1px solid #1d3d2c}
+  .board .f-rt{background:linear-gradient(90deg,transparent 48%,rgba(118,185,0,.12) 50%,transparent 52%) 0 0/40px 40px,linear-gradient(0deg,transparent 48%,rgba(118,185,0,.12) 50%,transparent 52%) 0 0/40px 40px,#10261b}
+  .cpu .face{background:#2a2d36;border:1px solid #3d414d}
+  .cpu .f-rt{background:repeating-linear-gradient(0deg,#3a3e4a 0 2px,#22252d 2px 5px)}
+  .ram .face{background:#1b1e27;border:1px solid #333847}
+  .ram .f-rt{background:repeating-linear-gradient(90deg,#3b4152 0 4px,#1b1e27 4px 9px)}
+  .nvme .face{background:#1a1c24;border:1px solid #3b4050}
+  .psu .face{background:#111319;border:1px solid #262a35}
+  .gpu .face{background:linear-gradient(180deg,#22252e,#15171d);border:1px solid #3a3f4c}
+  .gpu .f-tp{background:linear-gradient(90deg,#2c303b,#1a1d24);box-shadow:inset 0 2px 0 rgba(118,185,0,.75)}
+  .gpu .f-rt{display:flex;align-items:center;justify-content:space-around;padding:0 10px;overflow:hidden}
+  .fans{display:flex;gap:6%;width:100%;justify-content:space-around}
+  .fans i{width:26px;height:26px;border-radius:50%;flex:none;border:1px solid #4a4f5d;
+    background:conic-gradient(from 0deg,#2b2f39 0 20%,#14161c 20% 33%,#2b2f39 33% 53%,#14161c 53% 66%,#2b2f39 66% 86%,#14161c 86%);animation:spin 1.2s linear infinite}
+  .gpu-tag{position:absolute;left:10px;top:-14px;font-size:8px;letter-spacing:.16em;color:#9fd14a}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  .cub.hot{filter:drop-shadow(0 0 12px rgba(118,185,0,.65)) brightness(1.35)}
+
+  .pin3d{position:absolute;left:0;top:0;transform:translate3d(var(--x),var(--y),var(--z)) rotateY(calc(-1 * var(--ry,-35deg))) rotateX(14deg)}
+  .pin3d b{display:grid;place-items:center;width:22px;height:22px;margin:-11px 0 0 -11px;border-radius:50%;font-size:10px;font-weight:700;color:#06070c;background:#e8eaef;box-shadow:0 0 0 4px rgba(232,234,239,.12);transition:background .3s,transform .3s}
+  .pin3d.hot b{background:#9fd14a;transform:scale(1.25)}
+
+  .rig-hint{position:absolute;left:18px;bottom:14px;font-size:10px;letter-spacing:.18em;color:#5f626b}
+
+  .rig-legend{list-style:none;display:grid;gap:6px}
+  .rig-legend button{all:unset;box-sizing:border-box;width:100%;display:grid;grid-template-columns:34px 1fr;gap:12px;padding:12px 14px;border-radius:14px;cursor:pointer;border:1px solid transparent;transition:background .3s,border-color .3s}
+  .rig-legend button:hover,.rig-legend button:focus-visible,.rig-legend button.hot{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.1)}
+  .rig-legend button:focus-visible{outline:2px solid #9fd14a;outline-offset:2px}
+  .rig-legend .n{font-size:11px;color:#9fd14a;padding-top:2px}
+  .rig-legend b{display:block;font-size:15px;font-weight:700}
+  .rig-legend small{display:block;margin-top:3px;font-size:13px;line-height:1.5;color:#a6a9b2}
+
+  .rig-app{display:grid;grid-template-columns:1.2fr 1fr;gap:18px 4vw;padding:clamp(22px,3vw,40px);border-radius:24px;border:1px solid rgba(159,209,74,.25);background:linear-gradient(135deg,rgba(118,185,0,.07),rgba(255,255,255,.015))}
+  .rig-app h4{font-size:clamp(22px,2.4vw,34px);font-weight:800;letter-spacing:-.03em;margin-top:8px}
+  .rig-app p:not(.eyebrow-s){margin-top:10px;font-size:14px;line-height:1.6;color:#b4b7c0;max-width:52ch}
+  .rig-app ul{list-style:none;display:grid;gap:8px;align-content:center}
+  .rig-app li{font-size:14px;color:#dfe1e6;padding-left:18px;position:relative}
+  .rig-app li::before{content:"";position:absolute;left:0;top:.55em;width:7px;height:7px;border-radius:2px;background:#9fd14a}
+  .rig-app .tags{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:8px}
+  .rig-app .tags span{font-family:var(--mono);font-size:10px;letter-spacing:.08em;padding:6px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.14);color:#c9ccd3}
+  .rig-note{font-size:10px;letter-spacing:.12em;color:#5f626b}
+
+  @media (max-width:900px){
+    .rig-body,.rig-app{grid-template-columns:1fr}
+    .rig-view{height:420px}
+    .rig-world{--k:.66}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .fans i{animation:none}
+  }
+</style>
+
+<script>
+  const view = document.getElementById('rigView');
+  const world = document.getElementById('rigWorld');
+  const legend = document.getElementById('rigLegend');
+  if (view && world && legend) {
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let ry = -35, target: number | null = null, dragging = false, lastX = 0, hover = false, visible = false, raf = 0;
+    const apply = () => world.style.setProperty('--ry', `${ry}deg`);
+    const tick = () => {
+      raf = 0;
+      if (target !== null) {
+        const diff = ((target - ry + 540) % 360) - 180;
+        ry += diff * 0.08;
+        if (Math.abs(diff) < 0.3) { ry = target; target = null; }
+      } else if (!dragging && !hover && !reduce) {
+        ry -= 0.18;
+      }
+      apply();
+      if (visible && (target !== null || (!reduce && !hover && !dragging))) raf = requestAnimationFrame(tick);
+    };
+    const run = () => { if (!raf) raf = requestAnimationFrame(tick); };
+    new IntersectionObserver(([e]) => { visible = !!e?.isIntersecting; if (visible) run(); }).observe(view);
+    apply();
+
+    view.addEventListener('pointerdown', (e) => { dragging = true; target = null; lastX = e.clientX; view.classList.add('drag'); view.setPointerCapture(e.pointerId); });
+    view.addEventListener('pointermove', (e) => { if (!dragging) return; ry += (e.clientX - lastX) * 0.45; lastX = e.clientX; apply(); });
+    const end = () => { if (!dragging) return; dragging = false; view.classList.remove('drag'); run(); };
+    view.addEventListener('pointerup', end); view.addEventListener('pointercancel', end);
+
+    const parts = legend.querySelectorAll<HTMLButtonElement>('button');
+    const highlight = (btn: HTMLButtonElement | null) => {
+      parts.forEach((b) => b.classList.toggle('hot', b === btn));
+      world.querySelectorAll('.hot').forEach((el) => el.classList.remove('hot'));
+      if (!btn) { hover = false; run(); return; }
+      hover = true;
+      const n = btn.dataset.n, anchor = btn.dataset.anchor;
+      world.querySelector(`[data-pin="${n}"]`)?.classList.add('hot');
+      (anchor ? world.querySelectorAll(`[data-part="${anchor}"]`) : []).forEach((el) => el.classList.add('hot'));
+      const a = Number(btn.dataset.angle);
+      if (!Number.isNaN(a)) { target = a; run(); }
+    };
+    parts.forEach((b) => {
+      b.addEventListener('mouseenter', () => highlight(b));
+      b.addEventListener('focus', () => highlight(b));
+      b.addEventListener('click', () => highlight(b));
+    });
+    legend.addEventListener('mouseleave', () => highlight(null));
+  }
+</script>
