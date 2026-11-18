@@ -174,7 +174,7 @@ export const site = {
       alt: 'Modelo 3D de un gabinete con panel de vidrio y dos tarjetas gráficas NVIDIA en su interior, junto a la placa madre, CPU, memoria, almacenamiento y fuente de poder.',
       parts: [
         { anchor: 'gpu0', angle: -78, title: 'GPU 0 · NVIDIA', text: 'Inferencia de LLMs y modelos cuantizados con llama.cpp y vLLM.' },
-        { anchor: 'gpu1', angle: -102, title: 'GPU 1 · NVIDIA', text: 'Segunda GPU para repartir modelos y cargas en paralelo: embeddings, voz y ajustes LoRA / QLoRA.' },
+        { anchor: 'gpu1', angle: -102, title: 'GPU 1 · NVIDIA', text: 'Modelos de apoyo en paralelo: voz a texto (STT), reranker, embeddings, NER y LLM pequeños.' },
         { anchor: 'cpu', angle: -60, title: 'CPU y memoria', text: 'Orquestación, workers y servicios en contenedores con Docker Compose.' },
         { anchor: 'nvme', angle: -88, title: 'Almacenamiento NVMe', text: 'Pesos de modelos, datasets y bases vectoriales con pgvector.' },
         { anchor: 'board', angle: -120, title: 'Ubuntu · CUDA · Container Toolkit', text: 'Cada servicio aislado en su contenedor con acceso directo a las GPU.' },
