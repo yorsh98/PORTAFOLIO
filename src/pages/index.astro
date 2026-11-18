@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import HomelabRig from '../components/HomelabRig.astro';
 import { site } from '../data/site';
 import { technologies, categoryLabels } from '../data/technologies';
 import iconSet from '@iconify-json/simple-icons/icons.json';
@@ -149,6 +150,7 @@ const serviceWords = words([services.title]), stackWords = words([stack.title]);
       <p class="eyebrow-s mono" data-reveal>{localAi.eyebrow}</p>
       <h2 class="ai-title" id="ai-title" data-reveal data-drift="-1"><span>{localAi.title[0]}</span> <small>{localAi.title[1]}</small></h2>
       <p class="sec-text" data-reveal>{localAi.text}</p>
+      <HomelabRig />
       <div class="models">
         <p class="eyebrow-s mono" data-reveal>{localAi.models.label}</p>
         <ul>{localAi.models.items.map((m) => <li data-reveal="seq"><b>{m.k}</b><span>{m.name}</span><p>{m.v}</p></li>)}</ul>
